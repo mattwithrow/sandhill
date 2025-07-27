@@ -5,7 +5,7 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import AuthHomePage from './AuthHomePage';
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   /*
   const handleNavigateToAbout = () => {
@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
 
 
 
-  
+
   return (
 
     <React.StrictMode>

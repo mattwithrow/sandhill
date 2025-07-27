@@ -13,7 +13,7 @@ import { generateClient } from "aws-amplify/data";
 const client = generateClient<Schema>();
 
 const AuthHomePage: React.FC = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 /*
   const handleNavigateToAbout = () => {
     navigate('/');

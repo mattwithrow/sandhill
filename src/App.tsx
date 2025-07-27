@@ -1,7 +1,7 @@
 //import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
+//import type { Schema } from "../amplify/data/resource";
 //import { useAuthenticator } from '@aws-amplify/ui-react';
-import { generateClient } from "aws-amplify/data";
+//import { generateClient } from "aws-amplify/data";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AboutPage from "./AboutPage";
