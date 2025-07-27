@@ -1,6 +1,6 @@
 // LoginPage.tsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { Authenticator } from '@aws-amplify/ui-react';
 import AuthHomePage from './AuthHomePage';
 
