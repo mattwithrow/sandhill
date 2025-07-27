@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+//import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
-import { useAuthenticator } from '@aws-amplify/ui-react';
+//import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -9,7 +9,7 @@ import StartPage from "./StartPage";
 import LoginPage from "./LoginPage";
 import AuthHomePage from "./AuthHomePage";
 
-const client = generateClient<Schema>();
+//const client = generateClient<Schema>();
 
 function App() {
   return (

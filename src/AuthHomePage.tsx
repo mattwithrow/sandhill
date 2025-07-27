@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { Authenticator, Text, View, Image } from '@aws-amplify/ui-react';
+//import { Authenticator, Text, View, Image } from '@aws-amplify/ui-react';
 
 import { useEffect, useState } from "react";
 
@@ -14,7 +14,7 @@ const client = generateClient<Schema>();
 
 const AuthHomePage: React.FC = () => {
   const navigate = useNavigate();
-
+/*
   const handleNavigateToAbout = () => {
     navigate('/');
 
@@ -23,6 +23,7 @@ const AuthHomePage: React.FC = () => {
   };
     
 };
+*/
 
 const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
   const { signOut } = useAuthenticator();

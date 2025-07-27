@@ -7,13 +7,18 @@ import AuthHomePage from './AuthHomePage';
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
+  /*
   const handleNavigateToAbout = () => {
     navigate('/about');
   };
   const handleNavigateToAuthHome = () => {
     navigate('/auth_home');
   };
+  */
 
+
+
+  
   return (
 
     <React.StrictMode>
