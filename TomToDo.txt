@@ -1,0 +1,4 @@
+tsconfig.json
+    Change these parameters back to true. 
+    - "noUnusedParameters": true,
+    - "noFallthroughCasesInSwitch": true
