@@ -15,6 +15,7 @@ import AuthHomePage from "./AuthHomePage";
 function App() {
   return (
     <BrowserRouter>
+      <Layout>
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -22,6 +23,7 @@ function App() {
         <Route path="/start" element={<StartPage />} />
         <Route path="/auth_home" element={<AuthHomePage />} />
       </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }
