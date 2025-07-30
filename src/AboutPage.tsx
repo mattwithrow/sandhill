@@ -97,53 +97,50 @@ const AboutPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Call to Action Section */}
-        <section className="cta-section">
-          <div className="section-container">
-            <h2 className="section-title">Ready to Build with Purpose?</h2>
-            <p className="cta-text">
-              Create an account, see what we're about, and find your next collaborator, project, or mission.
-            </p>
-            <div className="cta-buttons">
-              <button className="btn btn-primary" onClick={handleNavigateToStart}>
-                Get Started
-              </button>
-              <button className="btn btn-secondary" onClick={handleNavigateToLogin}>
-                Sign In
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section className="contact-section">
-          <div className="section-container">
-            <h2 className="section-title">Get in Touch</h2>
-            <div className="contact-content">
-              <p>
-                Have questions about Sandhill? Want to learn more about how we can help you find the right collaborators?
+        {/* Bottom Grid Section */}
+        <div className="bottom-grid">
+          {/* Call to Action Section */}
+          <section className="cta-section">
+            <div className="section-container">
+              <h2 className="section-title">Ready to Build with Purpose?</h2>
+              <p className="cta-text">
+                Create an account, see what we're about, and find your next collaborator, project, or mission.
               </p>
-              <div className="contact-info">
-                <div className="contact-item">
-                  <strong>Email:</strong>
-                  <a href="mailto:hello@sandhill.com">hello@sandhill.com</a>
-                </div>
-                <div className="contact-item">
+              <div className="cta-buttons">
+                <button className="btn btn-primary" onClick={handleNavigateToStart}>
+                  Sign Up
+                </button>
+                <button className="btn btn-secondary" onClick={handleNavigateToLogin}>
+                  Sign In
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* Contact Section */}
+          <section className="contact-section">
+            <div className="section-container">
+              <h2 className="section-title">Get in Touch</h2>
+              <div className="contact-content">
+                <p>
+                  Have questions about Sandhill? Want to learn more about how we can help you find the right collaborators?
+                </p>
+                <div className="contact-info">
+                  <div className="contact-item">
+                    <strong>Email:</strong>
+                    <a href="mailto:hello@sandhill.com">hello@sandhill.com</a>
+                  </div>
+                                  <div className="contact-item">
                   <strong>LinkedIn:</strong>
                   <a href="https://linkedin.com/company/sandhill" target="_blank" rel="noopener noreferrer">
                     @sandhill
                   </a>
                 </div>
-                <div className="contact-item">
-                  <strong>Twitter:</strong>
-                  <a href="https://twitter.com/sandhill" target="_blank" rel="noopener noreferrer">
-                    @sandhill
-                  </a>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </div>
   );
