@@ -4,6 +4,7 @@
 //import { generateClient } from "aws-amplify/data";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
 import AboutPage from "./AboutPage";
 import StartPage from "./StartPage";
 import LoginPage from "./LoginPage";
