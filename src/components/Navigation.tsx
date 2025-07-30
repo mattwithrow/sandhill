@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Info, LogIn, User } from 'lucide-react';
 
 interface NavItem {
   name: string;
   path: string;
-  icon: React.ComponentType<{ size?: number }>;
   requiresAuth?: boolean;
 }
 
@@ -14,10 +12,10 @@ const Navigation: React.FC = () => {
   const location = useLocation();
 
   const navItems: NavItem[] = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Start', path: '/start', icon: Home },
-    { name: 'About', path: '/about', icon: Info },
-    { name: 'Dashboard', path: '/auth_home', icon: User, requiresAuth: true },
+    { name: 'Home', path: '/' },
+    { name: 'Start', path: '/start' },
+    { name: 'About', path: '/about' },
+    { name: 'Dashboard', path: '/auth_home', requiresAuth: true },
   ];
 
   const isActiveRoute = (path: string): boolean => {
@@ -46,8 +44,6 @@ const Navigation: React.FC = () => {
         {/* Desktop Navigation */}
         <ul className="nav-menu">
           {navItems.map((item) => {
-            const IconComponent = item.icon;
-            
             // Hide auth-required items if not authenticated
             if (item.requiresAuth && !isAuthenticated) {
               return null;
@@ -59,7 +55,6 @@ const Navigation: React.FC = () => {
                   to={item.path}
                   className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
                 >
-                  <IconComponent size={18} />
                   <span>{item.name}</span>
                 </Link>
               </li>
@@ -72,7 +67,6 @@ const Navigation: React.FC = () => {
           {!isAuthenticated ? (
             <>
               <Link to="/login" className="btn btn-secondary">
-                <LogIn size={16} />
                 Sign In
               </Link>
               <Link to="/start" className="btn btn-primary">
@@ -82,7 +76,6 @@ const Navigation: React.FC = () => {
           ) : (
             <>
               <Link to="/auth_home" className="btn btn-secondary">
-                <User size={16} />
                 Dashboard
               </Link>
               <button className="btn btn-ghost" onClick={() => {/* Add logout logic */}}>
@@ -98,15 +91,13 @@ const Navigation: React.FC = () => {
           onClick={toggleMobileMenu}
           aria-label="Toggle mobile menu"
         >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {isMobileMenuOpen ? '✕' : '☰'}
         </button>
 
         {/* Mobile Navigation Menu */}
         <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
           <ul className="nav-menu">
             {navItems.map((item) => {
-              const IconComponent = item.icon;
-              
               // Hide auth-required items if not authenticated
               if (item.requiresAuth && !isAuthenticated) {
                 return null;
@@ -119,7 +110,6 @@ const Navigation: React.FC = () => {
                     className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
                     onClick={closeMobileMenu}
                   >
-                    <IconComponent size={20} />
                     <span>{item.name}</span>
                   </Link>
                 </li>
@@ -136,7 +126,6 @@ const Navigation: React.FC = () => {
                   className="btn btn-secondary"
                   onClick={closeMobileMenu}
                 >
-                  <LogIn size={16} />
                   Sign In
                 </Link>
                 <Link 
@@ -154,7 +143,6 @@ const Navigation: React.FC = () => {
                   className="btn btn-secondary"
                   onClick={closeMobileMenu}
                 >
-                  <User size={16} />
                   Dashboard
                 </Link>
                 <button 
