@@ -15,13 +15,12 @@ const AboutPage: React.FC = () => {
 
   return (
     <div className="about-page">
-      <div className="about-container">
+      <div className="container">
         {/* Hero Section */}
-        <section className="hero-section">
-          <div className="hero-background-particles"></div>
+        <section className="hero">
           <div className="hero-content">
             <h1 className="hero-title">
-              About <span className="hero-title-accent">Sandhill</span>
+              About <span className="gradient-text">Sandhill</span>
             </h1>
             <p className="hero-subtitle">
               Connecting good people doing good work
@@ -30,13 +29,13 @@ const AboutPage: React.FC = () => {
         </section>
 
         {/* Who We Are Section */}
-        <section className="content-section">
-          <div className="section-container">
+        <section className="section">
+          <div className="content-card">
             <div className="section-header">
-              <div className="section-icon">🏔️</div>
+              <div className="feature-icon">🏔️</div>
               <h2 className="section-title">Who We Are</h2>
             </div>
-            <div className="content-grid">
+            <div className="grid-2">
               <div className="content-block">
                 <p>
                   Over the years, we've worked with amazing people—and also burned out trying to build with the wrong ones. 
@@ -47,20 +46,20 @@ const AboutPage: React.FC = () => {
                   This was born from that idea: that good people doing good work shouldn't have to build in isolation. 
                   With the right collaboration, momentum follows.
                 </p>
-                <p className="highlight-text">
+                <p className="gradient-text" style={{fontWeight: '600', fontStyle: 'italic'}}>
                   This is the tool we wish we had when we started.
                 </p>
               </div>
               <div className="image-grid">
                 <div className="image-placeholder">
                   <div className="placeholder-content">
-                    <span className="placeholder-icon">👥</span>
+                    <span className="placeholder-icon float">👥</span>
                     <p>Team Collaboration</p>
                   </div>
                 </div>
                 <div className="image-placeholder">
                   <div className="placeholder-content">
-                    <span className="placeholder-icon">💡</span>
+                    <span className="placeholder-icon float">💡</span>
                     <p>Innovation</p>
                   </div>
                 </div>
@@ -70,10 +69,10 @@ const AboutPage: React.FC = () => {
         </section>
 
         {/* Our Mission Section */}
-        <section className="content-section">
-          <div className="section-container">
+        <section className="section">
+          <div className="content-card">
             <div className="section-header">
-              <div className="section-icon">🎯</div>
+              <div className="feature-icon">🎯</div>
               <h2 className="section-title">Our Mission</h2>
             </div>
             <div className="content-block">
@@ -87,10 +86,10 @@ const AboutPage: React.FC = () => {
         </section>
 
         {/* Why Join Section */}
-        <section className="content-section">
-          <div className="section-container">
+        <section className="section">
+          <div className="content-card">
             <div className="section-header">
-              <div className="section-icon">🤝</div>
+              <div className="feature-icon">🤝</div>
               <h2 className="section-title">Why You Might Want to Join</h2>
             </div>
             <div className="content-block">
@@ -112,50 +111,46 @@ const AboutPage: React.FC = () => {
         </section>
 
         {/* Bottom Grid Section */}
-        <div className="bottom-grid">
+        <div className="grid-2">
           {/* Call to Action Section */}
           <section className="cta-section">
-            <div className="section-container">
-              <div className="cta-header">
-                <div className="cta-icon">🚀</div>
-                <h2 className="section-title">Ready to Build with Purpose?</h2>
-              </div>
-              <p className="cta-text">
-                Create an account, see what we're about, and find your next collaborator, project, or mission.
-              </p>
-              <div className="cta-buttons">
-                <button className="btn btn-primary" onClick={handleNavigateToStart}>
-                  🚀 Sign Up
-                </button>
-                <button className="btn btn-secondary" onClick={handleNavigateToLogin}>
-                  🔑 Sign In
-                </button>
-              </div>
+            <div className="section-header">
+              <div className="feature-icon">🚀</div>
+              <h2 className="section-title">Ready to Build with Purpose?</h2>
+            </div>
+            <p className="cta-text">
+              Create an account, see what we're about, and find your next collaborator, project, or mission.
+            </p>
+            <div className="cta-buttons">
+              <button className="btn btn-primary btn-large" onClick={handleNavigateToStart}>
+                🚀 Sign Up
+              </button>
+              <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
+                🔑 Sign In
+              </button>
             </div>
           </section>
 
           {/* Contact Section */}
-          <section className="contact-section">
-            <div className="section-container">
-              <div className="section-header">
-                <div className="section-icon">📧</div>
-                <h2 className="section-title">Get in Touch</h2>
-              </div>
-              <div className="contact-content">
-                <p>
-                  Have questions about Sandhill? Want to learn more about how we can help you find the right collaborators?
-                </p>
-                <div className="contact-info">
-                  <div className="contact-item">
-                    <strong>📧 Email:</strong>
-                    <a href="mailto:hello@sandhill.com">hello@sandhill.com</a>
-                  </div>
-                  <div className="contact-item">
-                    <strong>💼 LinkedIn:</strong>
-                    <a href="https://linkedin.com/company/sandhill" target="_blank" rel="noopener noreferrer">
-                      @sandhill
-                    </a>
-                  </div>
+          <section className="content-card">
+            <div className="section-header">
+              <div className="feature-icon">📧</div>
+              <h2 className="section-title">Get in Touch</h2>
+            </div>
+            <div className="contact-content">
+              <p>
+                Have questions about Sandhill? Want to learn more about how we can help you find the right collaborators?
+              </p>
+              <div className="contact-info">
+                <div className="contact-item">
+                  <strong>📧 Email:</strong>
+                  <a href="mailto:hello@sandhill.com">hello@sandhill.com</a>
+                </div>
+                <div className="contact-item">
+                  <strong>💼 LinkedIn:</strong>
+                  <a href="https://linkedin.com/company/sandhill" target="_blank" rel="noopener noreferrer">
+                    @sandhill
+                  </a>
                 </div>
               </div>
             </div>

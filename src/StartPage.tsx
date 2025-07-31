@@ -19,28 +19,27 @@ const StartPage: React.FC = () => {
 
   return (
     <div className="start-page">
-      <div className="start-container">
+      <div className="container">
         {/* Hero Section */}
-        <section className="hero-section">
-          <div className="hero-background-particles"></div>
+        <section className="hero">
           <div className="hero-content">
             <h1 className="hero-title">
               Connect with the right<br />
               people to build what<br />
-              <span className="hero-title-accent">matters.</span>
+              <span className="gradient-text">matters.</span>
             </h1>
             <p className="hero-subtitle">
               You care about mission, not just metrics. You want to create with people who show up, follow through, and give a damn.
             </p>
-            <div className="hero-cta-group">
-              <button className="btn btn-primary hero-cta" onClick={handleSignUp}>
+            <div className="cta-buttons">
+              <button className="btn btn-primary btn-large" onClick={handleSignUp}>
                 🚀 Get Started
               </button>
-              <button className="btn btn-secondary hero-cta-secondary" onClick={handleNavigateToAbout}>
+              <button className="btn btn-outline btn-large" onClick={handleNavigateToAbout}>
                 📖 Learn More
               </button>
             </div>
-            <div className="scroll-indicator">
+            <div className="scroll-indicator float">
               <span className="scroll-text">Scroll to explore</span>
               <div className="scroll-arrow">↓</div>
             </div>
@@ -48,38 +47,40 @@ const StartPage: React.FC = () => {
         </section>
 
         {/* Platform Description Section */}
-        <section className="platform-section">
-          <div className="section-container">
-            <div className="eyebrow">✨ A platform built for people with purpose.</div>
-            <h2 className="section-title">
-              We believe that when vision meets execution—and when values align—amazing things happen. Our platform brings together:
-            </h2>
-            <div className="platform-description">
-              <div className="platform-item">
-                <div className="platform-icon">💡</div>
+        <section className="section">
+          <div className="content-card">
+            <div className="section-header">
+              <div className="eyebrow">✨ A platform built for people with purpose.</div>
+              <h2 className="section-title">
+                We believe that when vision meets execution—and when values align—amazing things happen. Our platform brings together:
+              </h2>
+            </div>
+            <div className="grid-2">
+              <div className="feature-card">
+                <div className="feature-icon">💡</div>
                 <h3>Idea Owners</h3>
                 <p>People with a mission, a goal, or a spark worth pursuing</p>
               </div>
-              <div className="platform-item">
-                <div className="platform-icon">🔨</div>
+              <div className="feature-card">
+                <div className="feature-icon">🔨</div>
                 <h3>Builders & Creators</h3>
                 <p>Skilled individuals ready to collaborate and help shape what's next</p>
               </div>
             </div>
-            <p className="platform-summary">
+            <p className="text-center mb-xl" style={{fontSize: '1.3rem', fontWeight: '500'}}>
               We help you find each other. We make it easy to start. And we give you the tools to build something real.
             </p>
           </div>
         </section>
 
         {/* Two Column Section */}
-        <section className="two-column-section">
-          <div className="column-container">
+        <section className="section">
+          <div className="grid-2">
             {/* Left Column */}
-            <div className="column left-column">
-              <div className="column-header">
-                <div className="column-icon">🚀</div>
-                <h2 className="column-title">
+            <div className="feature-card">
+              <div className="section-header text-left">
+                <div className="feature-icon">🚀</div>
+                <h2 className="section-title">
                   You bring the idea. We help you find the right hands to build it.
                 </h2>
               </div>
@@ -92,10 +93,10 @@ const StartPage: React.FC = () => {
             </div>
 
             {/* Right Column */}
-            <div className="column right-column">
-              <div className="column-header">
-                <div className="column-icon">💼</div>
-                <h2 className="column-title">
+            <div className="feature-card">
+              <div className="section-header text-left">
+                <div className="feature-icon">💼</div>
+                <h2 className="section-title">
                   You're not just looking for work—you're looking for meaningful work.
                 </h2>
               </div>
@@ -110,36 +111,34 @@ const StartPage: React.FC = () => {
         </section>
 
         {/* Call to Action Section */}
-        <section className="cta-section">
-          <div className="section-container">
-            <div className="cta-header">
-              <div className="cta-icon">⭐</div>
-              <h2 className="section-title">Ready to build what matters?</h2>
+        <section className="cta-section fade-in">
+          <div className="section-header">
+            <div className="feature-icon">⭐</div>
+            <h2 className="section-title">Ready to build what matters?</h2>
+          </div>
+          <p className="cta-text">
+            Join a community of people who care about making a difference, not just making a profit.
+          </p>
+          <div className="cta-buttons">
+            <button className="btn btn-primary btn-large" onClick={handleSignUp}>
+              🚀 Get Started
+            </button>
+            <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
+              🔑 Sign In
+            </button>
+          </div>
+          <div className="trust-indicators">
+            <div className="trust-item">
+              <span className="trust-number">1,000+</span>
+              <span className="trust-label">Builders joined</span>
             </div>
-            <p className="cta-text">
-              Join a community of people who care about making a difference, not just making a profit.
-            </p>
-            <div className="cta-buttons">
-              <button className="btn btn-primary" onClick={handleSignUp}>
-                🚀 Get Started
-              </button>
-              <button className="btn btn-secondary" onClick={handleNavigateToLogin}>
-                🔑 Sign In
-              </button>
+            <div className="trust-item">
+              <span className="trust-number">500+</span>
+              <span className="trust-label">Projects launched</span>
             </div>
-            <div className="trust-indicators">
-              <div className="trust-item">
-                <span className="trust-number">1,000+</span>
-                <span className="trust-label">Builders joined</span>
-              </div>
-              <div className="trust-item">
-                <span className="trust-number">500+</span>
-                <span className="trust-label">Projects launched</span>
-              </div>
-              <div className="trust-item">
-                <span className="trust-number">98%</span>
-                <span className="trust-label">Success rate</span>
-              </div>
+            <div className="trust-item">
+              <span className="trust-number">98%</span>
+              <span className="trust-label">Success rate</span>
             </div>
           </div>
         </section>

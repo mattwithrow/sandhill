@@ -429,6 +429,200 @@ p {
 }
 
 /* ===============================================
+   SCROLL INDICATOR
+   =============================================== */
+
+.scroll-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-lg);
+}
+
+.scroll-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.scroll-arrow {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  animation: float 1.5s ease-in-out infinite;
+}
+
+/* ===============================================
+   TRUST INDICATORS
+   =============================================== */
+
+.trust-indicators {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+  margin-top: var(--space-lg);
+}
+
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.trust-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-orange);
+}
+
+.trust-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===============================================
+   FEATURE LISTS
+   =============================================== */
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-list li {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.8rem;
+  padding-left: 2.5rem;
+  position: relative;
+}
+
+.feature-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--primary-blue);
+  font-weight: bold;
+  font-size: 1.3rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===============================================
+   CONTENT BLOCKS
+   =============================================== */
+
+.content-block {
+  margin-bottom: var(--space-lg);
+}
+
+.content-block p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* ===============================================
+   IMAGE PLACEHOLDERS
+   =============================================== */
+
+.image-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.image-placeholder {
+  background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-lighter) 100%);
+  border: 2px dashed var(--bg-gray);
+  border-radius: var(--border-radius);
+  padding: var(--space-lg);
+  text-align: center;
+  transition: all 0.3s ease;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-placeholder:hover {
+  border-color: var(--primary-blue);
+  background: linear-gradient(135deg, var(--bg-lighter) 0%, var(--bg-gray) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.7;
+  animation: float 3s ease-in-out infinite;
+}
+
+.placeholder-content p {
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* ===============================================
+   CONTACT INFO
+   =============================================== */
+
+.contact-content p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 1.1rem;
+}
+
+.contact-item strong {
+  color: var(--text-primary);
+  min-width: 80px;
+}
+
+.contact-item a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-item a:hover {
+  color: var(--primary-purple);
+  text-decoration: underline;
+}
+
+/* ===============================================
    UTILITY CLASSES
    =============================================== */
 
@@ -509,6 +703,42 @@ p {
   .btn-large {
     width: 100%;
     max-width: 300px;
+  }
+
+  .trust-indicators {
+    gap: var(--space-lg);
+  }
+
+  .trust-number {
+    font-size: 1.5rem;
+  }
+
+  .image-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .image-placeholder {
+    min-height: 150px;
+    padding: var(--space-md);
+  }
+
+  .placeholder-icon {
+    font-size: 2.5rem;
+  }
+
+  .contact-info {
+    gap: 0.75rem;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .contact-item strong {
+    min-width: auto;
   }
 
   h1 { font-size: 2.5rem; }
