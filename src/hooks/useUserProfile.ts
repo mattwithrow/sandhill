@@ -37,10 +37,13 @@ export const useUserProfile = () => {
       if (profiles.length > 0) {
         setProfile(profiles[0]);
       } else {
+        // Get username from user attributes
+        const username = user?.signInDetails?.loginId || '';
+        
         // Create new profile if none exists
         const result = await client.models.UserProfile.create({
           userId: user?.userId || '',
-          username: user?.username || '',
+          username: username,
           userType: 'both',
           linkedinUrl: '',
           githubUrl: '',

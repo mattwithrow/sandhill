@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signUp } from 'aws-amplify/auth';
+import { signUp, signIn } from 'aws-amplify/auth';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
@@ -15,7 +15,6 @@ const CustomSignUp: React.FC = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuthenticator();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,13 +43,14 @@ const CustomSignUp: React.FC = () => {
     }
 
     try {
-      // Sign up the user
+      // Sign up the user with email as username and username as custom attribute
       const { isSignUpComplete, userId } = await signUp({
-        username: formData.username,
+        username: formData.email, // Use email as the username for login
         password: formData.password,
         options: {
           userAttributes: {
             email: formData.email,
+            username: formData.username, // Store username as custom attribute
           },
         },
       });
@@ -67,8 +67,8 @@ const CustomSignUp: React.FC = () => {
           projectDetails: '',
         });
 
-        // Sign in the user
-        await signIn({ username: formData.username, password: formData.password });
+        // Sign in the user with email
+        await signIn({ username: formData.email, password: formData.password });
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred during sign up');

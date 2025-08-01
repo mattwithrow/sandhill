@@ -72,7 +72,7 @@ UserProfile: {
 
 ### Username Support
 - **Username Field**: Users can create accounts with a unique username
-- **Flexible Login**: Users can sign in using either their username or email address
+- **Email Login**: Users sign in using their email address
 - **Profile Integration**: Username is automatically saved to user profile
 - **Custom UI**: Beautiful, responsive authentication forms
 
@@ -83,7 +83,7 @@ UserProfile: {
 4. User is signed in automatically after successful registration
 
 ### Sign In Process
-1. User can enter either username or email in the login field
+1. User enters their email address in the login field
 2. Password authentication
 3. Seamless transition to authenticated state
 

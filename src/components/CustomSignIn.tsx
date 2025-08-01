@@ -42,15 +42,15 @@ const CustomSignIn: React.FC = () => {
         <h2>Sign In</h2>
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="usernameOrEmail">Username or Email *</label>
+            <label htmlFor="usernameOrEmail">Email *</label>
             <input
-              type="text"
+              type="email"
               id="usernameOrEmail"
               name="usernameOrEmail"
               value={formData.usernameOrEmail}
               onChange={handleInputChange}
               required
-              placeholder="Enter your username or email"
+              placeholder="Enter your email"
               className="form-input"
             />
           </div>
