@@ -24,8 +24,8 @@ const Navigation: React.FC = () => {
   const authenticatedNavItems: NavItem[] = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Builders', path: '/builders' },
-    { name: 'Ideas', path: '/ideas' },
+    { name: 'Builders', path: '/builders', requiresAuth: true },
+    { name: 'Ideas', path: '/ideas', requiresAuth: true },
   ];
 
   const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems;
@@ -52,16 +52,23 @@ const Navigation: React.FC = () => {
 
         {/* Desktop Navigation */}
         <ul className="nav-menu">
-          {navItems.map((item) => (
-            <li key={item.name} className="nav-item">
-              <Link
-                to={item.path}
-                className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
-              >
-                <span>{item.name}</span>
-              </Link>
-            </li>
-          ))}
+          {navItems.map((item) => {
+            // Hide auth-required items if not authenticated
+            if (item.requiresAuth && !isAuthenticated) {
+              return null;
+            }
+
+            return (
+              <li key={item.name} className="nav-item">
+                <Link
+                  to={item.path}
+                  className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
+                >
+                  <span>{item.name}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         {/* Desktop Actions */}
@@ -93,21 +100,28 @@ const Navigation: React.FC = () => {
           {isMobileMenuOpen ? '✕' : '☰'}
         </button>
 
-        {/* Mobile Navigation Menu */}
-        <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
-          <ul className="nav-menu">
-            {navItems.map((item) => (
-              <li key={item.name} className="nav-item">
-                <Link
-                  to={item.path}
-                  className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
-                  onClick={closeMobileMenu}
-                >
-                  <span>{item.name}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  {/* Mobile Navigation Menu */}
+          <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+            <ul className="nav-menu">
+              {navItems.map((item) => {
+                // Hide auth-required items if not authenticated
+                if (item.requiresAuth && !isAuthenticated) {
+                  return null;
+                }
+
+                return (
+                  <li key={item.name} className="nav-item">
+                    <Link
+                      to={item.path}
+                      className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
+                      onClick={closeMobileMenu}
+                    >
+                      <span>{item.name}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
 
           {/* Mobile Actions */}
           <div className="nav-actions">
