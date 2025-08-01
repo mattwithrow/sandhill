@@ -15,8 +15,8 @@ const schema = a.schema({
   
   UserProfile: a
     .model({
-      userId: a.string().required(),
-      userType: a.enum(['builder', 'ideas', 'both']).required(),
+      userId: a.string(),
+      userType: a.enum(['builder', 'ideas', 'both']),
       linkedinUrl: a.string(),
       githubUrl: a.string(),
       portfolioUrl: a.string(),
@@ -24,7 +24,7 @@ const schema = a.schema({
     })
     .authorization((allow) => [
       allow.owner(), // Users can only access their own profile
-      allow.public().read(), // Anyone can read profiles (for discovery)
+      allow.publicApiKey().to(['read']), // Anyone can read profiles (for discovery)
     ]),
 });
 
@@ -37,10 +37,6 @@ export const data = defineData({
     // API Key is used for a.allow.public() rules
     apiKeyAuthorizationMode: {
       expiresInDays: 30,
-    },
-    // User Pool is used for a.allow.owner() rules
-    userPoolAuthorizationMode: {
-      userPoolId: "us-east-1_123456789", // This will be auto-generated
     },
   },
 });
