@@ -8,7 +8,6 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  /* TW:
   const { authStatus } = useAuthenticator();
   
   // Check if user is authenticated using Amplify auth
@@ -18,7 +17,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     // Redirect to login page if not authenticated
     return <Navigate to="/login" replace />;
   }
-  */
   return <>{children}</>;
 };
 
