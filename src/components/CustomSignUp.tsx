@@ -43,20 +43,19 @@ const CustomSignUp: React.FC = () => {
     }
 
     try {
-      // Sign up the user with email as username and username as custom attribute
+      // Sign up the user with email as username
       const { isSignUpComplete, userId } = await signUp({
         username: formData.email, // Use email as the username for login
         password: formData.password,
         options: {
           userAttributes: {
             email: formData.email,
-            username: formData.username, // Store username as custom attribute
           },
         },
       });
 
       if (isSignUpComplete && userId) {
-        // Create user profile
+        // Create user profile with the username
         await client.models.UserProfile.create({
           userId,
           username: formData.username,
