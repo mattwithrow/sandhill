@@ -1,21 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../amplify/data/resource";
+import type { Schema } from "../../amplify/data/resource";
 
 const client = generateClient<Schema>();
 
-interface UserProfile {
-  id?: string;
-  userId: string;
-  userType: 'builder' | 'ideas' | 'both';
-  linkedinUrl?: string;
-  githubUrl?: string;
-  portfolioUrl?: string;
-  projectDetails?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+type UserProfile = Schema["UserProfile"]["type"];
 
 export const useUserProfile = () => {
   const { user, authStatus } = useAuthenticator();
@@ -48,7 +38,7 @@ export const useUserProfile = () => {
         setProfile(profiles[0]);
       } else {
         // Create new profile if none exists
-        const newProfile = await client.models.UserProfile.create({
+        const result = await client.models.UserProfile.create({
           userId: user?.userId || '',
           userType: 'both',
           linkedinUrl: '',
@@ -56,7 +46,7 @@ export const useUserProfile = () => {
           portfolioUrl: '',
           projectDetails: ''
         });
-        setProfile(newProfile);
+        setProfile(result.data);
       }
     } catch (err) {
       console.error('Error loading/creating profile:', err);
@@ -72,12 +62,12 @@ export const useUserProfile = () => {
     }
 
     try {
-      const updatedProfile = await client.models.UserProfile.update({
+      const result = await client.models.UserProfile.update({
         id: profile.id,
         ...updates
       });
-      setProfile(updatedProfile);
-      return updatedProfile;
+      setProfile(result.data);
+      return result.data;
     } catch (err) {
       console.error('Error updating profile:', err);
       throw err;

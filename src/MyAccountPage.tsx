@@ -17,7 +17,7 @@ const MyAccountPage: React.FC = () => {
   useEffect(() => {
     if (profile) {
       setFormData({
-        userType: profile.userType,
+        userType: profile.userType || 'both',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
