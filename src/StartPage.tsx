@@ -31,14 +31,11 @@ const StartPage: React.FC = () => {
             <p className="hero-subtitle">
               You care about mission, not just metrics. You want to create with people who show up, follow through, and give a damn.
             </p>
-            <div className="cta-buttons">
-              <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-                🚀 Get Started
-              </button>
-              <button className="btn btn-outline btn-large" onClick={handleNavigateToAbout}>
-                📖 Learn More
-              </button>
-            </div>
+                         <div className="cta-buttons">
+               <button className="btn btn-primary btn-large" onClick={handleSignUp}>
+                 🚀 Sign Up
+               </button>
+             </div>
             <div className="scroll-indicator float">
               <span className="scroll-text">Scroll to explore</span>
               <div className="scroll-arrow">↓</div>
@@ -51,9 +48,9 @@ const StartPage: React.FC = () => {
           <div className="content-card">
             <div className="section-header">
               <div className="eyebrow">✨ A platform built for people with purpose.</div>
-              <h2 className="section-title">
-                We believe that when vision meets execution—and when values align—amazing things happen. Our platform brings together:
-              </h2>
+                             <h2 className="section-title">
+                 When vision meets execution and when values align, amazing things happen. Our platform brings together:
+               </h2>
             </div>
             <div className="grid-2">
               <div className="feature-card">
@@ -67,9 +64,7 @@ const StartPage: React.FC = () => {
                 <p>Skilled individuals ready to collaborate and help shape what's next</p>
               </div>
             </div>
-            <p className="text-center mb-xl" style={{fontSize: '1.3rem', fontWeight: '500'}}>
-              We help you find each other. We make it easy to start. And we give you the tools to build something real.
-            </p>
+            
           </div>
         </section>
 
@@ -119,14 +114,14 @@ const StartPage: React.FC = () => {
           <p className="cta-text">
             Join a community of people who care about making a difference, not just making a profit.
           </p>
-          <div className="cta-buttons">
-            <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-              🚀 Get Started
-            </button>
-            <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
-              🔑 Sign In
-            </button>
-          </div>
+                     <div className="cta-buttons">
+             <button className="btn btn-primary btn-large" onClick={handleSignUp}>
+               🚀 Sign Up
+             </button>
+             <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
+               🔑 Log In
+             </button>
+           </div>
           <div className="trust-indicators">
             <div className="trust-item">
               <span className="trust-number">1,000+</span>

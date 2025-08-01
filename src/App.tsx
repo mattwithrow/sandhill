@@ -9,6 +9,8 @@ import AboutPage from "./AboutPage";
 import StartPage from "./StartPage";
 import LoginPage from "./LoginPage";
 import AuthHomePage from "./AuthHomePage";
+import IdeasPage from "./IdeasPage";
+import BuildersPage from "./BuildersPage";
 
 //const client = generateClient<Schema>();
 
@@ -22,6 +24,8 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/start" element={<StartPage />} />
         <Route path="/auth_home" element={<AuthHomePage />} />
+        <Route path="/ideas" element={<IdeasPage />} />
+        <Route path="/builders" element={<BuildersPage />} />
       </Routes>
       </Layout>
     </BrowserRouter>
