@@ -11,12 +11,24 @@ const Navigation: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const location = useLocation();
 
-  const navItems: NavItem[] = [
+  // Check if user is authenticated (you can integrate with Amplify auth here)
+  const isAuthenticated = false; // Replace with actual auth check
+
+  // Version A: Unauthenticated navigation
+  const unauthenticatedNavItems: NavItem[] = [
     { name: 'Home', path: '/' },
-    { name: 'Start', path: '/start' },
     { name: 'About', path: '/about' },
-    { name: 'Dashboard', path: '/auth_home', requiresAuth: true },
   ];
+
+  // Version B: Authenticated navigation
+  const authenticatedNavItems: NavItem[] = [
+    { name: 'Home', path: '/' },
+    { name: 'About', path: '/about' },
+    { name: 'Builders', path: '/builders' },
+    { name: 'Ideas', path: '/ideas' },
+  ];
+
+  const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems;
 
   const isActiveRoute = (path: string): boolean => {
     return location.pathname === path;
@@ -30,9 +42,6 @@ const Navigation: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Check if user is authenticated (you can integrate with Amplify auth here)
-  const isAuthenticated = false; // Replace with actual auth check
-
   return (
     <nav className="nav-container">
       <div className="nav-wrapper">
@@ -43,23 +52,16 @@ const Navigation: React.FC = () => {
 
         {/* Desktop Navigation */}
         <ul className="nav-menu">
-          {navItems.map((item) => {
-            // Hide auth-required items if not authenticated
-            if (item.requiresAuth && !isAuthenticated) {
-              return null;
-            }
-
-            return (
-              <li key={item.name} className="nav-item">
-                <Link
-                  to={item.path}
-                  className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
-                >
-                  <span>{item.name}</span>
-                </Link>
-              </li>
-            );
-          })}
+          {navItems.map((item) => (
+            <li key={item.name} className="nav-item">
+              <Link
+                to={item.path}
+                className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
+              >
+                <span>{item.name}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
 
         {/* Desktop Actions */}
@@ -67,17 +69,14 @@ const Navigation: React.FC = () => {
           {!isAuthenticated ? (
             <>
               <Link to="/login" className="btn btn-secondary">
-                Sign In
+                Log In
               </Link>
               <Link to="/start" className="btn btn-primary">
-                Get Started
+                Sign Up
               </Link>
             </>
           ) : (
             <>
-              <Link to="/auth_home" className="btn btn-secondary">
-                Dashboard
-              </Link>
               <button className="btn btn-ghost" onClick={() => {/* Add logout logic */}}>
                 Sign Out
               </button>
@@ -97,24 +96,17 @@ const Navigation: React.FC = () => {
         {/* Mobile Navigation Menu */}
         <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
           <ul className="nav-menu">
-            {navItems.map((item) => {
-              // Hide auth-required items if not authenticated
-              if (item.requiresAuth && !isAuthenticated) {
-                return null;
-              }
-
-              return (
-                <li key={item.name} className="nav-item">
-                  <Link
-                    to={item.path}
-                    className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
-                    onClick={closeMobileMenu}
-                  >
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              );
-            })}
+            {navItems.map((item) => (
+              <li key={item.name} className="nav-item">
+                <Link
+                  to={item.path}
+                  className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
+                  onClick={closeMobileMenu}
+                >
+                  <span>{item.name}</span>
+                </Link>
+              </li>
+            ))}
           </ul>
 
           {/* Mobile Actions */}
@@ -126,25 +118,18 @@ const Navigation: React.FC = () => {
                   className="btn btn-secondary"
                   onClick={closeMobileMenu}
                 >
-                  Sign In
+                  Log In
                 </Link>
                 <Link 
                   to="/start" 
                   className="btn btn-primary"
                   onClick={closeMobileMenu}
                 >
-                  Get Started
+                  Sign Up
                 </Link>
               </>
             ) : (
               <>
-                <Link 
-                  to="/auth_home" 
-                  className="btn btn-secondary"
-                  onClick={closeMobileMenu}
-                >
-                  Dashboard
-                </Link>
                 <button 
                   className="btn btn-ghost" 
                   onClick={() => {
