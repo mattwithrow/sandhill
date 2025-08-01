@@ -11,6 +11,7 @@ import LoginPage from "./LoginPage";
 import AuthHomePage from "./AuthHomePage";
 import IdeasPage from "./IdeasPage";
 import BuildersPage from "./BuildersPage";
+import MyAccountPage from "./MyAccountPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 //const client = generateClient<Schema>();
@@ -25,6 +26,11 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/start" element={<StartPage />} />
         <Route path="/auth_home" element={<AuthHomePage />} />
+        <Route path="/my-account" element={
+          <ProtectedRoute>
+            <MyAccountPage />
+          </ProtectedRoute>
+        } />
         <Route path="/ideas" element={
           <ProtectedRoute>
             <IdeasPage />

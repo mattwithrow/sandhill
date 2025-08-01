@@ -95,6 +95,9 @@ const Navigation: React.FC = () => {
             </>
           ) : (
             <>
+              <Link to="/my-account" className="btn btn-secondary">
+                My Account
+              </Link>
               <button className="btn btn-ghost" onClick={handleSignOut}>
                 Sign Out
               </button>
@@ -155,6 +158,9 @@ const Navigation: React.FC = () => {
               </>
             ) : (
               <>
+                <Link to="/my-account" className="btn btn-secondary">
+                  My Account
+                </Link>
                 <button 
                   className="btn btn-ghost" 
                   onClick={handleSignOut}
