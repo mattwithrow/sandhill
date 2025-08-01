@@ -6,6 +6,7 @@ const MyAccountPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({
+    username: '',
     userType: 'both' as 'builder' | 'ideas' | 'both',
     linkedinUrl: '',
     githubUrl: '',
@@ -17,6 +18,7 @@ const MyAccountPage: React.FC = () => {
   useEffect(() => {
     if (profile) {
       setFormData({
+        username: profile.username || '',
         userType: profile.userType || 'both',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
@@ -35,6 +37,7 @@ const MyAccountPage: React.FC = () => {
 
     try {
       await updateProfile({
+        username: formData.username,
         userType: formData.userType,
         linkedinUrl: formData.linkedinUrl,
         githubUrl: formData.githubUrl,
@@ -108,6 +111,21 @@ const MyAccountPage: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Username */}
+          <div>
+            <label htmlFor="username" className="block text-lg font-medium text-gray-700 mb-2">
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={formData.username}
+              onChange={(e) => handleInputChange('username', e.target.value)}
+              placeholder="Your username"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
           {/* User Type Selection */}
           <div className="space-y-3">
             <label className="block text-lg font-medium text-gray-700">

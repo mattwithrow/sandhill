@@ -16,6 +16,7 @@ const schema = a.schema({
   UserProfile: a
     .model({
       userId: a.string(),
+      username: a.string(),
       userType: a.enum(['builder', 'ideas', 'both']),
       linkedinUrl: a.string(),
       githubUrl: a.string(),

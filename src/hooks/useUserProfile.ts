@@ -40,6 +40,7 @@ export const useUserProfile = () => {
         // Create new profile if none exists
         const result = await client.models.UserProfile.create({
           userId: user?.userId || '',
+          username: user?.username || '',
           userType: 'both',
           linkedinUrl: '',
           githubUrl: '',

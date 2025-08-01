@@ -13,6 +13,7 @@ The My Account functionality allows authenticated users to manage their profile 
 ### 2. User Profile Management
 - **Automatic Profile Creation**: A user profile is automatically created when a user signs up
 - **Profile Fields**:
+  - **Username**: Unique username for the user (required)
   - **User Type**: Radio buttons for "Builder", "Ideas", or "Both"
   - **Social Links**: 
     - LinkedIn URL
@@ -26,6 +27,7 @@ The My Account functionality allows authenticated users to manage their profile 
 ```typescript
 UserProfile: {
   userId: string (required)
+  username: string (required)
   userType: enum ['builder', 'ideas', 'both'] (required)
   linkedinUrl: string (optional)
   githubUrl: string (optional)
@@ -43,6 +45,9 @@ UserProfile: {
 2. **useUserProfile.ts**: Custom hook for profile state management
 3. **Updated Navigation.tsx**: Added My Account button
 4. **Updated App.tsx**: Added protected route for /my-account
+5. **CustomAuthenticator.tsx**: Custom authentication component with username support
+6. **CustomSignIn.tsx**: Sign-in component supporting username/email login
+7. **CustomSignUp.tsx**: Sign-up component with username field
 
 ### 4. User Experience
 - **Loading States**: Shows loading indicator while fetching profile
@@ -63,6 +68,25 @@ UserProfile: {
 4. **User Saves**: Profile is updated in the database
 5. **Profile Available**: Information can be used throughout the app
 
+## Authentication Features
+
+### Username Support
+- **Username Field**: Users can create accounts with a unique username
+- **Flexible Login**: Users can sign in using either their username or email address
+- **Profile Integration**: Username is automatically saved to user profile
+- **Custom UI**: Beautiful, responsive authentication forms
+
+### Sign Up Process
+1. User enters username, email, and password
+2. Account is created with username as the primary identifier
+3. User profile is automatically created with the username
+4. User is signed in automatically after successful registration
+
+### Sign In Process
+1. User can enter either username or email in the login field
+2. Password authentication
+3. Seamless transition to authenticated state
+
 ## Future Enhancements
 - Profile picture upload
 - Additional social media links
@@ -70,6 +94,8 @@ UserProfile: {
 - Project portfolio showcase
 - Connection requests between users
 - Profile visibility settings
+- Username uniqueness validation
+- Password reset functionality
 
 ## Technical Notes
 - Uses Amplify Data for database operations
