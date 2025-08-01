@@ -1,14 +1,17 @@
 // ProtectedRoute.tsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  // Check if user is authenticated (you can integrate with Amplify auth here)
-  const isAuthenticated = false; // Replace with actual auth check
+  const { authStatus } = useAuthenticator();
+  
+  // Check if user is authenticated using Amplify auth
+  const isAuthenticated = authStatus === 'authenticated';
 
   if (!isAuthenticated) {
     // Redirect to login page if not authenticated

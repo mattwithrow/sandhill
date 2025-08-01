@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 interface NavItem {
   name: string;
@@ -10,9 +11,10 @@ interface NavItem {
 const Navigation: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const location = useLocation();
+  const { authStatus, signOut } = useAuthenticator();
 
-  // Check if user is authenticated (you can integrate with Amplify auth here)
-  const isAuthenticated = false; // Replace with actual auth check
+  // Check if user is authenticated using Amplify auth
+  const isAuthenticated = authStatus === 'authenticated';
 
   // Version A: Unauthenticated navigation
   const unauthenticatedNavItems: NavItem[] = [
@@ -40,6 +42,15 @@ const Navigation: React.FC = () => {
 
   const closeMobileMenu = (): void => {
     setIsMobileMenuOpen(false);
+  };
+
+  const handleSignOut = async (): Promise<void> => {
+    try {
+      await signOut();
+      closeMobileMenu();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   return (
@@ -84,7 +95,7 @@ const Navigation: React.FC = () => {
             </>
           ) : (
             <>
-              <button className="btn btn-ghost" onClick={() => {/* Add logout logic */}}>
+              <button className="btn btn-ghost" onClick={handleSignOut}>
                 Sign Out
               </button>
             </>
@@ -146,10 +157,7 @@ const Navigation: React.FC = () => {
               <>
                 <button 
                   className="btn btn-ghost" 
-                  onClick={() => {
-                    /* Add logout logic */
-                    closeMobileMenu();
-                  }}
+                  onClick={handleSignOut}
                 >
                   Sign Out
                 </button>
