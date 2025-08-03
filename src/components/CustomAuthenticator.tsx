@@ -5,11 +5,12 @@ import CustomSignUp from './CustomSignUp';
 
 interface CustomAuthenticatorProps {
   children: React.ReactNode;
+  defaultSignUp?: boolean;
 }
 
-const CustomAuthenticator: React.FC<CustomAuthenticatorProps> = ({ children }) => {
+const CustomAuthenticator: React.FC<CustomAuthenticatorProps> = ({ children, defaultSignUp = false }) => {
   const { authStatus } = useAuthenticator();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(defaultSignUp);
 
   // If user is authenticated, render the children
   if (authStatus === 'authenticated') {

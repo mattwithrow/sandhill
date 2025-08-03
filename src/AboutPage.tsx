@@ -10,7 +10,7 @@ const AboutPage: React.FC = () => {
   };
 
   const handleNavigateToStart = () => {
-    navigate('/start');
+    navigate('/login?signup=true');
   };
 
   return (

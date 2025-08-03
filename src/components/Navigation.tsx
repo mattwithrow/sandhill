@@ -89,7 +89,7 @@ const Navigation: React.FC = () => {
               <Link to="/login" className="btn btn-secondary">
                 Log In
               </Link>
-              <Link to="/start" className="btn btn-primary">
+              <Link to="/login?signup=true" className="btn btn-primary">
                 Sign Up
               </Link>
             </>
@@ -149,7 +149,7 @@ const Navigation: React.FC = () => {
                   Log In
                 </Link>
                 <Link 
-                  to="/start" 
+                  to="/login?signup=true" 
                   className="btn btn-primary"
                   onClick={closeMobileMenu}
                 >

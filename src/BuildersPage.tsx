@@ -10,7 +10,7 @@ const BuildersPage: React.FC = () => {
   };
 
   const handleSignUp = () => {
-    navigate('/login'); // You can change this to a signup route when available
+    navigate('/login?signup=true');
   };
 
   return (
