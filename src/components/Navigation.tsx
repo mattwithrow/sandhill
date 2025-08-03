@@ -114,8 +114,8 @@ const Navigation: React.FC = () => {
           {isMobileMenuOpen ? '✕' : '☰'}
         </button>
 
-                  {/* Mobile Navigation Menu */}
-          <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+        {/* Mobile Navigation Menu */}
+        <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
             <ul className="nav-menu">
               {navItems.map((item) => {
                 // Hide auth-required items if not authenticated

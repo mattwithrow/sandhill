@@ -118,6 +118,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "username": {
+              "name": "username",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "userType": {
               "name": "userType",
               "isArray": false,
