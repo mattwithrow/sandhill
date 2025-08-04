@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useUserProfile } from './hooks/useUserProfile';
 
 const MyAccountPage: React.FC = () => {
-  const { profile, isLoading, error, updateProfile } = useUserProfile();
+  const { profile, isLoading, error, updateProfile, refreshProfile } = useUserProfile();
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     userType: 'both' as 'builder' | 'ideas' | 'both',
@@ -72,6 +73,7 @@ const MyAccountPage: React.FC = () => {
         projectDetails: formData.projectDetails
       });
       setMessage('Profile saved successfully!');
+      setIsEditing(false);
     } catch (error) {
       console.error('Error saving profile:', error);
       setMessage('Error saving profile. Please try again.');
@@ -104,6 +106,40 @@ const MyAccountPage: React.FC = () => {
     });
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+    setMessage('');
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setMessage('');
+    // Reset form data to current profile
+    if (profile) {
+      setFormData({
+        username: profile.username || '',
+        userType: profile.userType || 'both',
+        bio: profile.bio || '',
+        experience: profile.experience || '',
+        passions: profile.passions || '',
+        values: profile.values || '',
+        contributionGoals: profile.contributionGoals || '',
+        skills: profile.skills || '',
+        linkedinUrl: profile.linkedinUrl || '',
+        githubUrl: profile.githubUrl || '',
+        portfolioUrl: profile.portfolioUrl || '',
+        twitterUrl: profile.twitterUrl || '',
+        instagramUrl: profile.instagramUrl || '',
+        websiteUrl: profile.websiteUrl || '',
+        projectDetails: profile.projectDetails || ''
+      });
+    }
+  };
+
+  const handleRetry = () => {
+    refreshProfile();
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -121,7 +157,13 @@ const MyAccountPage: React.FC = () => {
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">My Account</h1>
           <div className="bg-red-100 text-red-700 p-4 rounded-lg border border-red-300">
-            {error}
+            <p className="mb-4">{error}</p>
+            <button
+              onClick={handleRetry}
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+            >
+              Try Again
+            </button>
           </div>
         </div>
       </div>
@@ -142,7 +184,17 @@ const MyAccountPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">My Account</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">My Account</h1>
+          {!isEditing && (
+            <button
+              onClick={handleEdit}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Edit Profile
+            </button>
+          )}
+        </div>
         
         {message && (
           <div className={`mb-6 p-4 rounded-lg ${
@@ -154,7 +206,8 @@ const MyAccountPage: React.FC = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {isEditing ? (
+          <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username */}
           <div>
             <label htmlFor="username" className="block text-lg font-medium text-gray-700 mb-2">
@@ -408,16 +461,134 @@ const MyAccountPage: React.FC = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="pt-4">
+          <div className="pt-4 flex space-x-4">
             <button
               type="submit"
               disabled={isSaving}
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSaving ? 'Saving...' : 'Save Profile'}
             </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
           </div>
         </form>
+        ) : (
+          <div className="space-y-6">
+            {/* Profile View */}
+            <div className="bg-white shadow rounded-lg p-6">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">Username</h3>
+                  <p className="text-gray-600">{profile?.username || 'Not set'}</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">I am a</h3>
+                  <p className="text-gray-600 capitalize">{profile?.userType || 'Not set'}</p>
+                </div>
+
+                {profile?.bio && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Bio</h3>
+                    <p className="text-gray-600">{profile.bio}</p>
+                  </div>
+                )}
+
+                {profile?.experience && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Experience</h3>
+                    <p className="text-gray-600">{profile.experience}</p>
+                  </div>
+                )}
+
+                {profile?.passions && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Passions</h3>
+                    <p className="text-gray-600">{profile.passions}</p>
+                  </div>
+                )}
+
+                {profile?.values && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Values</h3>
+                    <p className="text-gray-600">{profile.values}</p>
+                  </div>
+                )}
+
+                {profile?.contributionGoals && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">What I'm looking to contribute to</h3>
+                    <p className="text-gray-600">{profile.contributionGoals}</p>
+                  </div>
+                )}
+
+                {profile?.skills && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Skills</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {getSkillsArray(profile.skills).map((skill) => (
+                        <span key={skill} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {(profile?.linkedinUrl || profile?.githubUrl || profile?.portfolioUrl || profile?.twitterUrl || profile?.instagramUrl || profile?.websiteUrl) && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Social Links</h3>
+                    <div className="space-y-2">
+                      {profile.linkedinUrl && (
+                        <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 block">
+                          LinkedIn
+                        </a>
+                      )}
+                      {profile.githubUrl && (
+                        <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 block">
+                          GitHub
+                        </a>
+                      )}
+                      {profile.portfolioUrl && (
+                        <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 block">
+                          Portfolio
+                        </a>
+                      )}
+                      {profile.websiteUrl && (
+                        <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 block">
+                          Personal Website
+                        </a>
+                      )}
+                      {profile.twitterUrl && (
+                        <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 block">
+                          Twitter/X
+                        </a>
+                      )}
+                      {profile.instagramUrl && (
+                        <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 block">
+                          Instagram
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {profile?.projectDetails && (
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Project Details</h3>
+                    <p className="text-gray-600">{profile.projectDetails}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

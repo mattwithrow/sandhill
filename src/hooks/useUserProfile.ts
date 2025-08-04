@@ -27,6 +27,8 @@ export const useUserProfile = () => {
       setIsLoading(true);
       setError(null);
 
+      console.log('Loading profile for user:', user?.userId);
+
       // Try to load existing profile
       const { data: profiles } = await client.models.UserProfile.list({
         filter: {
@@ -34,9 +36,13 @@ export const useUserProfile = () => {
         }
       });
 
+      console.log('Found profiles:', profiles.length);
+
       if (profiles.length > 0) {
+        console.log('Using existing profile:', profiles[0]);
         setProfile(profiles[0]);
       } else {
+        console.log('Creating new profile for user:', user?.userId);
         // Get username from user attributes
         const username = user?.signInDetails?.loginId || '';
         
@@ -59,11 +65,12 @@ export const useUserProfile = () => {
           websiteUrl: '',
           projectDetails: ''
         });
+        console.log('Created new profile:', result.data);
         setProfile(result.data);
       }
     } catch (err) {
       console.error('Error loading/creating profile:', err);
-      setError('Failed to load profile');
+      setError(`Failed to load profile: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
