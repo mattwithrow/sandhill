@@ -73,7 +73,7 @@ const CustomSignIn: React.FC = () => {
   // Check if user is already authenticated
   useEffect(() => {
     if (authStatus === 'authenticated') {
-      navigate('/');
+      navigate('/my-account');
     }
   }, [authStatus, navigate]);
 
@@ -82,11 +82,18 @@ const CustomSignIn: React.FC = () => {
     if (signInSuccess) {
       // Small delay to show success state before redirect
       const timer = setTimeout(() => {
-        navigate('/');
+        navigate('/my-account');
       }, 1000);
       return () => clearTimeout(timer);
     }
   }, [signInSuccess, navigate]);
+
+  // Debug authentication state
+  useEffect(() => {
+    console.log('Auth status:', authStatus);
+    console.log('User:', user);
+    console.log('Is authenticated:', authStatus === 'authenticated');
+  }, [authStatus, user]);
 
   if (signInSuccess) {
     return (

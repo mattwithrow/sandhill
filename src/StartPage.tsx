@@ -8,6 +8,10 @@ const StartPage: React.FC = () => {
   const { authStatus } = useAuthenticator();
   const isAuthenticated = authStatus === 'authenticated';
 
+  // Debug authentication state in start page
+  console.log('StartPage - Auth status:', authStatus);
+  console.log('StartPage - Is authenticated:', isAuthenticated);
+
   const handleNavigateToAbout = () => {
     navigate('/about');
   };
