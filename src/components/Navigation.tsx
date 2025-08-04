@@ -83,7 +83,7 @@ const Navigation: React.FC = () => {
         </ul>
 
         {/* Desktop Actions */}
-        <div className="nav-actions">
+        <div className="nav-actions nav-actions-desktop">
           {!isAuthenticated ? (
             <>
               <Link to="/login" className="btn btn-secondary">
@@ -105,17 +105,31 @@ const Navigation: React.FC = () => {
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          className="nav-mobile-toggle"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle mobile menu"
-        >
-          {isMobileMenuOpen ? '✕' : '☰'}
-        </button>
+        {/* Mobile Menu Toggle with Dropdown */}
+        <div className="nav-mobile-container">
+          <button
+            className="nav-mobile-toggle"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+          >
+            ☰
+          </button>
 
-        {/* Mobile Navigation Menu */}
-        <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+          {/* Mobile Navigation Menu */}
+          {isMobileMenuOpen && (
+            <div className="nav-mobile-backdrop" onClick={closeMobileMenu}></div>
+          )}
+          <div className={`nav-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+            <div className="nav-mobile-header">
+              <div className="nav-mobile-brand">Sandhill</div>
+              <button
+                className="nav-mobile-close"
+                onClick={closeMobileMenu}
+                aria-label="Close mobile menu"
+              >
+                ✕
+              </button>
+            </div>
             <ul className="nav-menu">
               {navItems.map((item) => {
                 // Hide auth-required items if not authenticated
@@ -138,7 +152,7 @@ const Navigation: React.FC = () => {
             </ul>
 
           {/* Mobile Actions */}
-          <div className="nav-actions">
+          <div className="nav-actions nav-actions-mobile">
             {!isAuthenticated ? (
               <>
                 <Link 
@@ -170,6 +184,7 @@ const Navigation: React.FC = () => {
               </>
             )}
           </div>
+        </div>
         </div>
       </div>
     </nav>

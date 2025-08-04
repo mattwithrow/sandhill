@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signIn } from 'aws-amplify/auth';
+import { signIn, resetPassword } from 'aws-amplify/auth';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
 const CustomSignIn: React.FC = () => {
@@ -9,6 +9,10 @@ const CustomSignIn: React.FC = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
   const { signOut } = useAuthenticator();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +39,101 @@ const CustomSignIn: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const handleForgotPassword = () => {
+    setShowForgotPassword(true);
+    setResetEmail(formData.usernameOrEmail);
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setResetLoading(true);
+
+    try {
+      await resetPassword({ username: resetEmail });
+      setResetSuccess(true);
+    } catch (err: any) {
+      setError(err.message || 'Error sending reset email');
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  const handleBackToSignIn = () => {
+    setShowForgotPassword(false);
+    setResetSuccess(false);
+    setError('');
+  };
+
+  if (showForgotPassword) {
+    return (
+      <div className="auth-container">
+        <div className="auth-card">
+          <h2>Reset Password</h2>
+          {!resetSuccess ? (
+            <>
+              <p className="auth-text">
+                Enter your email address and we'll send you a link to reset your password.
+              </p>
+              <form onSubmit={handleResetPassword} className="auth-form">
+                <div className="form-group">
+                  <label htmlFor="resetEmail">Email *</label>
+                  <input
+                    type="email"
+                    id="resetEmail"
+                    name="resetEmail"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required
+                    placeholder="Enter your email"
+                    className="form-input"
+                  />
+                </div>
+
+                {error && <div className="error-message">{error}</div>}
+
+                <button 
+                  type="submit" 
+                  disabled={resetLoading}
+                  className="btn btn-primary btn-full"
+                >
+                  {resetLoading ? 'Sending...' : 'Send Reset Link'}
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <div className="success-message">
+                <p>✅ Reset link sent!</p>
+                <p>Check your email for instructions to reset your password.</p>
+                <div className="password-requirements">
+                  <p className="requirements-title">When creating your new password, remember it must contain:</p>
+                  <ul className="requirements-list">
+                    <li className="requirement-met">At least 8 characters</li>
+                    <li className="requirement-met">One uppercase letter</li>
+                    <li className="requirement-met">One lowercase letter</li>
+                    <li className="requirement-met">One number</li>
+                    <li className="requirement-met">One special character (!@#$%^&*(),.?":{}|&lt;&gt;)</li>
+                  </ul>
+                </div>
+              </div>
+            </>
+          )}
+          
+          <div className="auth-footer">
+            <button
+              type="button"
+              className="link-button"
+              onClick={handleBackToSignIn}
+            >
+              ← Back to Sign In
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-container">
@@ -67,6 +166,15 @@ const CustomSignIn: React.FC = () => {
               placeholder="Enter your password"
               className="form-input"
             />
+            <div className="form-helper">
+              <button
+                type="button"
+                className="link-button"
+                onClick={handleForgotPassword}
+              >
+                Forgot Password?
+              </button>
+            </div>
           </div>
 
           {error && <div className="error-message">{error}</div>}

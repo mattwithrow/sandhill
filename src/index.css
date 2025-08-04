@@ -75,6 +75,12 @@ a {
   --danger-color: #ef4444;
   --warning-color: #f59e0b;
   
+  /* Sandhill Brand Colors */
+  --primary-orange: #f6ad55;
+  --primary-teal: #38b2ac;
+  --accent-orange: #ed8936;
+  --accent-teal: #319795;
+  
   /* Backgrounds */
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
@@ -528,7 +534,7 @@ select:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f6ad55 0%, #38b2ac 100%);
   padding: var(--spacing-md);
 }
 
@@ -578,8 +584,8 @@ select:focus {
 }
 
 .auth-tab.active {
-  color: var(--primary-color);
-  border-bottom-color: var(--primary-color);
+  color: var(--primary-orange);
+  border-bottom-color: var(--primary-orange);
 }
 
 .auth-tab:hover:not(.active) {
@@ -632,8 +638,8 @@ select:focus {
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px rgba(246, 173, 85, 0.1);
 }
 
 .form-input::placeholder {
@@ -655,6 +661,78 @@ select:focus {
   border-radius: var(--border-radius);
   font-size: 0.875rem;
   text-align: center;
+}
+
+.success-message {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.form-helper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing-xs);
+}
+
+.password-requirements {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+}
+
+.requirements-title {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.875rem;
+}
+
+.requirements-list {
+  margin: 0;
+  padding-left: var(--spacing-md);
+  list-style: none;
+}
+
+.requirements-list li {
+  margin-bottom: var(--spacing-xs);
+  position: relative;
+  padding-left: var(--spacing-sm);
+}
+
+.requirements-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.requirement-met {
+  color: #059669;
+}
+
+.requirement-met::before {
+  background-color: #059669;
+}
+
+.requirement-unmet {
+  color: #6b7280;
+}
+
+.requirement-unmet::before {
+  background-color: #d1d5db;
 }
 
 .auth-footer {
@@ -681,7 +759,7 @@ select:focus {
 .link-button {
   background: none;
   border: none;
-  color: var(--primary-color);
+  color: var(--primary-orange);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -690,7 +768,7 @@ select:focus {
 }
 
 .link-button:hover {
-  color: var(--primary-hover);
+  color: var(--accent-orange);
 }
 
 /* Responsive adjustments for auth */

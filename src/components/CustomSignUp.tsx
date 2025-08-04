@@ -199,6 +199,26 @@ const CustomSignUp: React.FC = () => {
               placeholder="Create a password"
               className="form-input"
             />
+            <div className="password-requirements">
+              <p className="requirements-title">Password must contain:</p>
+              <ul className="requirements-list">
+                <li className={formData.password.length >= 8 ? 'requirement-met' : 'requirement-unmet'}>
+                  At least 8 characters
+                </li>
+                <li className={/[A-Z]/.test(formData.password) ? 'requirement-met' : 'requirement-unmet'}>
+                  One uppercase letter
+                </li>
+                <li className={/[a-z]/.test(formData.password) ? 'requirement-met' : 'requirement-unmet'}>
+                  One lowercase letter
+                </li>
+                <li className={/\d/.test(formData.password) ? 'requirement-met' : 'requirement-unmet'}>
+                  One number
+                </li>
+                <li className={/[!@#$%^&*(),.?":{}|<>]/.test(formData.password) ? 'requirement-met' : 'requirement-unmet'}>
+                  One special character (!@#$%^&*(),.?":{}|&lt;&gt;)
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div className="form-group">
