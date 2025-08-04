@@ -1,17 +1,27 @@
 // LoginPage.tsx
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 import CustomAuthenticator from './components/CustomAuthenticator';
-import AuthHomePage from './AuthHomePage';
 
 const LoginPage: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { authStatus } = useAuthenticator();
   const showSignUp = searchParams.get('signup') === 'true';
+
+  // Redirect authenticated users to My Account page
+  useEffect(() => {
+    if (authStatus === 'authenticated') {
+      console.log('LoginPage: User authenticated, redirecting to My Account');
+      navigate('/my-account');
+    }
+  }, [authStatus, navigate]);
 
   return (
     <React.StrictMode>
       <CustomAuthenticator defaultSignUp={showSignUp}>
-        <AuthHomePage />
+        <div>Loading...</div>
       </CustomAuthenticator>
     </React.StrictMode>
   );

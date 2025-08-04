@@ -14,7 +14,6 @@ const CustomSignIn: React.FC = () => {
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
-  const [signInSuccess, setSignInSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -33,7 +32,6 @@ const CustomSignIn: React.FC = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setSignInSuccess(false); // Reset success state
 
     try {
       console.log('Attempting sign in with:', formData.usernameOrEmail);
@@ -42,14 +40,12 @@ const CustomSignIn: React.FC = () => {
         password: formData.password 
       });
       
-      // If we get here, sign in was successful
       console.log('Sign in successful');
-      setSignInSuccess(true);
+      // The LoginPage will handle the redirect when authStatus changes
       
     } catch (err: any) {
       console.error('Sign in error:', err);
       setError(err.message || 'Invalid username/email or password');
-      setSignInSuccess(false);
     } finally {
       setLoading(false);
     }
@@ -83,48 +79,22 @@ const CustomSignIn: React.FC = () => {
 
   // Check if user is already authenticated
   useEffect(() => {
-    if (authStatus === 'authenticated') {
+    console.log('Auth status changed:', authStatus);
+    if (authStatus === 'authenticated' && user) {
       console.log('User already authenticated, redirecting to My Account');
       navigate('/my-account');
     }
-  }, [authStatus, navigate]);
-
-  // Handle successful sign-in
-  useEffect(() => {
-    if (signInSuccess) {
-      console.log('Sign in success detected, showing success message');
-      // Show success message for 2 seconds, then navigate
-      const timer = setTimeout(() => {
-        console.log('Navigating to My Account after success message');
-        setSignInSuccess(false);
-        navigate('/my-account');
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [signInSuccess, navigate]);
+  }, [authStatus, user, navigate]);
 
   // Debug authentication state
   useEffect(() => {
     console.log('CustomSignIn - Auth status:', authStatus);
-    console.log('CustomSignIn - Sign in success:', signInSuccess);
     console.log('CustomSignIn - User:', user);
-  }, [authStatus, signInSuccess, user]);
+  }, [authStatus, user]);
 
 
 
-  if (signInSuccess) {
-    return (
-      <div className="auth-container">
-        <div className="auth-card">
-          <h2>Sign In Successful!</h2>
-          <div className="success-message">
-            <p>✅ Welcome back!</p>
-            <p>Redirecting you to My Account...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   if (showForgotPassword) {
     return (
