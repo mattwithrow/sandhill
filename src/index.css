@@ -735,6 +735,33 @@ select:focus {
   background-color: #d1d5db;
 }
 
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: var(--primary-orange);
+}
+
+.password-toggle:focus {
+  outline: none;
+  color: var(--primary-orange);
+}
+
 .auth-footer {
   margin-top: var(--spacing-lg);
   text-align: center;

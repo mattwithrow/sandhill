@@ -16,9 +16,7 @@ const Navigation: React.FC = () => {
   // Check if user is authenticated using Amplify auth
   const isAuthenticated = authStatus === 'authenticated';
 
-  // Debug authentication state in navigation
-  console.log('Navigation - Auth status:', authStatus);
-  console.log('Navigation - Is authenticated:', isAuthenticated);
+
 
   // Version A: Unauthenticated navigation
   const unauthenticatedNavItems: NavItem[] = [

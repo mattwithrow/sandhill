@@ -15,6 +15,9 @@ const CustomSignIn: React.FC = () => {
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [signInSuccess, setSignInSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const { authStatus, user } = useAuthenticator();
   const navigate = useNavigate();
 
@@ -70,30 +73,26 @@ const CustomSignIn: React.FC = () => {
     setError('');
   };
 
-  // Check if user is already authenticated
+  // Check if user is already authenticated - only redirect if not in sign-in process
   useEffect(() => {
-    if (authStatus === 'authenticated') {
+    if (authStatus === 'authenticated' && !signInSuccess) {
       navigate('/my-account');
     }
-  }, [authStatus, navigate]);
+  }, [authStatus, navigate, signInSuccess]);
 
   // Handle successful sign-in
   useEffect(() => {
     if (signInSuccess) {
       // Small delay to show success state before redirect
       const timer = setTimeout(() => {
+        setSignInSuccess(false); // Reset the success state
         navigate('/my-account');
       }, 1000);
       return () => clearTimeout(timer);
     }
   }, [signInSuccess, navigate]);
 
-  // Debug authentication state
-  useEffect(() => {
-    console.log('Auth status:', authStatus);
-    console.log('User:', user);
-    console.log('Is authenticated:', authStatus === 'authenticated');
-  }, [authStatus, user]);
+
 
   if (signInSuccess) {
     return (
@@ -199,16 +198,26 @@ const CustomSignIn: React.FC = () => {
 
           <div className="form-group">
             <label htmlFor="password">Password *</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-              placeholder="Enter your password"
-              className="form-input"
-            />
+            <div className="password-input-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                placeholder="Enter your password"
+                className="form-input"
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "👁️" : "👁️‍🗨️"}
+              </button>
+            </div>
             <div className="form-helper">
               <button
                 type="button"
