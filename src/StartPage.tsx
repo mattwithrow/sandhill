@@ -1,9 +1,12 @@
 // StartPage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 const StartPage: React.FC = () => {
   const navigate = useNavigate();
+  const { authStatus } = useAuthenticator();
+  const isAuthenticated = authStatus === 'authenticated';
 
   const handleNavigateToAbout = () => {
     navigate('/about');
@@ -31,11 +34,22 @@ const StartPage: React.FC = () => {
             <p className="hero-subtitle">
               You care about mission, not just metrics. You want to create with people who show up, follow through, and give a damn.
             </p>
-                         <div className="cta-buttons">
-               <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-                 🚀 Sign Up
-               </button>
-             </div>
+            {!isAuthenticated ? (
+              <div className="cta-buttons">
+                <button className="btn btn-primary btn-large" onClick={handleSignUp}>
+                  🚀 Sign Up
+                </button>
+              </div>
+            ) : (
+              <div className="cta-buttons">
+                <button className="btn btn-primary btn-large" onClick={() => navigate('/ideas')}>
+                  💡 Browse Ideas
+                </button>
+                <button className="btn btn-outline btn-large" onClick={() => navigate('/builders')}>
+                  👥 Find Builders
+                </button>
+              </div>
+            )}
             <div className="scroll-indicator float">
               <span className="scroll-text">Scroll to explore</span>
               <div className="scroll-arrow">↓</div>
@@ -109,19 +123,35 @@ const StartPage: React.FC = () => {
         <section className="cta-section fade-in">
           <div className="section-header">
             <div className="feature-icon">⭐</div>
-            <h2 className="section-title">Ready to build what matters?</h2>
+            <h2 className="section-title">
+              {isAuthenticated ? 'Ready to start building?' : 'Ready to build what matters?'}
+            </h2>
           </div>
           <p className="cta-text">
-            Join a community of people who care about making a difference, not just making a profit.
+            {isAuthenticated 
+              ? 'Explore ideas, connect with builders, and start creating something meaningful.'
+              : 'Join a community of people who care about making a difference, not just making a profit.'
+            }
           </p>
-                     <div className="cta-buttons">
-             <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-               🚀 Sign Up
-             </button>
-             <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
-               🔑 Log In
-             </button>
-           </div>
+          {!isAuthenticated ? (
+            <div className="cta-buttons">
+              <button className="btn btn-primary btn-large" onClick={handleSignUp}>
+                🚀 Sign Up
+              </button>
+              <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
+                🔑 Log In
+              </button>
+            </div>
+          ) : (
+            <div className="cta-buttons">
+              <button className="btn btn-primary btn-large" onClick={() => navigate('/my-account')}>
+                👤 My Account
+              </button>
+              <button className="btn btn-outline btn-large" onClick={() => navigate('/ideas')}>
+                💡 Browse Ideas
+              </button>
+            </div>
+          )}
           <div className="trust-indicators">
             <div className="trust-item">
               <span className="trust-number">1,000+</span>

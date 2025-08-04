@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { signIn } from 'aws-amplify/auth';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
 const CustomSignIn: React.FC = () => {
@@ -9,7 +8,7 @@ const CustomSignIn: React.FC = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signOut } = useAuthenticator();
+  const { signIn, signOut } = useAuthenticator();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
