@@ -13,12 +13,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   // Check if user is authenticated using Amplify auth
   const isAuthenticated = authStatus === 'authenticated';
 
-
+  // Debug authentication state in protected route
+  console.log('ProtectedRoute - Auth status:', authStatus);
+  console.log('ProtectedRoute - Is authenticated:', isAuthenticated);
 
   if (!isAuthenticated) {
     // Redirect to login page if not authenticated
+    console.log('ProtectedRoute - Redirecting to login');
     return <Navigate to="/login" replace />;
   }
+  
+  console.log('ProtectedRoute - Rendering protected content');
   return <>{children}</>;
 };
 

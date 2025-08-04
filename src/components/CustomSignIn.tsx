@@ -35,11 +35,17 @@ const CustomSignIn: React.FC = () => {
     setLoading(true);
 
     try {
-      await signIn({ 
+      const result = await signIn({ 
         username: formData.usernameOrEmail, 
         password: formData.password 
       });
+      console.log('Sign in result:', result);
       setSignInSuccess(true);
+      
+      // Force navigation after successful sign-in
+      setTimeout(() => {
+        navigate('/my-account');
+      }, 2000);
     } catch (err: any) {
       setError(err.message || 'Invalid username/email or password');
     } finally {
@@ -87,10 +93,36 @@ const CustomSignIn: React.FC = () => {
       const timer = setTimeout(() => {
         setSignInSuccess(false); // Reset the success state
         navigate('/my-account');
-      }, 1000);
+      }, 1500); // Increased delay to ensure auth state is updated
       return () => clearTimeout(timer);
     }
   }, [signInSuccess, navigate]);
+
+  // Alternative: Check auth status after successful sign-in
+  useEffect(() => {
+    if (signInSuccess && authStatus === 'authenticated') {
+      const timer = setTimeout(() => {
+        setSignInSuccess(false);
+        navigate('/my-account');
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [signInSuccess, authStatus, navigate]);
+
+  // Debug authentication state
+  useEffect(() => {
+    console.log('CustomSignIn - Auth status:', authStatus);
+    console.log('CustomSignIn - Sign in success:', signInSuccess);
+    console.log('CustomSignIn - User:', user);
+  }, [authStatus, signInSuccess, user]);
+
+  // Force navigation when authenticated
+  useEffect(() => {
+    if (authStatus === 'authenticated') {
+      console.log('User is authenticated, navigating to My Account');
+      navigate('/my-account');
+    }
+  }, [authStatus, navigate]);
 
 
 
@@ -101,7 +133,7 @@ const CustomSignIn: React.FC = () => {
           <h2>Sign In Successful!</h2>
           <div className="success-message">
             <p>✅ Welcome back!</p>
-            <p>Redirecting you to the homepage...</p>
+            <p>Redirecting you to My Account...</p>
           </div>
         </div>
       </div>
