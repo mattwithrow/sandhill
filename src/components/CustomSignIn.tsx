@@ -33,21 +33,23 @@ const CustomSignIn: React.FC = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    setSignInSuccess(false); // Reset success state
 
     try {
-      const result = await signIn({ 
+      console.log('Attempting sign in with:', formData.usernameOrEmail);
+      await signIn({ 
         username: formData.usernameOrEmail, 
         password: formData.password 
       });
-      console.log('Sign in result:', result);
+      
+      // If we get here, sign in was successful
+      console.log('Sign in successful');
       setSignInSuccess(true);
       
-      // Force navigation after successful sign-in
-      setTimeout(() => {
-        navigate('/my-account');
-      }, 2000);
     } catch (err: any) {
+      console.error('Sign in error:', err);
       setError(err.message || 'Invalid username/email or password');
+      setSignInSuccess(false);
     } finally {
       setLoading(false);
     }
@@ -79,35 +81,27 @@ const CustomSignIn: React.FC = () => {
     setError('');
   };
 
-  // Check if user is already authenticated - only redirect if not in sign-in process
+  // Check if user is already authenticated
   useEffect(() => {
-    if (authStatus === 'authenticated' && !signInSuccess) {
+    if (authStatus === 'authenticated') {
+      console.log('User already authenticated, redirecting to My Account');
       navigate('/my-account');
     }
-  }, [authStatus, navigate, signInSuccess]);
+  }, [authStatus, navigate]);
 
   // Handle successful sign-in
   useEffect(() => {
     if (signInSuccess) {
-      // Small delay to show success state before redirect
+      console.log('Sign in success detected, showing success message');
+      // Show success message for 2 seconds, then navigate
       const timer = setTimeout(() => {
-        setSignInSuccess(false); // Reset the success state
+        console.log('Navigating to My Account after success message');
+        setSignInSuccess(false);
         navigate('/my-account');
-      }, 1500); // Increased delay to ensure auth state is updated
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [signInSuccess, navigate]);
-
-  // Alternative: Check auth status after successful sign-in
-  useEffect(() => {
-    if (signInSuccess && authStatus === 'authenticated') {
-      const timer = setTimeout(() => {
-        setSignInSuccess(false);
-        navigate('/my-account');
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [signInSuccess, authStatus, navigate]);
 
   // Debug authentication state
   useEffect(() => {
@@ -115,14 +109,6 @@ const CustomSignIn: React.FC = () => {
     console.log('CustomSignIn - Sign in success:', signInSuccess);
     console.log('CustomSignIn - User:', user);
   }, [authStatus, signInSuccess, user]);
-
-  // Force navigation when authenticated
-  useEffect(() => {
-    if (authStatus === 'authenticated') {
-      console.log('User is authenticated, navigating to My Account');
-      navigate('/my-account');
-    }
-  }, [authStatus, navigate]);
 
 
 
