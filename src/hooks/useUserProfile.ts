@@ -45,9 +45,18 @@ export const useUserProfile = () => {
           userId: user?.userId || '',
           username: username,
           userType: 'both',
+          bio: '',
+          experience: '',
+          passions: '',
+          values: '',
+          contributionGoals: '',
+          skills: [],
           linkedinUrl: '',
           githubUrl: '',
           portfolioUrl: '',
+          twitterUrl: '',
+          instagramUrl: '',
+          websiteUrl: '',
           projectDetails: ''
         });
         setProfile(result.data);

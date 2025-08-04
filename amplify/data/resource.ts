@@ -18,9 +18,18 @@ const schema = a.schema({
       userId: a.string(),
       username: a.string(),
       userType: a.enum(['builder', 'ideas', 'both']),
+      bio: a.string(),
+      experience: a.string(),
+      passions: a.string(),
+      values: a.string(),
+      contributionGoals: a.string(),
+      skills: a.list(a.string()),
       linkedinUrl: a.string(),
       githubUrl: a.string(),
       portfolioUrl: a.string(),
+      twitterUrl: a.string(),
+      instagramUrl: a.string(),
+      websiteUrl: a.string(),
       projectDetails: a.string(),
     })
     .authorization((allow) => [

@@ -8,9 +8,18 @@ const MyAccountPage: React.FC = () => {
   const [formData, setFormData] = useState({
     username: '',
     userType: 'both' as 'builder' | 'ideas' | 'both',
+    bio: '',
+    experience: '',
+    passions: '',
+    values: '',
+    contributionGoals: '',
+    skills: [] as string[],
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
+    twitterUrl: '',
+    instagramUrl: '',
+    websiteUrl: '',
     projectDetails: ''
   });
 
@@ -20,9 +29,18 @@ const MyAccountPage: React.FC = () => {
       setFormData({
         username: profile.username || '',
         userType: profile.userType || 'both',
+        bio: profile.bio || '',
+        experience: profile.experience || '',
+        passions: profile.passions || '',
+        values: profile.values || '',
+        contributionGoals: profile.contributionGoals || '',
+        skills: profile.skills || [],
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
+        twitterUrl: profile.twitterUrl || '',
+        instagramUrl: profile.instagramUrl || '',
+        websiteUrl: profile.websiteUrl || '',
         projectDetails: profile.projectDetails || ''
       });
     }
@@ -39,9 +57,18 @@ const MyAccountPage: React.FC = () => {
       await updateProfile({
         username: formData.username,
         userType: formData.userType,
+        bio: formData.bio,
+        experience: formData.experience,
+        passions: formData.passions,
+        values: formData.values,
+        contributionGoals: formData.contributionGoals,
+        skills: formData.skills,
         linkedinUrl: formData.linkedinUrl,
         githubUrl: formData.githubUrl,
         portfolioUrl: formData.portfolioUrl,
+        twitterUrl: formData.twitterUrl,
+        instagramUrl: formData.instagramUrl,
+        websiteUrl: formData.websiteUrl,
         projectDetails: formData.projectDetails
       });
       setMessage('Profile saved successfully!');
@@ -57,6 +84,15 @@ const MyAccountPage: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       [field]: value
+    }));
+  };
+
+  const handleSkillToggle = (skill: string) => {
+    setFormData(prev => ({
+      ...prev,
+      skills: prev.skills.includes(skill)
+        ? prev.skills.filter(s => s !== skill)
+        : [...prev.skills, skill]
     }));
   };
 
@@ -152,50 +188,199 @@ const MyAccountPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Bio */}
+          <div>
+            <label htmlFor="bio" className="block text-lg font-medium text-gray-700 mb-2">
+              Bio
+            </label>
+            <textarea
+              id="bio"
+              value={formData.bio}
+              onChange={(e) => handleInputChange('bio', e.target.value)}
+              placeholder="Tell us about yourself..."
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            />
+          </div>
+
+          {/* Experience */}
+          <div>
+            <label htmlFor="experience" className="block text-lg font-medium text-gray-700 mb-2">
+              Experience
+            </label>
+            <textarea
+              id="experience"
+              value={formData.experience}
+              onChange={(e) => handleInputChange('experience', e.target.value)}
+              placeholder="What's your background and experience?"
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            />
+          </div>
+
+          {/* Passions */}
+          <div>
+            <label htmlFor="passions" className="block text-lg font-medium text-gray-700 mb-2">
+              Passions
+            </label>
+            <textarea
+              id="passions"
+              value={formData.passions}
+              onChange={(e) => handleInputChange('passions', e.target.value)}
+              placeholder="What are you passionate about?"
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            />
+          </div>
+
+          {/* Values */}
+          <div>
+            <label htmlFor="values" className="block text-lg font-medium text-gray-700 mb-2">
+              Values
+            </label>
+            <textarea
+              id="values"
+              value={formData.values}
+              onChange={(e) => handleInputChange('values', e.target.value)}
+              placeholder="What values are important to you?"
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            />
+          </div>
+
+          {/* Contribution Goals */}
+          <div>
+            <label htmlFor="contributionGoals" className="block text-lg font-medium text-gray-700 mb-2">
+              What are you looking to contribute to?
+            </label>
+            <textarea
+              id="contributionGoals"
+              value={formData.contributionGoals}
+              onChange={(e) => handleInputChange('contributionGoals', e.target.value)}
+              placeholder="What type of projects or causes do you want to contribute to?"
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            />
+          </div>
+
+          {/* Skills */}
+          <div>
+            <label className="block text-lg font-medium text-gray-700 mb-3">
+              Skills (Select all that apply)
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {[
+                'JavaScript', 'TypeScript', 'React', 'Vue', 'Angular', 'Node.js',
+                'Python', 'Java', 'C#', 'PHP', 'Ruby', 'Go', 'Rust',
+                'UX Design', 'UI Design', 'CX Design', 'Graphic Design',
+                'Frontend Development', 'Backend Development', 'Full Stack',
+                'Mobile Development', 'DevOps', 'Cloud Computing',
+                'Data Science', 'Machine Learning', 'AI', 'Blockchain',
+                'Product Management', 'Project Management', 'Marketing',
+                'Content Creation', 'Video Production', 'Photography',
+                'Writing', 'Editing', 'Research', 'Strategy'
+              ].map((skill) => (
+                <label key={skill} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.skills.includes(skill)}
+                    onChange={() => handleSkillToggle(skill)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <span className="text-sm text-gray-700">{skill}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
           {/* Social Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-700">Social Links</h3>
             
-            <div>
-              <label htmlFor="linkedinUrl" className="block text-sm font-medium text-gray-700 mb-1">
-                LinkedIn URL
-              </label>
-              <input
-                type="url"
-                id="linkedinUrl"
-                value={formData.linkedinUrl}
-                onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
-                placeholder="https://linkedin.com/in/yourprofile"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="linkedinUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  LinkedIn URL
+                </label>
+                <input
+                  type="url"
+                  id="linkedinUrl"
+                  value={formData.linkedinUrl}
+                  onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
+                  placeholder="https://linkedin.com/in/yourprofile"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="githubUrl" className="block text-sm font-medium text-gray-700 mb-1">
-                GitHub URL
-              </label>
-              <input
-                type="url"
-                id="githubUrl"
-                value={formData.githubUrl}
-                onChange={(e) => handleInputChange('githubUrl', e.target.value)}
-                placeholder="https://github.com/yourusername"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+              <div>
+                <label htmlFor="githubUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  GitHub URL
+                </label>
+                <input
+                  type="url"
+                  id="githubUrl"
+                  value={formData.githubUrl}
+                  onChange={(e) => handleInputChange('githubUrl', e.target.value)}
+                  placeholder="https://github.com/yourusername"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
 
-            <div>
-              <label htmlFor="portfolioUrl" className="block text-sm font-medium text-gray-700 mb-1">
-                Portfolio URL
-              </label>
-              <input
-                type="url"
-                id="portfolioUrl"
-                value={formData.portfolioUrl}
-                onChange={(e) => handleInputChange('portfolioUrl', e.target.value)}
-                placeholder="https://yourportfolio.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+              <div>
+                <label htmlFor="portfolioUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Portfolio URL
+                </label>
+                <input
+                  type="url"
+                  id="portfolioUrl"
+                  value={formData.portfolioUrl}
+                  onChange={(e) => handleInputChange('portfolioUrl', e.target.value)}
+                  placeholder="https://yourportfolio.com"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="websiteUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Personal Website
+                </label>
+                <input
+                  type="url"
+                  id="websiteUrl"
+                  value={formData.websiteUrl}
+                  onChange={(e) => handleInputChange('websiteUrl', e.target.value)}
+                  placeholder="https://yourwebsite.com"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="twitterUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Twitter/X URL
+                </label>
+                <input
+                  type="url"
+                  id="twitterUrl"
+                  value={formData.twitterUrl}
+                  onChange={(e) => handleInputChange('twitterUrl', e.target.value)}
+                  placeholder="https://twitter.com/yourusername"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="instagramUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Instagram URL
+                </label>
+                <input
+                  type="url"
+                  id="instagramUrl"
+                  value={formData.instagramUrl}
+                  onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
+                  placeholder="https://instagram.com/yourusername"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
             </div>
           </div>
 
