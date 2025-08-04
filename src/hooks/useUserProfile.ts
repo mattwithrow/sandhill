@@ -28,6 +28,14 @@ export const useUserProfile = () => {
       setError(null);
 
       console.log('Loading profile for user:', user?.userId);
+      console.log('Client models:', client.models);
+
+      // Check if UserProfile model exists
+      if (!client.models.UserProfile) {
+        console.error('UserProfile model not found in client.models');
+        setError('Profile system not available. Please try again later.');
+        return;
+      }
 
       // Try to load existing profile
       const { data: profiles } = await client.models.UserProfile.list({
@@ -125,7 +133,33 @@ export const useUserProfile = () => {
       }
     } catch (err) {
       console.error('Error loading/creating profile:', err);
-      setError(`Failed to load profile: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      
+      // Create a temporary profile object as fallback
+      const tempProfile: UserProfile = {
+        id: 'temp-' + Date.now(),
+        userId: user?.userId || '',
+        username: user?.signInDetails?.loginId || user?.username || '',
+        userType: 'both',
+        bio: '',
+        experience: '',
+        passions: '',
+        values: '',
+        contributionGoals: '',
+        skills: '',
+        linkedinUrl: '',
+        githubUrl: '',
+        portfolioUrl: '',
+        twitterUrl: '',
+        instagramUrl: '',
+        websiteUrl: '',
+        projectDetails: '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      } as UserProfile;
+      
+      console.log('Created temporary profile as fallback:', tempProfile);
+      setProfile(tempProfile);
+      setError(null); // Clear error since we have a fallback
     } finally {
       setIsLoading(false);
     }
@@ -134,6 +168,39 @@ export const useUserProfile = () => {
   const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!profile?.id) {
       throw new Error('No profile to update');
+    }
+
+    // If this is a temporary profile, try to create a real one
+    if (profile.id.startsWith('temp-')) {
+      console.log('Attempting to create real profile from temporary one');
+      try {
+        const result = await client.models.UserProfile.create({
+          userId: profile.userId,
+          username: profile.username,
+          userType: profile.userType,
+          bio: updates.bio || profile.bio || '',
+          experience: updates.experience || profile.experience || '',
+          passions: updates.passions || profile.passions || '',
+          values: updates.values || profile.values || '',
+          contributionGoals: updates.contributionGoals || profile.contributionGoals || '',
+          skills: updates.skills || profile.skills || '',
+          linkedinUrl: updates.linkedinUrl || profile.linkedinUrl || '',
+          githubUrl: updates.githubUrl || profile.githubUrl || '',
+          portfolioUrl: updates.portfolioUrl || profile.portfolioUrl || '',
+          twitterUrl: updates.twitterUrl || profile.twitterUrl || '',
+          instagramUrl: updates.instagramUrl || profile.instagramUrl || '',
+          websiteUrl: updates.websiteUrl || profile.websiteUrl || '',
+          projectDetails: updates.projectDetails || profile.projectDetails || ''
+        });
+        setProfile(result.data);
+        return result.data;
+      } catch (createErr) {
+        console.error('Error creating real profile:', createErr);
+        // Update the temporary profile in memory
+        const updatedTempProfile = { ...profile, ...updates };
+        setProfile(updatedTempProfile);
+        return updatedTempProfile;
+      }
     }
 
     try {

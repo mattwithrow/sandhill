@@ -163,12 +163,20 @@ const MyAccountPage: React.FC = () => {
           <h1 className="text-3xl font-bold mb-8">My Account</h1>
           <div className="bg-red-100 text-red-700 p-4 rounded-lg border border-red-300">
             <p className="mb-4">{error}</p>
-            <button
-              onClick={handleRetry}
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-            >
-              Try Again
-            </button>
+            <div className="flex space-x-4">
+              <button
+                onClick={handleRetry}
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+              >
+                Try Again
+              </button>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Create Profile Anyway
+              </button>
+            </div>
           </div>
         </div>
       </div>
