@@ -40,33 +40,88 @@ export const useUserProfile = () => {
 
       if (profiles.length > 0) {
         console.log('Using existing profile:', profiles[0]);
-        setProfile(profiles[0]);
+        // Ensure the profile has all required fields
+        const existingProfile = profiles[0];
+        const updatedProfile = {
+          ...existingProfile,
+          bio: existingProfile.bio || '',
+          experience: existingProfile.experience || '',
+          passions: existingProfile.passions || '',
+          values: existingProfile.values || '',
+          contributionGoals: existingProfile.contributionGoals || '',
+          skills: existingProfile.skills || '',
+          linkedinUrl: existingProfile.linkedinUrl || '',
+          githubUrl: existingProfile.githubUrl || '',
+          portfolioUrl: existingProfile.portfolioUrl || '',
+          twitterUrl: existingProfile.twitterUrl || '',
+          instagramUrl: existingProfile.instagramUrl || '',
+          websiteUrl: existingProfile.websiteUrl || '',
+          projectDetails: existingProfile.projectDetails || ''
+        };
+        setProfile(updatedProfile);
       } else {
         console.log('Creating new profile for user:', user?.userId);
         // Get username from user attributes
-        const username = user?.signInDetails?.loginId || '';
+        const username = user?.signInDetails?.loginId || user?.username || '';
         
         // Create new profile if none exists
-        const result = await client.models.UserProfile.create({
-          userId: user?.userId || '',
-          username: username,
-          userType: 'both',
-          bio: '',
-          experience: '',
-          passions: '',
-          values: '',
-          contributionGoals: '',
-          skills: '',
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          twitterUrl: '',
-          instagramUrl: '',
-          websiteUrl: '',
-          projectDetails: ''
-        });
-        console.log('Created new profile:', result.data);
-        setProfile(result.data);
+        try {
+          const result = await client.models.UserProfile.create({
+            userId: user?.userId || '',
+            username: username,
+            userType: 'both',
+            bio: '',
+            experience: '',
+            passions: '',
+            values: '',
+            contributionGoals: '',
+            skills: '',
+            linkedinUrl: '',
+            githubUrl: '',
+            portfolioUrl: '',
+            twitterUrl: '',
+            instagramUrl: '',
+            websiteUrl: '',
+            projectDetails: ''
+          });
+          console.log('Created new profile:', result.data);
+          setProfile(result.data);
+        } catch (createError) {
+          console.error('Error creating profile with all fields:', createError);
+          
+          // Try creating a minimal profile as fallback
+          try {
+            console.log('Attempting to create minimal profile...');
+            const minimalResult = await client.models.UserProfile.create({
+              userId: user?.userId || '',
+              username: username,
+              userType: 'both',
+              linkedinUrl: '',
+              githubUrl: '',
+              portfolioUrl: '',
+              projectDetails: ''
+            });
+            console.log('Created minimal profile:', minimalResult.data);
+            
+                         // Add the new fields as empty strings
+             const fullProfile: UserProfile = {
+               ...minimalResult.data,
+               bio: '',
+               experience: '',
+               passions: '',
+               values: '',
+               contributionGoals: '',
+               skills: '',
+               twitterUrl: '',
+               instagramUrl: '',
+               websiteUrl: ''
+             } as UserProfile;
+             setProfile(fullProfile);
+          } catch (minimalError) {
+            console.error('Error creating minimal profile:', minimalError);
+            throw createError; // Throw the original error
+          }
+        }
       }
     } catch (err) {
       console.error('Error loading/creating profile:', err);

@@ -49,29 +49,34 @@ const MyAccountPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!profile) return;
 
     setIsSaving(true);
     setMessage('');
 
     try {
-      await updateProfile({
-        username: formData.username,
-        userType: formData.userType,
-        bio: formData.bio,
-        experience: formData.experience,
-        passions: formData.passions,
-        values: formData.values,
-        contributionGoals: formData.contributionGoals,
-        skills: formData.skills,
-        linkedinUrl: formData.linkedinUrl,
-        githubUrl: formData.githubUrl,
-        portfolioUrl: formData.portfolioUrl,
-        twitterUrl: formData.twitterUrl,
-        instagramUrl: formData.instagramUrl,
-        websiteUrl: formData.websiteUrl,
-        projectDetails: formData.projectDetails
-      });
+      if (profile) {
+        // Update existing profile
+        await updateProfile({
+          username: formData.username,
+          userType: formData.userType,
+          bio: formData.bio,
+          experience: formData.experience,
+          passions: formData.passions,
+          values: formData.values,
+          contributionGoals: formData.contributionGoals,
+          skills: formData.skills,
+          linkedinUrl: formData.linkedinUrl,
+          githubUrl: formData.githubUrl,
+          portfolioUrl: formData.portfolioUrl,
+          twitterUrl: formData.twitterUrl,
+          instagramUrl: formData.instagramUrl,
+          websiteUrl: formData.websiteUrl,
+          projectDetails: formData.projectDetails
+        });
+      } else {
+        // Create new profile
+        await refreshProfile();
+      }
       setMessage('Profile saved successfully!');
       setIsEditing(false);
     } catch (error) {
@@ -175,7 +180,18 @@ const MyAccountPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">My Account</h1>
-          <div className="text-center">No profile found.</div>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h3 className="text-lg font-medium text-yellow-800 mb-2">Profile Setup Required</h3>
+            <p className="text-yellow-700 mb-4">
+              We need to set up your profile. This will help you connect with other builders and ideas.
+            </p>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Set Up Profile
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -208,6 +224,13 @@ const MyAccountPage: React.FC = () => {
 
         {isEditing ? (
           <form onSubmit={handleSubmit} className="space-y-6">
+            {!profile && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p className="text-blue-800">
+                  Creating your profile... Please fill out the information below.
+                </p>
+              </div>
+            )}
           {/* Username */}
           <div>
             <label htmlFor="username" className="block text-lg font-medium text-gray-700 mb-2">
