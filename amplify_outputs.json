@@ -134,6 +134,48 @@
               "isRequired": false,
               "attributes": []
             },
+            "bio": {
+              "name": "bio",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "experience": {
+              "name": "experience",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "passions": {
+              "name": "passions",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "values": {
+              "name": "values",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "contributionGoals": {
+              "name": "contributionGoals",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "skills": {
+              "name": "skills",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "linkedinUrl": {
               "name": "linkedinUrl",
               "isArray": false,
@@ -150,6 +192,27 @@
             },
             "portfolioUrl": {
               "name": "portfolioUrl",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "twitterUrl": {
+              "name": "twitterUrl",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "instagramUrl": {
+              "name": "instagramUrl",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "websiteUrl": {
+              "name": "websiteUrl",
               "isArray": false,
               "type": "String",
               "isRequired": false,

@@ -50,7 +50,7 @@ export const useUserProfile = () => {
           passions: '',
           values: '',
           contributionGoals: '',
-          skills: [],
+          skills: '',
           linkedinUrl: '',
           githubUrl: '',
           portfolioUrl: '',

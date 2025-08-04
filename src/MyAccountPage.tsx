@@ -13,7 +13,7 @@ const MyAccountPage: React.FC = () => {
     passions: '',
     values: '',
     contributionGoals: '',
-    skills: [] as string[],
+    skills: '',
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
@@ -34,7 +34,7 @@ const MyAccountPage: React.FC = () => {
         passions: profile.passions || '',
         values: profile.values || '',
         contributionGoals: profile.contributionGoals || '',
-        skills: profile.skills || [],
+        skills: profile.skills || '',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
@@ -87,13 +87,21 @@ const MyAccountPage: React.FC = () => {
     }));
   };
 
+  const getSkillsArray = (skillsString: string): string[] => {
+    return skillsString ? skillsString.split(',').map(s => s.trim()).filter(s => s) : [];
+  };
+
   const handleSkillToggle = (skill: string) => {
-    setFormData(prev => ({
-      ...prev,
-      skills: prev.skills.includes(skill)
-        ? prev.skills.filter(s => s !== skill)
-        : [...prev.skills, skill]
-    }));
+    setFormData(prev => {
+      const currentSkills = getSkillsArray(prev.skills);
+      const newSkills = currentSkills.includes(skill)
+        ? currentSkills.filter(s => s !== skill)
+        : [...currentSkills, skill];
+      return {
+        ...prev,
+        skills: newSkills.join(', ')
+      };
+    });
   };
 
   if (isLoading) {
@@ -280,15 +288,15 @@ const MyAccountPage: React.FC = () => {
                 'Content Creation', 'Video Production', 'Photography',
                 'Writing', 'Editing', 'Research', 'Strategy'
               ].map((skill) => (
-                <label key={skill} className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.skills.includes(skill)}
-                    onChange={() => handleSkillToggle(skill)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <span className="text-sm text-gray-700">{skill}</span>
-                </label>
+                                 <label key={skill} className="flex items-center space-x-2 cursor-pointer">
+                   <input
+                     type="checkbox"
+                     checked={getSkillsArray(formData.skills).includes(skill)}
+                     onChange={() => handleSkillToggle(skill)}
+                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                   />
+                   <span className="text-sm text-gray-700">{skill}</span>
+                 </label>
               ))}
             </div>
           </div>

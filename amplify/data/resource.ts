@@ -23,7 +23,7 @@ const schema = a.schema({
       passions: a.string(),
       values: a.string(),
       contributionGoals: a.string(),
-      skills: a.list(a.string()),
+      skills: a.string(),
       linkedinUrl: a.string(),
       githubUrl: a.string(),
       portfolioUrl: a.string(),
