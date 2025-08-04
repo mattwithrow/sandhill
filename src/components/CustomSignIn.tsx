@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signIn, resetPassword } from 'aws-amplify/auth';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { useNavigate } from 'react-router-dom';
 
 const CustomSignIn: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,9 @@ const CustomSignIn: React.FC = () => {
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
-  const { signOut } = useAuthenticator();
+  const [signInSuccess, setSignInSuccess] = useState(false);
+  const { authStatus, user } = useAuthenticator();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,6 +36,7 @@ const CustomSignIn: React.FC = () => {
         username: formData.usernameOrEmail, 
         password: formData.password 
       });
+      setSignInSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Invalid username/email or password');
     } finally {
@@ -65,6 +69,38 @@ const CustomSignIn: React.FC = () => {
     setResetSuccess(false);
     setError('');
   };
+
+  // Check if user is already authenticated
+  useEffect(() => {
+    if (authStatus === 'authenticated') {
+      navigate('/');
+    }
+  }, [authStatus, navigate]);
+
+  // Handle successful sign-in
+  useEffect(() => {
+    if (signInSuccess) {
+      // Small delay to show success state before redirect
+      const timer = setTimeout(() => {
+        navigate('/');
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [signInSuccess, navigate]);
+
+  if (signInSuccess) {
+    return (
+      <div className="auth-container">
+        <div className="auth-card">
+          <h2>Sign In Successful!</h2>
+          <div className="success-message">
+            <p>✅ Welcome back!</p>
+            <p>Redirecting you to the homepage...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (showForgotPassword) {
     return (
