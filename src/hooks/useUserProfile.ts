@@ -14,10 +14,22 @@ export const useUserProfile = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('useUserProfile - Auth status:', authStatus);
+    console.log('useUserProfile - User:', user);
+    console.log('useUserProfile - User ID:', user?.userId);
+    
     if (authStatus === 'authenticated' && user?.userId) {
+      console.log('useUserProfile - Loading profile...');
       loadOrCreateProfile();
     } else if (authStatus === 'unauthenticated') {
+      console.log('useUserProfile - User unauthenticated, clearing profile');
       setProfile(null);
+      setIsLoading(false);
+    } else if (authStatus === 'authenticated' && !user?.userId) {
+      console.log('useUserProfile - Authenticated but no user ID, waiting...');
+      // Don't set loading to false yet, wait for user ID
+    } else {
+      console.log('useUserProfile - Other auth status, setting loading to false');
       setIsLoading(false);
     }
   }, [authStatus, user?.userId]);
