@@ -24,28 +24,6 @@ const MyAccountPage: React.FC = () => {
     projectDetails: ''
   });
 
-  // Initialize form data immediately
-  useEffect(() => {
-    console.log('Component mounted, initializing form data');
-    setFormData({
-      username: '',
-      userType: 'both',
-      bio: '',
-      experience: '',
-      passions: '',
-      values: '',
-      contributionGoals: '',
-      skills: '',
-      linkedinUrl: '',
-      githubUrl: '',
-      portfolioUrl: '',
-      twitterUrl: '',
-      instagramUrl: '',
-      websiteUrl: '',
-      projectDetails: ''
-    });
-  }, []);
-
   // Update form data when profile loads or when editing starts
   useEffect(() => {
     if (profile) {
@@ -95,35 +73,50 @@ const MyAccountPage: React.FC = () => {
     console.log('Form data changed:', formData);
   }, [formData]);
 
+  // Refresh profile data when component mounts
+  useEffect(() => {
+    if (!isLoading && profile) {
+      console.log('Refreshing profile data on component mount');
+      refreshProfile();
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
     setMessage('');
 
     try {
-      if (profile) {
-        await updateProfile({
-          username: formData.username,
-          userType: formData.userType,
-          bio: formData.bio,
-          experience: formData.experience,
-          passions: formData.passions,
-          values: formData.values,
-          contributionGoals: formData.contributionGoals,
-          skills: formData.skills,
-          linkedinUrl: formData.linkedinUrl,
-          githubUrl: formData.githubUrl,
-          portfolioUrl: formData.portfolioUrl,
-          twitterUrl: formData.twitterUrl,
-          instagramUrl: formData.instagramUrl,
-          websiteUrl: formData.websiteUrl,
-          projectDetails: formData.projectDetails
-        });
-      } else {
-        await refreshProfile();
-      }
+      console.log('Submitting form data:', formData);
+      const updatedProfile = await updateProfile({
+        username: formData.username,
+        userType: formData.userType,
+        bio: formData.bio,
+        experience: formData.experience,
+        passions: formData.passions,
+        values: formData.values,
+        contributionGoals: formData.contributionGoals,
+        skills: formData.skills,
+        linkedinUrl: formData.linkedinUrl,
+        githubUrl: formData.githubUrl,
+        portfolioUrl: formData.portfolioUrl,
+        twitterUrl: formData.twitterUrl,
+        instagramUrl: formData.instagramUrl,
+        websiteUrl: formData.websiteUrl,
+        projectDetails: formData.projectDetails
+      });
+      
+      console.log('Profile updated successfully:', updatedProfile);
       setMessage('Profile saved successfully!');
       setIsEditing(false);
+      
+      // Refresh the profile to ensure we have the latest data
+      await refreshProfile();
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setMessage('');
+      }, 3000);
     } catch (error) {
       console.error('Error saving profile:', error);
       setMessage('Error saving profile. Please try again.');
@@ -164,7 +157,9 @@ const MyAccountPage: React.FC = () => {
   const handleCancel = () => {
     setIsEditing(false);
     setMessage('');
+    // Reset form data to current profile data
     if (profile) {
+      console.log('Resetting form data to current profile:', profile);
       setFormData({
         username: profile.username || '',
         userType: profile.userType || 'both',

@@ -252,14 +252,16 @@ export const useUserProfile = () => {
       throw new Error('No profile to update');
     }
 
+    console.log('Updating profile with data:', updates);
+
     // If this is a temporary profile, try to create a real one
     if (profile.id.startsWith('temp-')) {
       console.log('Attempting to create real profile from temporary one');
       try {
         const result = await client.models.UserProfile.create({
           userId: profile.userId,
-          username: profile.username,
-          userType: profile.userType,
+          username: updates.username || profile.username,
+          userType: updates.userType || profile.userType,
           bio: updates.bio || profile.bio || '',
           experience: updates.experience || profile.experience || '',
           passions: updates.passions || profile.passions || '',
@@ -274,6 +276,7 @@ export const useUserProfile = () => {
           websiteUrl: updates.websiteUrl || profile.websiteUrl || '',
           projectDetails: updates.projectDetails || profile.projectDetails || ''
         });
+        console.log('Successfully created real profile:', result.data);
         setProfile(result.data);
         return result.data;
       } catch (createErr) {
@@ -286,11 +289,15 @@ export const useUserProfile = () => {
     }
 
     try {
+      console.log('Updating existing profile with ID:', profile.id);
       const result = await client.models.UserProfile.update({
         id: profile.id,
         ...updates
       });
+      console.log('Successfully updated profile:', result.data);
       setProfile(result.data);
+      // Refresh the profile data to ensure consistency
+      await loadOrCreateProfile();
       return result.data;
     } catch (err) {
       console.error('Error updating profile:', err);
