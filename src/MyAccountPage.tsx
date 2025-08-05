@@ -102,9 +102,6 @@ const MyAccountPage: React.FC = () => {
       setMessage('Profile saved successfully!');
       setIsEditing(false);
       
-      // Refresh the profile to ensure we have the latest data
-      await refreshProfile();
-      
       // Clear success message after 3 seconds
       setTimeout(() => {
         setMessage('');
@@ -156,6 +153,7 @@ const MyAccountPage: React.FC = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setIsViewingProfile(false); // Exit viewing mode
     setMessage('');
     
     // Initialize form data with current profile data when starting to edit
@@ -203,6 +201,7 @@ const MyAccountPage: React.FC = () => {
 
   const handleCancel = () => {
     setIsEditing(false);
+    setIsViewingProfile(false); // Return to overview
     setMessage('');
     // Reset form data to current profile data
     if (profile) {

@@ -26,7 +26,7 @@ export const useUserProfile = () => {
         const tempProfile: UserProfile = {
           id: 'temp-' + Date.now(),
           userId: user?.userId || 'temp-user',
-          username: user?.signInDetails?.loginId || user?.username || 'User',
+          username: '',
           userType: 'both',
           bio: '',
           experience: '',
@@ -84,7 +84,7 @@ export const useUserProfile = () => {
         const tempProfile: UserProfile = {
           id: 'temp-' + Date.now(),
           userId: user?.userId || 'temp-user',
-          username: user?.signInDetails?.loginId || user?.username || 'User',
+          username: '',
           userType: 'both',
           bio: '',
           experience: '',
@@ -145,8 +145,8 @@ export const useUserProfile = () => {
         setProfile(updatedProfile);
       } else {
         console.log('Creating new profile for user:', user?.userId);
-        // Get username from user attributes
-        const username = user?.signInDetails?.loginId || user?.username || '';
+        // Don't set username to email - let user set it themselves
+        const username = '';
         
         // Create new profile if none exists
         try {
@@ -184,7 +184,7 @@ export const useUserProfile = () => {
             console.log('Attempting to create minimal profile...');
             const minimalResult = await client.models.UserProfile.create({
               userId: user?.userId || '',
-              username: username,
+              username: '',
               userType: 'both',
               linkedinUrl: '',
               githubUrl: '',
@@ -220,7 +220,7 @@ export const useUserProfile = () => {
       const tempProfile: UserProfile = {
         id: 'temp-' + Date.now(),
         userId: user?.userId || 'temp-user',
-        username: user?.signInDetails?.loginId || user?.username || 'User',
+        username: '',
         userType: 'both',
         bio: '',
         experience: '',
@@ -296,8 +296,6 @@ export const useUserProfile = () => {
       });
       console.log('Successfully updated profile:', result.data);
       setProfile(result.data);
-      // Refresh the profile data to ensure consistency
-      await loadOrCreateProfile();
       return result.data;
     } catch (err) {
       console.error('Error updating profile:', err);
