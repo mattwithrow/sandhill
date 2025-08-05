@@ -18,6 +18,36 @@ export const useUserProfile = () => {
     console.log('useUserProfile - User:', user);
     console.log('useUserProfile - User ID:', user?.userId);
     
+    // Set a global timeout to prevent infinite loading
+    const globalTimeout = setTimeout(() => {
+      console.log('useUserProfile - Global timeout reached, creating temporary profile');
+      setIsLoading(false);
+      if (!profile) {
+        const tempProfile: UserProfile = {
+          id: 'temp-' + Date.now(),
+          userId: user?.userId || 'temp-user',
+          username: user?.signInDetails?.loginId || user?.username || 'User',
+          userType: 'both',
+          bio: '',
+          experience: '',
+          passions: '',
+          values: '',
+          contributionGoals: '',
+          skills: '',
+          linkedinUrl: '',
+          githubUrl: '',
+          portfolioUrl: '',
+          twitterUrl: '',
+          instagramUrl: '',
+          websiteUrl: '',
+          projectDetails: '',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as UserProfile;
+        setProfile(tempProfile);
+      }
+    }, 3000); // 3 second global timeout
+    
     if (authStatus === 'authenticated' && user?.userId) {
       console.log('useUserProfile - Loading profile...');
       loadOrCreateProfile();
@@ -27,12 +57,14 @@ export const useUserProfile = () => {
       setIsLoading(false);
     } else if (authStatus === 'authenticated' && !user?.userId) {
       console.log('useUserProfile - Authenticated but no user ID, waiting...');
-      // Don't set loading to false yet, wait for user ID
+      // Don't set loading to false, let the global timeout handle it
     } else {
       console.log('useUserProfile - Other auth status, setting loading to false');
       setIsLoading(false);
     }
-  }, [authStatus, user?.userId]);
+    
+    return () => clearTimeout(globalTimeout);
+  }, [authStatus, user?.userId, profile]);
 
   const loadOrCreateProfile = async () => {
     try {
@@ -41,20 +73,52 @@ export const useUserProfile = () => {
 
       console.log('Loading profile for user:', user?.userId);
       console.log('Client models:', client.models);
+      console.log('Client:', client);
 
       // Check if UserProfile model exists
       if (!client.models.UserProfile) {
         console.error('UserProfile model not found in client.models');
-        setError('Profile system not available. Please try again later.');
+        console.log('Available models:', Object.keys(client.models || {}));
+        // Instead of setting an error, create a temporary profile
+        console.log('Creating temporary profile due to missing UserProfile model');
+        const tempProfile: UserProfile = {
+          id: 'temp-' + Date.now(),
+          userId: user?.userId || 'temp-user',
+          username: user?.signInDetails?.loginId || user?.username || 'User',
+          userType: 'both',
+          bio: '',
+          experience: '',
+          passions: '',
+          values: '',
+          contributionGoals: '',
+          skills: '',
+          linkedinUrl: '',
+          githubUrl: '',
+          portfolioUrl: '',
+          twitterUrl: '',
+          instagramUrl: '',
+          websiteUrl: '',
+          projectDetails: '',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as UserProfile;
+        setProfile(tempProfile);
+        setIsLoading(false);
         return;
       }
 
-      // Try to load existing profile
-      const { data: profiles } = await client.models.UserProfile.list({
+      // Try to load existing profile with timeout
+      const profilePromise = client.models.UserProfile.list({
         filter: {
           userId: { eq: user?.userId }
         }
       });
+      
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database timeout')), 5000)
+      );
+      
+      const { data: profiles } = await Promise.race([profilePromise, timeoutPromise]) as any;
 
       console.log('Found profiles:', profiles.length);
 
@@ -86,7 +150,7 @@ export const useUserProfile = () => {
         
         // Create new profile if none exists
         try {
-          const result = await client.models.UserProfile.create({
+          const createPromise = client.models.UserProfile.create({
             userId: user?.userId || '',
             username: username,
             userType: 'both',
@@ -104,6 +168,12 @@ export const useUserProfile = () => {
             websiteUrl: '',
             projectDetails: ''
           });
+          
+          const createTimeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Create profile timeout')), 5000)
+          );
+          
+          const result = await Promise.race([createPromise, createTimeoutPromise]) as any;
           console.log('Created new profile:', result.data);
           setProfile(result.data);
         } catch (createError) {
@@ -149,8 +219,8 @@ export const useUserProfile = () => {
       // Create a temporary profile object as fallback
       const tempProfile: UserProfile = {
         id: 'temp-' + Date.now(),
-        userId: user?.userId || '',
-        username: user?.signInDetails?.loginId || user?.username || '',
+        userId: user?.userId || 'temp-user',
+        username: user?.signInDetails?.loginId || user?.username || 'User',
         userType: 'both',
         bio: '',
         experience: '',
