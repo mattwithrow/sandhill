@@ -66,25 +66,36 @@ const MyAccountPage: React.FC = () => {
     setIsSaving(true);
     setMessage('');
 
+    // Validate required fields
+    if (!formData.username || formData.username.trim().length < 3) {
+      setMessage('Username is required and must be at least 3 characters long.');
+      setIsSaving(false);
+      return;
+    }
+
     try {
       console.log('Submitting form data:', formData);
-      const updatedProfile = await updateProfile({
-        username: formData.username,
+      
+      // Prepare the data to update
+      const updateData = {
+        username: formData.username.trim(),
         userType: formData.userType,
-        bio: formData.bio,
-        experience: formData.experience,
-        passions: formData.passions,
-        values: formData.values,
-        contributionGoals: formData.contributionGoals,
-        skills: formData.skills,
-        linkedinUrl: formData.linkedinUrl,
-        githubUrl: formData.githubUrl,
-        portfolioUrl: formData.portfolioUrl,
-        twitterUrl: formData.twitterUrl,
-        instagramUrl: formData.instagramUrl,
-        websiteUrl: formData.websiteUrl,
-        projectDetails: formData.projectDetails
-      });
+        bio: formData.bio?.trim() || '',
+        experience: formData.experience?.trim() || '',
+        passions: formData.passions?.trim() || '',
+        values: formData.values?.trim() || '',
+        contributionGoals: formData.contributionGoals?.trim() || '',
+        skills: formData.skills?.trim() || '',
+        linkedinUrl: formData.linkedinUrl?.trim() || '',
+        githubUrl: formData.githubUrl?.trim() || '',
+        portfolioUrl: formData.portfolioUrl?.trim() || '',
+        twitterUrl: formData.twitterUrl?.trim() || '',
+        instagramUrl: formData.instagramUrl?.trim() || '',
+        websiteUrl: formData.websiteUrl?.trim() || '',
+        projectDetails: formData.projectDetails?.trim() || ''
+      };
+
+      const updatedProfile = await updateProfile(updateData);
       
       console.log('Profile updated successfully:', updatedProfile);
       setMessage('Profile saved successfully!');
@@ -106,6 +117,19 @@ const MyAccountPage: React.FC = () => {
   };
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
+    // Username validation
+    if (field === 'username') {
+      // Only allow alphanumeric characters, underscores, and hyphens
+      const usernameRegex = /^[a-zA-Z0-9_-]*$/;
+      if (!usernameRegex.test(value)) {
+        return; // Don't update if invalid characters
+      }
+      // Limit length to 3-20 characters
+      if (value.length > 20) {
+        return;
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -342,36 +366,48 @@ const MyAccountPage: React.FC = () => {
               <div className="feature-card">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-medium">Profile Completion</span>
-                  <span className="text-sm font-bold gradient-text">
-                    {(() => {
-                      const fields = [
-                        profile?.username, profile?.bio, profile?.experience, 
-                        profile?.passions, profile?.values, profile?.contributionGoals,
-                        profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
-                        profile?.portfolioUrl, profile?.projectDetails
-                      ];
-                      const filledFields = fields.filter(field => field && field.trim() !== '').length;
-                      const percentage = Math.round((filledFields / fields.length) * 100);
-                      return `${percentage}%`;
-                    })()}
-                  </span>
+                                          <span className="text-sm font-bold gradient-text">
+                          {(() => {
+                            const fields = [
+                              profile?.username, profile?.bio, profile?.experience, 
+                              profile?.passions, profile?.values, profile?.skills
+                            ];
+                            // Add conditional fields based on user type
+                            if (profile?.userType === 'builder' || profile?.userType === 'both') {
+                              fields.push(profile?.contributionGoals);
+                            }
+                            if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+                              fields.push(profile?.projectDetails);
+                            }
+                            
+                            const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                            const percentage = Math.round((filledFields / fields.length) * 100);
+                            return `${percentage}%`;
+                          })()}
+                        </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div 
                     className="h-3 rounded-full transition-all duration-300"
-                    style={{ 
-                      background: 'var(--primary-gradient)',
-                      width: `${(() => {
-                        const fields = [
-                          profile?.username, profile?.bio, profile?.experience, 
-                          profile?.passions, profile?.values, profile?.contributionGoals,
-                          profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
-                          profile?.portfolioUrl, profile?.projectDetails
-                        ];
-                        const filledFields = fields.filter(field => field && field.trim() !== '').length;
-                        return Math.round((filledFields / fields.length) * 100);
-                      })()}%` 
-                    }}
+                                              style={{ 
+                            background: 'var(--primary-gradient)',
+                            width: `${(() => {
+                              const fields = [
+                                profile?.username, profile?.bio, profile?.experience, 
+                                profile?.passions, profile?.values, profile?.skills
+                              ];
+                              // Add conditional fields based on user type
+                              if (profile?.userType === 'builder' || profile?.userType === 'both') {
+                                fields.push(profile?.contributionGoals);
+                              }
+                              if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+                                fields.push(profile?.projectDetails);
+                              }
+                              
+                              const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                              return Math.round((filledFields / fields.length) * 100);
+                            })()}%` 
+                          }}
                   ></div>
                 </div>
               </div>
@@ -430,9 +466,17 @@ const MyAccountPage: React.FC = () => {
                       id="username"
                       value={formData.username || ''}
                       onChange={(e) => handleInputChange('username', e.target.value)}
-                      placeholder="Your username"
+                      placeholder="Your username (3-20 characters, letters, numbers, _ or -)"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {formData.username && formData.username.length < 3 && (
+                        <span className="text-red-500">Username must be at least 3 characters</span>
+                      )}
+                      {formData.username && formData.username.length >= 3 && (
+                        <span className="text-green-500">✓ Username is valid</span>
+                      )}
+                    </p>
                   </div>
 
                   <div className="feature-card">
@@ -528,19 +572,21 @@ const MyAccountPage: React.FC = () => {
                       />
                     </div>
 
-                    <div className="feature-card">
-                      <label htmlFor="contributionGoals" className="block text-sm font-semibold mb-2">
-                        What are you looking to contribute to?
-                      </label>
-                      <textarea
-                        id="contributionGoals"
-                        value={formData.contributionGoals}
-                        onChange={(e) => handleInputChange('contributionGoals', e.target.value)}
-                        placeholder="What type of projects or causes do you want to contribute to?"
-                        rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                      />
-                    </div>
+                    {(formData.userType === 'builder' || formData.userType === 'both') && (
+                      <div className="feature-card">
+                        <label htmlFor="contributionGoals" className="block text-sm font-semibold mb-2">
+                          What are you looking to contribute to?
+                        </label>
+                        <textarea
+                          id="contributionGoals"
+                          value={formData.contributionGoals}
+                          onChange={(e) => handleInputChange('contributionGoals', e.target.value)}
+                          placeholder="What type of projects or causes do you want to contribute to?"
+                          rows={3}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -551,7 +597,7 @@ const MyAccountPage: React.FC = () => {
                 </div>
                 
                 <div className="feature-card">
-                  <div className="grid-2">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                     {[
                       'JavaScript', 'TypeScript', 'React', 'Vue', 'Angular', 'Node.js',
                       'Python', 'Java', 'C#', 'PHP', 'Ruby', 'Go', 'Rust',
@@ -563,23 +609,23 @@ const MyAccountPage: React.FC = () => {
                       'Content Creation', 'Video Production', 'Photography',
                       'Writing', 'Editing', 'Research', 'Strategy'
                     ].map((skill) => (
-                      <label key={skill} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-orange-50 transition-colors">
+                      <label key={skill} className="flex items-center space-x-2 cursor-pointer p-2 rounded border border-gray-200 hover:bg-orange-50 transition-colors">
                         <input
                           type="checkbox"
                           checked={getSkillsArray(formData.skills).includes(skill)}
                           onChange={() => handleSkillToggle(skill)}
-                          className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                          className="h-3 w-3 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                         />
-                        <span className="text-sm text-gray-700 font-medium">{skill}</span>
+                        <span className="text-xs text-gray-700 font-medium">{skill}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
-                {/* Social Links Card */}
+                {/* Links & Portfolio Card */}
                 <div className="section-header">
                   <div className="feature-icon">🔗</div>
-                  <h2 className="section-title">Social Links & Portfolio</h2>
+                  <h2 className="section-title">Links & Portfolio</h2>
                 </div>
                 
                 <div className="grid-2">
@@ -668,31 +714,35 @@ const MyAccountPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Project Details Card */}
-                <div className="section-header">
-                  <div className="feature-icon">🎯</div>
-                  <h2 className="section-title">Project Details</h2>
-                </div>
-                
-                <div className="feature-card">
-                  <label htmlFor="projectDetails" className="block text-sm font-semibold mb-2">
-                    Tell us about your project or what you're looking for
-                  </label>
-                  <textarea
-                    id="projectDetails"
-                    value={formData.projectDetails}
-                    onChange={(e) => handleInputChange('projectDetails', e.target.value)}
-                    placeholder="Describe your idea, what you're looking to build, or what type of projects you're interested in working on..."
-                    rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                  />
-                </div>
+                {/* Project Details Card - Only for Ideas or Both */}
+                {(formData.userType === 'ideas' || formData.userType === 'both') && (
+                  <>
+                    <div className="section-header">
+                      <div className="feature-icon">🎯</div>
+                      <h2 className="section-title">Project Details</h2>
+                    </div>
+                    
+                    <div className="feature-card">
+                      <label htmlFor="projectDetails" className="block text-sm font-semibold mb-2">
+                        Tell us about your project or what you're looking for
+                      </label>
+                      <textarea
+                        id="projectDetails"
+                        value={formData.projectDetails}
+                        onChange={(e) => handleInputChange('projectDetails', e.target.value)}
+                        placeholder="Describe your idea, what you're looking to build, or what type of projects you're interested in working on..."
+                        rows={6}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                      />
+                    </div>
+                  </>
+                )}
 
                 {/* Submit Buttons */}
                 <div className="cta-buttons">
                   <button
                     type="submit"
-                    disabled={isSaving}
+                    disabled={isSaving || !formData.username || formData.username.trim().length < 3}
                     className="btn btn-primary btn-large"
                   >
                     {isSaving ? '💾 Saving...' : '💾 Save Profile'}
@@ -818,7 +868,7 @@ const MyAccountPage: React.FC = () => {
                     </div>
                   )}
 
-                  {profile?.contributionGoals && (
+                  {(profile?.userType === 'builder' || profile?.userType === 'both') && profile?.contributionGoals && (
                     <div className="feature-card">
                       <h3 className="text-xl font-bold mb-4 flex items-center">
                         <span className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center mr-3">🎯</span>
@@ -828,7 +878,7 @@ const MyAccountPage: React.FC = () => {
                     </div>
                   )}
 
-                  {profile?.projectDetails && (
+                  {(profile?.userType === 'ideas' || profile?.userType === 'both') && profile?.projectDetails && (
                     <div className="feature-card">
                       <h3 className="text-xl font-bold mb-4 flex items-center">
                         <span className="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center mr-3">🚀</span>
