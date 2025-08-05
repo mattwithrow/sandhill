@@ -24,7 +24,29 @@ const MyAccountPage: React.FC = () => {
     projectDetails: ''
   });
 
-  // Update form data when profile loads
+  // Initialize form data immediately
+  useEffect(() => {
+    console.log('Component mounted, initializing form data');
+    setFormData({
+      username: '',
+      userType: 'both',
+      bio: '',
+      experience: '',
+      passions: '',
+      values: '',
+      contributionGoals: '',
+      skills: '',
+      linkedinUrl: '',
+      githubUrl: '',
+      portfolioUrl: '',
+      twitterUrl: '',
+      instagramUrl: '',
+      websiteUrl: '',
+      projectDetails: ''
+    });
+  }, []);
+
+  // Update form data when profile loads or when editing starts
   useEffect(() => {
     if (profile) {
       console.log('Setting form data from profile:', profile);
@@ -45,8 +67,28 @@ const MyAccountPage: React.FC = () => {
         websiteUrl: profile.websiteUrl || '',
         projectDetails: profile.projectDetails || ''
       });
+    } else if (isEditing) {
+      // Initialize form data for new users when they start editing
+      console.log('Initializing form data for new user');
+      setFormData({
+        username: '',
+        userType: 'both',
+        bio: '',
+        experience: '',
+        passions: '',
+        values: '',
+        contributionGoals: '',
+        skills: '',
+        linkedinUrl: '',
+        githubUrl: '',
+        portfolioUrl: '',
+        twitterUrl: '',
+        instagramUrl: '',
+        websiteUrl: '',
+        projectDetails: ''
+      });
     }
-  }, [profile]);
+  }, [profile, isEditing]);
 
   // Debug form data changes
   useEffect(() => {
@@ -274,6 +316,20 @@ const MyAccountPage: React.FC = () => {
             </div>
           )}
 
+          {/* Debug Form Data (temporary) */}
+          {isEditing && (
+            <div className="mb-8 p-6 rounded-2xl shadow-lg bg-blue-50 border border-blue-200">
+              <h3 className="font-bold text-blue-800 mb-2">Debug Info:</h3>
+              <div className="text-sm text-blue-700">
+                <p>Username: "{formData.username}"</p>
+                <p>User Type: "{formData.userType}"</p>
+                <p>Bio: "{formData.bio}"</p>
+                <p>Profile exists: {profile ? 'Yes' : 'No'}</p>
+                <p>Is Editing: {isEditing ? 'Yes' : 'No'}</p>
+              </div>
+            </div>
+          )}
+
           {isEditing ? (
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Basic Information Card */}
@@ -293,8 +349,11 @@ const MyAccountPage: React.FC = () => {
                     <input
                       type="text"
                       id="username"
-                      value={formData.username}
-                      onChange={(e) => handleInputChange('username', e.target.value)}
+                      value={formData.username || ''}
+                      onChange={(e) => {
+                        console.log('Username input changed:', e.target.value);
+                        handleInputChange('username', e.target.value);
+                      }}
                       placeholder="Your username"
                       className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-lg font-medium bg-white/80 backdrop-blur-sm"
                     />
@@ -316,7 +375,10 @@ const MyAccountPage: React.FC = () => {
                             name="userType"
                             value={option.value}
                             checked={formData.userType === option.value}
-                            onChange={(e) => handleInputChange('userType', e.target.value as 'builder' | 'ideas' | 'both')}
+                            onChange={(e) => {
+                              console.log('User type changed:', e.target.value);
+                              handleInputChange('userType', e.target.value as 'builder' | 'ideas' | 'both');
+                            }}
                             className="h-5 w-5 text-blue-600 focus:ring-4 focus:ring-blue-500/20 border-2 border-gray-300"
                           />
                           <span className="text-2xl">{option.icon}</span>
@@ -344,8 +406,11 @@ const MyAccountPage: React.FC = () => {
                     </label>
                     <textarea
                       id="bio"
-                      value={formData.bio}
-                      onChange={(e) => handleInputChange('bio', e.target.value)}
+                      value={formData.bio || ''}
+                      onChange={(e) => {
+                        console.log('Bio textarea changed:', e.target.value);
+                        handleInputChange('bio', e.target.value);
+                      }}
                       placeholder="Tell us about yourself in a few sentences..."
                       rows={3}
                       className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 resize-vertical transition-all text-lg font-medium bg-white/80 backdrop-blur-sm"
