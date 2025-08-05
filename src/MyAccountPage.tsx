@@ -24,7 +24,7 @@ const MyAccountPage: React.FC = () => {
     projectDetails: ''
   });
 
-  // Update form data when profile loads or when editing starts
+  // Update form data when profile loads
   useEffect(() => {
     if (profile) {
       console.log('Setting form data from profile:', profile);
@@ -45,35 +45,15 @@ const MyAccountPage: React.FC = () => {
         websiteUrl: profile.websiteUrl || '',
         projectDetails: profile.projectDetails || ''
       });
-    } else if (isEditing) {
-      // Initialize form data for new users when they start editing
-      console.log('Initializing form data for new user');
-      setFormData({
-        username: '',
-        userType: 'both',
-        bio: '',
-        experience: '',
-        passions: '',
-        values: '',
-        contributionGoals: '',
-        skills: '',
-        linkedinUrl: '',
-        githubUrl: '',
-        portfolioUrl: '',
-        twitterUrl: '',
-        instagramUrl: '',
-        websiteUrl: '',
-        projectDetails: ''
-      });
     }
-  }, [profile, isEditing]);
+  }, [profile]);
 
   // Debug form data changes
   useEffect(() => {
     console.log('Form data changed:', formData);
   }, [formData]);
 
-  // Refresh profile data when component mounts
+  // Refresh profile data when component mounts (only once)
   useEffect(() => {
     if (!isLoading && profile) {
       console.log('Refreshing profile data on component mount');
@@ -152,6 +132,48 @@ const MyAccountPage: React.FC = () => {
   const handleEdit = () => {
     setIsEditing(true);
     setMessage('');
+    
+    // Initialize form data with current profile data when starting to edit
+    if (profile) {
+      console.log('Initializing form data for editing:', profile);
+      setFormData({
+        username: profile.username || '',
+        userType: profile.userType || 'both',
+        bio: profile.bio || '',
+        experience: profile.experience || '',
+        passions: profile.passions || '',
+        values: profile.values || '',
+        contributionGoals: profile.contributionGoals || '',
+        skills: profile.skills || '',
+        linkedinUrl: profile.linkedinUrl || '',
+        githubUrl: profile.githubUrl || '',
+        portfolioUrl: profile.portfolioUrl || '',
+        twitterUrl: profile.twitterUrl || '',
+        instagramUrl: profile.instagramUrl || '',
+        websiteUrl: profile.websiteUrl || '',
+        projectDetails: profile.projectDetails || ''
+      });
+    } else {
+      // Initialize empty form data for new users
+      console.log('Initializing empty form data for new user');
+      setFormData({
+        username: '',
+        userType: 'both',
+        bio: '',
+        experience: '',
+        passions: '',
+        values: '',
+        contributionGoals: '',
+        skills: '',
+        linkedinUrl: '',
+        githubUrl: '',
+        portfolioUrl: '',
+        twitterUrl: '',
+        instagramUrl: '',
+        websiteUrl: '',
+        projectDetails: ''
+      });
+    }
   };
 
   const handleCancel = () => {

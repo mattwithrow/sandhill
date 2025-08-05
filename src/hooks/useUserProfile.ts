@@ -64,7 +64,7 @@ export const useUserProfile = () => {
     }
     
     return () => clearTimeout(globalTimeout);
-  }, [authStatus, user?.userId, profile]);
+  }, [authStatus, user?.userId]);
 
   const loadOrCreateProfile = async () => {
     try {
