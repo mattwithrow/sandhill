@@ -91,7 +91,7 @@ const MyAccountPage: React.FC = () => {
     }));
   };
 
-  const getSkillsArray = (skillsString: string): string[] => {
+  const getSkillsArray = (skillsString: string | null | undefined): string[] => {
     return skillsString ? skillsString.split(',').map(s => s.trim()).filter(s => s) : [];
   };
 
@@ -605,13 +605,13 @@ const MyAccountPage: React.FC = () => {
                     <div className="mb-6">
                       <h3 className="text-sm font-semibold text-gray-700 mb-3">Skills</h3>
                       <div className="flex flex-wrap gap-2">
-                        {getSkillsArray(profile.skills).slice(0, 6).map((skill) => (
+                        {getSkillsArray(profile?.skills || '').slice(0, 6).map((skill) => (
                           <span key={skill} className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
                             {skill}
                           </span>
                         ))}
-                        {getSkillsArray(profile.skills).length > 6 && (
-                          <span className="text-gray-500 text-xs">+{getSkillsArray(profile.skills).length - 6} more</span>
+                        {getSkillsArray(profile?.skills || '').length > 6 && (
+                          <span className="text-gray-500 text-xs">+{getSkillsArray(profile?.skills || '').length - 6} more</span>
                         )}
                       </div>
                     </div>
@@ -622,32 +622,32 @@ const MyAccountPage: React.FC = () => {
                       <h3 className="text-sm font-semibold text-gray-700 mb-3">Connect</h3>
                       <div className="space-y-2">
                                                  {profile.linkedinUrl && (
-                           <a href={String(profile.linkedinUrl)} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                           <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
                              <span className="mr-2">🔗</span> LinkedIn
                            </a>
                          )}
                          {profile.githubUrl && (
-                           <a href={String(profile.githubUrl)} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-gray-900 transition-colors">
+                           <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-gray-900 transition-colors">
                              <span className="mr-2">🐙</span> GitHub
                            </a>
                          )}
                          {profile.portfolioUrl && (
-                           <a href={String(profile.portfolioUrl)} target="_blank" rel="noopener noreferrer" className="flex items-center text-purple-600 hover:text-purple-800 transition-colors">
+                           <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-purple-600 hover:text-purple-800 transition-colors">
                              <span className="mr-2">🎨</span> Portfolio
                            </a>
                          )}
                          {profile.websiteUrl && (
-                           <a href={String(profile.websiteUrl)} target="_blank" rel="noopener noreferrer" className="flex items-center text-green-600 hover:text-green-800 transition-colors">
+                           <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-green-600 hover:text-green-800 transition-colors">
                              <span className="mr-2">🌐</span> Website
                            </a>
                          )}
                          {profile.twitterUrl && (
-                           <a href={String(profile.twitterUrl)} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-400 hover:text-blue-600 transition-colors">
+                           <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-400 hover:text-blue-600 transition-colors">
                              <span className="mr-2">🐦</span> Twitter/X
                            </a>
                          )}
                          {profile.instagramUrl && (
-                           <a href={String(profile.instagramUrl)} target="_blank" rel="noopener noreferrer" className="flex items-center text-pink-600 hover:text-pink-800 transition-colors">
+                           <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-pink-600 hover:text-pink-800 transition-colors">
                              <span className="mr-2">📷</span> Instagram
                            </a>
                          )}
@@ -716,7 +716,7 @@ const MyAccountPage: React.FC = () => {
                       All Skills
                     </h3>
                     <div className="flex flex-wrap gap-3">
-                      {getSkillsArray(profile.skills).map((skill) => (
+                      {getSkillsArray(profile?.skills || '').map((skill) => (
                         <span key={skill} className="bg-gradient-to-r from-teal-500 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md">
                           {skill}
                         </span>
