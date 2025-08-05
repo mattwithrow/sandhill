@@ -336,7 +336,7 @@ const MyAccountPage: React.FC = () => {
         <section className="hero">
           <div className="hero-content">
             <h1 className="hero-title">
-              Hello, <span className="gradient-text">{profile?.username || 'Builder'}</span>! 👋
+              Hello, <span className="gradient-text">{profile?.username || 'Builder'}</span>!
             </h1>
             <p className="hero-subtitle">
               Welcome to your professional profile on Sandhill
@@ -344,70 +344,117 @@ const MyAccountPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Profile Completion Section */}
+        {/* Profile Completion Section - Show at top when 100% */}
+        {(() => {
+          const fields = [
+            profile?.username, profile?.bio, profile?.experience, 
+            profile?.passions, profile?.values, profile?.skills
+          ];
+          // Add conditional fields based on user type
+          if (profile?.userType === 'builder' || profile?.userType === 'both') {
+            fields.push(profile?.contributionGoals);
+          }
+          if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+            fields.push(profile?.projectDetails);
+          }
+          
+          const filledFields = fields.filter(field => field && field.trim() !== '').length;
+          const percentage = Math.round((filledFields / fields.length) * 100);
+          
+          if (percentage === 100) {
+            return (
+              <section className="section">
+                <div className="content-card">
+                  <div className="section-header">
+                    <h2 className="section-title">Your Profile</h2>
+                  </div>
+                  <div className="content-block">
+                    <p>
+                      Your profile is complete! You're all set to connect with the right people and opportunities.
+                    </p>
+                    
+                    {/* Profile Completion Indicator */}
+                    <div className="feature-card">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium">Profile Completion</span>
+                        <span className="text-xs font-bold gradient-text">{percentage}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="h-2 rounded-full transition-all duration-300"
+                          style={{ 
+                            background: 'var(--primary-gradient)',
+                            width: `${percentage}%` 
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            );
+          }
+          return null;
+        })()}
+
+        {/* Main Profile Section */}
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="feature-icon">💡</div>
-              <h2 className="section-title">Complete Your Profile</h2>
+              <h2 className="section-title">Your Profile</h2>
             </div>
             <div className="content-block">
               <p>
                 We encourage you to fill out your profile with as much information as you feel comfortable sharing. 
                 The more details you provide, the better we can connect you with the right people and opportunities.
               </p>
-              <p className="gradient-text" style={{fontWeight: '600', fontStyle: 'italic'}}>
-                <strong>Your privacy matters:</strong> None of your personal details will ever be sold. 
-                We're here to help you build cool shit, not exploit your data. 
-                This platform exists to enable creators, builders, and innovators like you.
-              </p>
               
-              {/* Profile Completion Indicator */}
+              {/* Profile Completion Indicator - Smaller version */}
               <div className="feature-card">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium">Profile Completion</span>
-                                          <span className="text-sm font-bold gradient-text">
-                          {(() => {
-                            const fields = [
-                              profile?.username, profile?.bio, profile?.experience, 
-                              profile?.passions, profile?.values, profile?.skills
-                            ];
-                            // Add conditional fields based on user type
-                            if (profile?.userType === 'builder' || profile?.userType === 'both') {
-                              fields.push(profile?.contributionGoals);
-                            }
-                            if (profile?.userType === 'ideas' || profile?.userType === 'both') {
-                              fields.push(profile?.projectDetails);
-                            }
-                            
-                            const filledFields = fields.filter(field => field && field.trim() !== '').length;
-                            const percentage = Math.round((filledFields / fields.length) * 100);
-                            return `${percentage}%`;
-                          })()}
-                        </span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium">Profile Completion</span>
+                  <span className="text-xs font-bold gradient-text">
+                    {(() => {
+                      const fields = [
+                        profile?.username, profile?.bio, profile?.experience, 
+                        profile?.passions, profile?.values, profile?.skills
+                      ];
+                      // Add conditional fields based on user type
+                      if (profile?.userType === 'builder' || profile?.userType === 'both') {
+                        fields.push(profile?.contributionGoals);
+                      }
+                      if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+                        fields.push(profile?.projectDetails);
+                      }
+                      
+                      const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                      const percentage = Math.round((filledFields / fields.length) * 100);
+                      return `${percentage}%`;
+                    })()}
+                  </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
-                    className="h-3 rounded-full transition-all duration-300"
-                                              style={{ 
-                            background: 'var(--primary-gradient)',
-                            width: `${(() => {
-                              const fields = [
-                                profile?.username, profile?.bio, profile?.experience, 
-                                profile?.passions, profile?.values, profile?.skills
-                              ];
-                              // Add conditional fields based on user type
-                              if (profile?.userType === 'builder' || profile?.userType === 'both') {
-                                fields.push(profile?.contributionGoals);
-                              }
-                              if (profile?.userType === 'ideas' || profile?.userType === 'both') {
-                                fields.push(profile?.projectDetails);
-                              }
-                              
-                              const filledFields = fields.filter(field => field && field.trim() !== '').length;
-                              return Math.round((filledFields / fields.length) * 100);
-                            })()}%` 
-                          }}
+                    className="h-2 rounded-full transition-all duration-300"
+                    style={{ 
+                      background: 'var(--primary-gradient)',
+                      width: `${(() => {
+                        const fields = [
+                          profile?.username, profile?.bio, profile?.experience, 
+                          profile?.passions, profile?.values, profile?.skills
+                        ];
+                        // Add conditional fields based on user type
+                        if (profile?.userType === 'builder' || profile?.userType === 'both') {
+                          fields.push(profile?.contributionGoals);
+                        }
+                        if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+                          fields.push(profile?.projectDetails);
+                        }
+                        
+                        const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                        return Math.round((filledFields / fields.length) * 100);
+                      })()}%` 
+                    }}
                   ></div>
                 </div>
               </div>
@@ -419,13 +466,13 @@ const MyAccountPage: React.FC = () => {
                   onClick={() => setIsViewingProfile(true)}
                   className="btn btn-primary btn-large"
                 >
-                  👁️ View My Profile
+                  View My Profile
                 </button>
                 <button
                   onClick={handleEdit}
                   className="btn btn-outline btn-large"
                 >
-                  ✏️ Edit Profile
+                  Edit Profile
                 </button>
               </div>
             )}
@@ -436,13 +483,13 @@ const MyAccountPage: React.FC = () => {
                   onClick={() => setIsViewingProfile(false)}
                   className="btn btn-outline btn-large"
                 >
-                  ← Back to Overview
+                  Back to Overview
                 </button>
                 <button
                   onClick={handleEdit}
                   className="btn btn-primary btn-large"
                 >
-                  ✏️ Edit Profile
+                  Edit Profile
                 </button>
               </div>
             )}
@@ -458,11 +505,6 @@ const MyAccountPage: React.FC = () => {
                 : 'border-green-200 bg-green-50'
             }`}>
               <div className="flex items-center">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
-                  message.includes('Error') ? 'bg-red-100' : 'bg-green-100'
-                }`}>
-                  {message.includes('Error') ? '❌' : '✅'}
-                </div>
                 <span className="font-medium">{message}</span>
               </div>
             </div>
@@ -475,7 +517,6 @@ const MyAccountPage: React.FC = () => {
               <form onSubmit={handleSubmit}>
                 {/* Basic Information Card */}
                 <div className="section-header">
-                  <div className="feature-icon">👤</div>
                   <h2 className="section-title">Basic Information</h2>
                 </div>
                 
@@ -497,7 +538,7 @@ const MyAccountPage: React.FC = () => {
                         <span className="text-red-500">Username must be at least 3 characters</span>
                       )}
                       {formData.username && formData.username.length >= 3 && (
-                        <span className="text-green-500">✓ Username is valid</span>
+                        <span className="text-green-500">Username is valid</span>
                       )}
                     </p>
                   </div>
@@ -508,9 +549,9 @@ const MyAccountPage: React.FC = () => {
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: 'builder', label: 'Builder', icon: '🔨' },
-                        { value: 'ideas', label: 'Ideas', icon: '💡' },
-                        { value: 'both', label: 'Both', icon: '🚀' }
+                        { value: 'builder', label: 'Builder' },
+                        { value: 'ideas', label: 'Ideas' },
+                        { value: 'both', label: 'Both' }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center space-x-4 cursor-pointer p-4 rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
                           <input
@@ -521,7 +562,6 @@ const MyAccountPage: React.FC = () => {
                             onChange={(e) => handleInputChange('userType', e.target.value as 'builder' | 'ideas' | 'both')}
                             className="h-5 w-5 text-orange-600 focus:ring-2 focus:ring-orange-500 border-2 border-gray-300"
                           />
-                          <span className="text-2xl">{option.icon}</span>
                           <span className="text-gray-700 font-bold">{option.label}</span>
                         </label>
                       ))}
@@ -531,7 +571,6 @@ const MyAccountPage: React.FC = () => {
 
                 {/* Personal Story Card */}
                 <div className="section-header">
-                  <div className="feature-icon">📖</div>
                   <h2 className="section-title">Your Story</h2>
                 </div>
                 
@@ -785,7 +824,6 @@ const MyAccountPage: React.FC = () => {
           <section className="section">
             <div className="content-card">
               <div className="section-header">
-                <div className="feature-icon">👤</div>
                 <h2 className="section-title">My Profile</h2>
               </div>
               <div className="grid-2">
@@ -797,8 +835,8 @@ const MyAccountPage: React.FC = () => {
                     </div>
                     <h2 className="text-2xl font-bold mb-2">{profile?.username || 'User'}</h2>
                     <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
-                      {profile?.userType === 'builder' ? '🔨 Builder' : 
-                       profile?.userType === 'ideas' ? '💡 Ideas' : '🚀 Both'}
+                      {profile?.userType === 'builder' ? 'Builder' : 
+                       profile?.userType === 'ideas' ? 'Ideas' : 'Both'}
                     </div>
                   </div>
 
@@ -830,32 +868,32 @@ const MyAccountPage: React.FC = () => {
                       <div className="space-y-2">
                         {profile.linkedinUrl && (
                           <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
-                            <span className="mr-2">🔗</span> LinkedIn
+                            LinkedIn
                           </a>
                         )}
                         {profile.githubUrl && (
                           <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-gray-900 transition-colors">
-                            <span className="mr-2">🐙</span> GitHub
+                            GitHub
                           </a>
                         )}
                         {profile.portfolioUrl && (
                           <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-purple-600 hover:text-purple-800 transition-colors">
-                            <span className="mr-2">🎨</span> Portfolio
+                            Portfolio
                           </a>
                         )}
                         {profile.websiteUrl && (
                           <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-green-600 hover:text-green-800 transition-colors">
-                            <span className="mr-2">🌐</span> Website
+                            Website
                           </a>
                         )}
                         {profile.twitterUrl && (
                           <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-400 hover:text-blue-600 transition-colors">
-                            <span className="mr-2">🐦</span> Twitter/X
+                            Twitter/X
                           </a>
                         )}
                         {profile.instagramUrl && (
                           <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-pink-600 hover:text-pink-800 transition-colors">
-                            <span className="mr-2">📷</span> Instagram
+                            Instagram
                           </a>
                         )}
                       </div>
@@ -867,8 +905,7 @@ const MyAccountPage: React.FC = () => {
                 <div className="space-y-6">
                   {profile?.experience && (
                     <div className="feature-card">
-                      <h3 className="text-xl font-bold mb-4 flex items-center">
-                        <span className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center mr-3">💼</span>
+                      <h3 className="text-xl font-bold mb-4">
                         Experience
                       </h3>
                       <p className="text-gray-700 leading-relaxed">{profile.experience}</p>
@@ -877,8 +914,7 @@ const MyAccountPage: React.FC = () => {
 
                   {profile?.passions && (
                     <div className="feature-card">
-                      <h3 className="text-xl font-bold mb-4 flex items-center">
-                        <span className="w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center mr-3">🔥</span>
+                      <h3 className="text-xl font-bold mb-4">
                         Passions
                       </h3>
                       <p className="text-gray-700 leading-relaxed">{profile.passions}</p>
@@ -887,8 +923,7 @@ const MyAccountPage: React.FC = () => {
 
                   {profile?.values && (
                     <div className="feature-card">
-                      <h3 className="text-xl font-bold mb-4 flex items-center">
-                        <span className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center mr-3">💎</span>
+                      <h3 className="text-xl font-bold mb-4">
                         Values
                       </h3>
                       <p className="text-gray-700 leading-relaxed">{profile.values}</p>
@@ -897,8 +932,7 @@ const MyAccountPage: React.FC = () => {
 
                   {(profile?.userType === 'builder' || profile?.userType === 'both') && profile?.contributionGoals && (
                     <div className="feature-card">
-                      <h3 className="text-xl font-bold mb-4 flex items-center">
-                        <span className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center mr-3">🎯</span>
+                      <h3 className="text-xl font-bold mb-4">
                         Looking to Contribute To
                       </h3>
                       <p className="text-gray-700 leading-relaxed">{profile.contributionGoals}</p>
@@ -907,8 +941,7 @@ const MyAccountPage: React.FC = () => {
 
                   {(profile?.userType === 'ideas' || profile?.userType === 'both') && profile?.projectDetails && (
                     <div className="feature-card">
-                      <h3 className="text-xl font-bold mb-4 flex items-center">
-                        <span className="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center mr-3">🚀</span>
+                      <h3 className="text-xl font-bold mb-4">
                         Project Details
                       </h3>
                       <p className="text-gray-700 leading-relaxed">{profile.projectDetails}</p>
@@ -917,8 +950,7 @@ const MyAccountPage: React.FC = () => {
 
                   {getSkillsArray(profile?.skills || '').length > 0 && (
                     <div className="feature-card">
-                      <h3 className="text-xl font-bold mb-4 flex items-center">
-                        <span className="w-6 h-6 bg-teal-100 rounded-lg flex items-center justify-center mr-3">🛠️</span>
+                      <h3 className="text-xl font-bold mb-4">
                         All Skills
                       </h3>
                       <div className="flex flex-wrap gap-3">
@@ -938,7 +970,6 @@ const MyAccountPage: React.FC = () => {
           <section className="section">
             <div className="content-card">
               <div className="section-header">
-                <div className="feature-icon">📊</div>
                 <h2 className="section-title">Profile Overview</h2>
               </div>
               <div className="content-block">
@@ -949,9 +980,9 @@ const MyAccountPage: React.FC = () => {
                   <h3 className="font-semibold mb-2">Quick Stats:</h3>
                   <ul className="space-y-1 text-sm text-gray-600">
                     <li>• Username: {profile?.username || 'Not set'}</li>
-                    <li>• User Type: {profile?.userType === 'builder' ? '🔨 Builder' : profile?.userType === 'ideas' ? '💡 Ideas' : '🚀 Both'}</li>
-                    <li>• Bio: {profile?.bio ? '✓ Set' : 'Not set'}</li>
-                    <li>• Experience: {profile?.experience ? '✓ Set' : 'Not set'}</li>
+                    <li>• User Type: {profile?.userType === 'builder' ? 'Builder' : profile?.userType === 'ideas' ? 'Ideas' : 'Both'}</li>
+                    <li>• Bio: {profile?.bio ? 'Set' : 'Not set'}</li>
+                    <li>• Experience: {profile?.experience ? 'Set' : 'Not set'}</li>
                     <li>• Skills: {getSkillsArray(profile?.skills || '').length} selected</li>
                     <li>• Links: {(() => {
                       const links = [profile?.linkedinUrl, profile?.githubUrl, profile?.portfolioUrl, profile?.websiteUrl, profile?.twitterUrl, profile?.instagramUrl];
@@ -977,6 +1008,19 @@ const MyAccountPage: React.FC = () => {
             </div>
           </section>
         )}
+
+        {/* Privacy Statement */}
+        <section className="section">
+          <div className="content-card">
+            <div className="content-block">
+              <p className="gradient-text" style={{fontWeight: '600', fontStyle: 'italic'}}>
+                <strong>Your privacy matters:</strong> None of your personal details will ever be sold. 
+                We're here to help you build cool shit, not exploit your data. 
+                This platform exists to enable creators, builders, and innovators like you.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
