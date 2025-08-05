@@ -271,15 +271,26 @@ const MyAccountPage: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Sandhill!</h2>
-                <p className="text-gray-600 mb-6">
-                  Let's set up your professional profile to help you connect with the right people and build what matters.
-                </p>
+                <h2 className="text-3xl font-bold text-gray-800 mb-4">Welcome to Sandhill! 🚀</h2>
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200 mb-6">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center justify-center">
+                    <span className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2 text-blue-600">💡</span>
+                    Let's Build Something Amazing
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed mb-3">
+                    Set up your professional profile to connect with the right people and opportunities. 
+                    Share as much information as you feel comfortable with - every detail helps us match you better.
+                  </p>
+                  <p className="text-gray-600 text-sm italic">
+                    <strong>Your privacy is sacred:</strong> We'll never sell your data. 
+                    This platform exists to help you build cool shit, not exploit your information.
+                  </p>
+                </div>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="bg-gradient-to-r from-orange-500 to-teal-500 text-white px-8 py-4 rounded-lg hover:from-orange-600 hover:to-teal-600 transition-all font-medium text-lg shadow-lg"
+                  className="bg-gradient-to-r from-orange-500 to-teal-500 text-white px-8 py-4 rounded-lg hover:from-orange-600 hover:to-teal-600 transition-all font-medium text-lg shadow-lg transform hover:scale-105"
                 >
-                  Set Up Your Profile
+                  ✨ Set Up Your Profile
                 </button>
               </div>
             </div>
@@ -296,13 +307,66 @@ const MyAccountPage: React.FC = () => {
           {/* Header */}
           <div className="bg-gradient-to-r from-white via-orange-50 to-teal-50 rounded-3xl shadow-2xl p-10 mb-10 border border-orange-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div>
+              <div className="flex-1">
                 <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-500 to-teal-600 bg-clip-text text-transparent mb-4">
-                  My Account
+                  Hello, {profile?.username || 'Builder'}! 👋
                 </h1>
-                <p className="text-gray-700 text-xl font-medium">
-                  ✨ Manage your professional profile and connect with the Sandhill community
-                </p>
+                <div className="space-y-4">
+                  <p className="text-gray-700 text-xl font-medium">
+                    ✨ Welcome to your professional profile on Sandhill
+                  </p>
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200">
+                    <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                      <span className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2 text-blue-600">💡</span>
+                      Complete Your Profile
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed mb-3">
+                      We encourage you to fill out your profile with as much information as you feel comfortable sharing. 
+                      The more details you provide, the better we can connect you with the right people and opportunities.
+                    </p>
+                    <p className="text-gray-600 text-sm italic mb-4">
+                      <strong>Your privacy matters:</strong> None of your personal details will ever be sold. 
+                      We're here to help you build cool shit, not exploit your data. 
+                      This platform exists to enable creators, builders, and innovators like you.
+                    </p>
+                    {/* Profile Completion Indicator */}
+                    <div className="bg-white rounded-xl p-4 border border-blue-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-700">Profile Completion</span>
+                        <span className="text-sm font-bold text-blue-600">
+                          {(() => {
+                            const fields = [
+                              profile?.username, profile?.bio, profile?.experience, 
+                              profile?.passions, profile?.values, profile?.contributionGoals,
+                              profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
+                              profile?.portfolioUrl, profile?.projectDetails
+                            ];
+                            const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                            const percentage = Math.round((filledFields / fields.length) * 100);
+                            return `${percentage}%`;
+                          })()}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
+                          style={{ 
+                            width: `${(() => {
+                              const fields = [
+                                profile?.username, profile?.bio, profile?.experience, 
+                                profile?.passions, profile?.values, profile?.contributionGoals,
+                                profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
+                                profile?.portfolioUrl, profile?.projectDetails
+                              ];
+                              const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                              return Math.round((filledFields / fields.length) * 100);
+                            })()}%` 
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               {!isEditing && (
                 <button
@@ -333,19 +397,7 @@ const MyAccountPage: React.FC = () => {
             </div>
           )}
 
-          {/* Debug Form Data (temporary) */}
-          {isEditing && (
-            <div className="mb-8 p-6 rounded-2xl shadow-lg bg-blue-50 border border-blue-200">
-              <h3 className="font-bold text-blue-800 mb-2">Debug Info:</h3>
-              <div className="text-sm text-blue-700">
-                <p>Username: "{formData.username}"</p>
-                <p>User Type: "{formData.userType}"</p>
-                <p>Bio: "{formData.bio}"</p>
-                <p>Profile exists: {profile ? 'Yes' : 'No'}</p>
-                <p>Is Editing: {isEditing ? 'Yes' : 'No'}</p>
-              </div>
-            </div>
-          )}
+
 
           {isEditing ? (
             <form onSubmit={handleSubmit} className="space-y-8">
