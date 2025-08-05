@@ -6,6 +6,7 @@ const MyAccountPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [isViewingProfile, setIsViewingProfile] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     userType: 'both' as 'builder' | 'ideas' | 'both',
@@ -413,8 +414,31 @@ const MyAccountPage: React.FC = () => {
               </div>
             </div>
             
-            {!isEditing && (
+            {!isEditing && !isViewingProfile && (
               <div className="cta-buttons">
+                <button
+                  onClick={() => setIsViewingProfile(true)}
+                  className="btn btn-primary btn-large"
+                >
+                  👁️ View My Profile
+                </button>
+                <button
+                  onClick={handleEdit}
+                  className="btn btn-outline btn-large"
+                >
+                  ✏️ Edit Profile
+                </button>
+              </div>
+            )}
+            
+            {isViewingProfile && (
+              <div className="cta-buttons">
+                <button
+                  onClick={() => setIsViewingProfile(false)}
+                  className="btn btn-outline btn-large"
+                >
+                  ← Back to Overview
+                </button>
                 <button
                   onClick={handleEdit}
                   className="btn btn-primary btn-large"
@@ -758,9 +782,13 @@ const MyAccountPage: React.FC = () => {
               </form>
             </div>
           </section>
-        ) : (
+        ) : isViewingProfile ? (
           <section className="section">
             <div className="content-card">
+              <div className="section-header">
+                <div className="feature-icon">👤</div>
+                <h2 className="section-title">My Profile</h2>
+              </div>
               <div className="grid-2">
                 {/* Profile Overview Card */}
                 <div className="feature-card">
@@ -904,6 +932,48 @@ const MyAccountPage: React.FC = () => {
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className="section">
+            <div className="content-card">
+              <div className="section-header">
+                <div className="feature-icon">📊</div>
+                <h2 className="section-title">Profile Overview</h2>
+              </div>
+              <div className="content-block">
+                <p>
+                  Welcome to your profile dashboard! Here you can view your profile completion status and manage your information.
+                </p>
+                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                  <h3 className="font-semibold mb-2">Quick Stats:</h3>
+                  <ul className="space-y-1 text-sm text-gray-600">
+                    <li>• Username: {profile?.username || 'Not set'}</li>
+                    <li>• User Type: {profile?.userType === 'builder' ? '🔨 Builder' : profile?.userType === 'ideas' ? '💡 Ideas' : '🚀 Both'}</li>
+                    <li>• Bio: {profile?.bio ? '✓ Set' : 'Not set'}</li>
+                    <li>• Experience: {profile?.experience ? '✓ Set' : 'Not set'}</li>
+                    <li>• Skills: {getSkillsArray(profile?.skills || '').length} selected</li>
+                    <li>• Links: {(() => {
+                      const links = [profile?.linkedinUrl, profile?.githubUrl, profile?.portfolioUrl, profile?.websiteUrl, profile?.twitterUrl, profile?.instagramUrl];
+                      return links.filter(link => link && link.trim() !== '').length;
+                    })()} added</li>
+                  </ul>
+                </div>
+                
+                {/* Debug Info - Only show in development */}
+                {process.env.NODE_ENV === 'development' && (
+                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h3 className="font-semibold mb-2 text-blue-800">Debug Info:</h3>
+                    <div className="text-xs text-blue-700 space-y-1">
+                      <p>Profile ID: {profile?.id || 'None'}</p>
+                      <p>User ID: {profile?.userId || 'None'}</p>
+                      <p>Is Loading: {isLoading ? 'Yes' : 'No'}</p>
+                      <p>Has Error: {error ? 'Yes' : 'No'}</p>
+                      {error && <p>Error: {error}</p>}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </section>
