@@ -27,6 +27,7 @@ const MyAccountPage: React.FC = () => {
   // Update form data when profile loads
   useEffect(() => {
     if (profile) {
+      console.log('Setting form data from profile:', profile);
       setFormData({
         username: profile.username || '',
         userType: profile.userType || 'both',
@@ -46,6 +47,11 @@ const MyAccountPage: React.FC = () => {
       });
     }
   }, [profile]);
+
+  // Debug form data changes
+  useEffect(() => {
+    console.log('Form data changed:', formData);
+  }, [formData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,11 +176,6 @@ const MyAccountPage: React.FC = () => {
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-200">
               <div className="text-center">
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                  </svg>
-                </div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">Profile Loading Error</h2>
                 <p className="text-gray-600 mb-6">{error}</p>
                 <div className="flex justify-center space-x-4">
@@ -234,20 +235,20 @@ const MyAccountPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+          <div className="bg-gradient-to-r from-white via-orange-50 to-teal-50 rounded-3xl shadow-2xl p-10 mb-10 border border-orange-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-teal-600 bg-clip-text text-transparent mb-2">
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-500 to-teal-600 bg-clip-text text-transparent mb-4">
                   My Account
                 </h1>
-                <p className="text-gray-600 text-lg">
-                  Manage your professional profile and connect with the Sandhill community
+                <p className="text-gray-700 text-xl font-medium">
+                  ✨ Manage your professional profile and connect with the Sandhill community
                 </p>
               </div>
               {!isEditing && (
                 <button
                   onClick={handleEdit}
-                  className="mt-4 md:mt-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all font-medium shadow-lg"
+                  className="mt-6 md:mt-0 bg-gradient-to-r from-orange-500 via-red-500 to-teal-500 text-white px-8 py-4 rounded-2xl hover:from-orange-600 hover:via-red-600 hover:to-teal-600 transition-all font-bold text-lg shadow-xl transform hover:scale-105"
                 >
                   ✏️ Edit Profile
                 </button>
@@ -276,9 +277,9 @@ const MyAccountPage: React.FC = () => {
           {isEditing ? (
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Basic Information Card */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+              <div className="bg-gradient-to-br from-white via-blue-50 to-purple-50 rounded-3xl shadow-2xl p-10 border border-blue-200">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-8 flex items-center">
+                  <span className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-4 text-white text-xl">
                     👤
                   </span>
                   Basic Information
@@ -295,7 +296,7 @@ const MyAccountPage: React.FC = () => {
                       value={formData.username}
                       onChange={(e) => handleInputChange('username', e.target.value)}
                       placeholder="Your username"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-lg font-medium bg-white/80 backdrop-blur-sm"
                     />
                   </div>
 
@@ -309,17 +310,17 @@ const MyAccountPage: React.FC = () => {
                         { value: 'ideas', label: 'Ideas', icon: '💡' },
                         { value: 'both', label: 'Both', icon: '🚀' }
                       ].map((option) => (
-                        <label key={option.value} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                        <label key={option.value} className="flex items-center space-x-4 cursor-pointer p-4 rounded-2xl border-2 border-gray-200 hover:border-blue-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all transform hover:scale-105">
                           <input
                             type="radio"
                             name="userType"
                             value={option.value}
                             checked={formData.userType === option.value}
                             onChange={(e) => handleInputChange('userType', e.target.value as 'builder' | 'ideas' | 'both')}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                            className="h-5 w-5 text-blue-600 focus:ring-4 focus:ring-blue-500/20 border-2 border-gray-300"
                           />
-                          <span className="text-lg">{option.icon}</span>
-                          <span className="text-gray-700 font-medium">{option.label}</span>
+                          <span className="text-2xl">{option.icon}</span>
+                          <span className="text-gray-700 font-bold text-lg">{option.label}</span>
                         </label>
                       ))}
                     </div>
@@ -328,9 +329,9 @@ const MyAccountPage: React.FC = () => {
               </div>
 
               {/* Personal Story Card */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+              <div className="bg-gradient-to-br from-white via-purple-50 to-pink-50 rounded-3xl shadow-2xl p-10 border border-purple-200">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-8 flex items-center">
+                  <span className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-4 text-white text-xl">
                     📖
                   </span>
                   Your Story
@@ -347,7 +348,7 @@ const MyAccountPage: React.FC = () => {
                       onChange={(e) => handleInputChange('bio', e.target.value)}
                       placeholder="Tell us about yourself in a few sentences..."
                       rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-vertical transition-all"
+                      className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 resize-vertical transition-all text-lg font-medium bg-white/80 backdrop-blur-sm"
                     />
                   </div>
 
@@ -568,18 +569,18 @@ const MyAccountPage: React.FC = () => {
               </div>
 
               {/* Submit Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-6">
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="flex-1 bg-gradient-to-r from-green-500 to-blue-600 text-white py-4 px-8 rounded-lg hover:from-green-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium text-lg shadow-lg"
+                  className="flex-1 bg-gradient-to-r from-orange-500 via-red-500 to-teal-500 text-white py-6 px-10 rounded-2xl hover:from-orange-600 hover:via-red-600 hover:to-teal-600 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:ring-offset-4 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold text-xl shadow-2xl transform hover:scale-105"
                 >
                   {isSaving ? '💾 Saving...' : '💾 Save Profile'}
                 </button>
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all font-medium text-lg"
+                  className="px-10 py-6 border-3 border-gray-300 text-gray-700 rounded-2xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 transition-all font-bold text-xl transform hover:scale-105"
                 >
                   ❌ Cancel
                 </button>
