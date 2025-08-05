@@ -934,6 +934,12 @@ p {
   background: var(--light-gradient);
 }
 
+/* My Account Page Specific */
+.my-account-page {
+  min-height: 100vh;
+  background: var(--light-gradient);
+}
+
 .start-page .hero {
   margin-bottom: var(--space-3xl);
   padding: 8rem 2rem;

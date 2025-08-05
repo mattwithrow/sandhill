@@ -261,130 +261,142 @@ const MyAccountPage: React.FC = () => {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-yellow-200">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">Welcome to Sandhill! 🚀</h2>
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200 mb-6">
-                  <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center justify-center">
-                    <span className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2 text-blue-600">💡</span>
-                    Let's Build Something Amazing
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed mb-3">
-                    Set up your professional profile to connect with the right people and opportunities. 
-                    Share as much information as you feel comfortable with - every detail helps us match you better.
-                  </p>
-                  <p className="text-gray-600 text-sm italic">
-                    <strong>Your privacy is sacred:</strong> We'll never sell your data. 
-                    This platform exists to help you build cool shit, not exploit your information.
-                  </p>
-                </div>
+      <div className="my-account-page">
+        <div className="container">
+          <section className="hero">
+            <div className="hero-content">
+              <h1 className="hero-title">
+                Welcome to <span className="gradient-text">Sandhill</span>! 🚀
+              </h1>
+              <p className="hero-subtitle">
+                Let's build something amazing together
+              </p>
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="content-card">
+              <div className="section-header">
+                <div className="feature-icon">💡</div>
+                <h2 className="section-title">Set Up Your Profile</h2>
+              </div>
+              <div className="content-block">
+                <p>
+                  Set up your professional profile to connect with the right people and opportunities. 
+                  Share as much information as you feel comfortable with - every detail helps us match you better.
+                </p>
+                <p className="gradient-text" style={{fontWeight: '600', fontStyle: 'italic'}}>
+                  <strong>Your privacy is sacred:</strong> We'll never sell your data. 
+                  This platform exists to help you build cool shit, not exploit your information.
+                </p>
+              </div>
+              <div className="cta-buttons">
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="bg-gradient-to-r from-orange-500 to-teal-500 text-white px-8 py-4 rounded-lg hover:from-orange-600 hover:to-teal-600 transition-all font-medium text-lg shadow-lg transform hover:scale-105"
+                  className="btn btn-primary btn-large"
                 >
                   ✨ Set Up Your Profile
                 </button>
               </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-white via-orange-50 to-teal-50 rounded-3xl shadow-2xl p-10 mb-10 border border-orange-200">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div className="flex-1">
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-500 to-teal-600 bg-clip-text text-transparent mb-4">
-                  Hello, {profile?.username || 'Builder'}! 👋
-                </h1>
-                <div className="space-y-4">
-                  <p className="text-gray-700 text-xl font-medium">
-                    ✨ Welcome to your professional profile on Sandhill
-                  </p>
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200">
-                    <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
-                      <span className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-2 text-blue-600">💡</span>
-                      Complete Your Profile
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed mb-3">
-                      We encourage you to fill out your profile with as much information as you feel comfortable sharing. 
-                      The more details you provide, the better we can connect you with the right people and opportunities.
-                    </p>
-                    <p className="text-gray-600 text-sm italic mb-4">
-                      <strong>Your privacy matters:</strong> None of your personal details will ever be sold. 
-                      We're here to help you build cool shit, not exploit your data. 
-                      This platform exists to enable creators, builders, and innovators like you.
-                    </p>
-                    {/* Profile Completion Indicator */}
-                    <div className="bg-white rounded-xl p-4 border border-blue-200">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-700">Profile Completion</span>
-                        <span className="text-sm font-bold text-blue-600">
-                          {(() => {
-                            const fields = [
-                              profile?.username, profile?.bio, profile?.experience, 
-                              profile?.passions, profile?.values, profile?.contributionGoals,
-                              profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
-                              profile?.portfolioUrl, profile?.projectDetails
-                            ];
-                            const filledFields = fields.filter(field => field && field.trim() !== '').length;
-                            const percentage = Math.round((filledFields / fields.length) * 100);
-                            return `${percentage}%`;
-                          })()}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
-                          style={{ 
-                            width: `${(() => {
-                              const fields = [
-                                profile?.username, profile?.bio, profile?.experience, 
-                                profile?.passions, profile?.values, profile?.contributionGoals,
-                                profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
-                                profile?.portfolioUrl, profile?.projectDetails
-                              ];
-                              const filledFields = fields.filter(field => field && field.trim() !== '').length;
-                              return Math.round((filledFields / fields.length) * 100);
-                            })()}%` 
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
+    <div className="my-account-page">
+      <div className="container">
+        {/* Hero Section */}
+        <section className="hero">
+          <div className="hero-content">
+            <h1 className="hero-title">
+              Hello, <span className="gradient-text">{profile?.username || 'Builder'}</span>! 👋
+            </h1>
+            <p className="hero-subtitle">
+              Welcome to your professional profile on Sandhill
+            </p>
+          </div>
+        </section>
+
+        {/* Profile Completion Section */}
+        <section className="section">
+          <div className="content-card">
+            <div className="section-header">
+              <div className="feature-icon">💡</div>
+              <h2 className="section-title">Complete Your Profile</h2>
+            </div>
+            <div className="content-block">
+              <p>
+                We encourage you to fill out your profile with as much information as you feel comfortable sharing. 
+                The more details you provide, the better we can connect you with the right people and opportunities.
+              </p>
+              <p className="gradient-text" style={{fontWeight: '600', fontStyle: 'italic'}}>
+                <strong>Your privacy matters:</strong> None of your personal details will ever be sold. 
+                We're here to help you build cool shit, not exploit your data. 
+                This platform exists to enable creators, builders, and innovators like you.
+              </p>
+              
+              {/* Profile Completion Indicator */}
+              <div className="feature-card">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-medium">Profile Completion</span>
+                  <span className="text-sm font-bold gradient-text">
+                    {(() => {
+                      const fields = [
+                        profile?.username, profile?.bio, profile?.experience, 
+                        profile?.passions, profile?.values, profile?.contributionGoals,
+                        profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
+                        profile?.portfolioUrl, profile?.projectDetails
+                      ];
+                      const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                      const percentage = Math.round((filledFields / fields.length) * 100);
+                      return `${percentage}%`;
+                    })()}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div 
+                    className="h-3 rounded-full transition-all duration-300"
+                    style={{ 
+                      background: 'var(--primary-gradient)',
+                      width: `${(() => {
+                        const fields = [
+                          profile?.username, profile?.bio, profile?.experience, 
+                          profile?.passions, profile?.values, profile?.contributionGoals,
+                          profile?.skills, profile?.linkedinUrl, profile?.githubUrl,
+                          profile?.portfolioUrl, profile?.projectDetails
+                        ];
+                        const filledFields = fields.filter(field => field && field.trim() !== '').length;
+                        return Math.round((filledFields / fields.length) * 100);
+                      })()}%` 
+                    }}
+                  ></div>
                 </div>
               </div>
-              {!isEditing && (
+            </div>
+            
+            {!isEditing && (
+              <div className="cta-buttons">
                 <button
                   onClick={handleEdit}
-                  className="mt-6 md:mt-0 bg-gradient-to-r from-orange-500 via-red-500 to-teal-500 text-white px-8 py-4 rounded-2xl hover:from-orange-600 hover:via-red-600 hover:to-teal-600 transition-all font-bold text-lg shadow-xl transform hover:scale-105"
+                  className="btn btn-primary btn-large"
                 >
                   ✏️ Edit Profile
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
+        </section>
 
-          {/* Success/Error Messages */}
-          {message && (
-            <div className={`mb-8 p-6 rounded-2xl shadow-lg ${
+        {/* Success/Error Messages */}
+        {message && (
+          <section className="section">
+            <div className={`content-card ${
               message.includes('Error') 
-                ? 'bg-red-50 border border-red-200 text-red-800' 
-                : 'bg-green-50 border border-green-200 text-green-800'
+                ? 'border-red-200 bg-red-50' 
+                : 'border-green-200 bg-green-50'
             }`}>
               <div className="flex items-center">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
@@ -395,41 +407,36 @@ const MyAccountPage: React.FC = () => {
                 <span className="font-medium">{message}</span>
               </div>
             </div>
-          )}
+          </section>
+        )}
 
-
-
-          {isEditing ? (
-            <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Basic Information Card */}
-              <div className="bg-gradient-to-br from-white via-blue-50 to-purple-50 rounded-3xl shadow-2xl p-10 border border-blue-200">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-8 flex items-center">
-                  <span className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-4 text-white text-xl">
-                    👤
-                  </span>
-                  Basic Information
-                </h2>
+        {isEditing ? (
+          <section className="section">
+            <div className="content-card">
+              <form onSubmit={handleSubmit}>
+                {/* Basic Information Card */}
+                <div className="section-header">
+                  <div className="feature-icon">👤</div>
+                  <h2 className="section-title">Basic Information</h2>
+                </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-2">
+                <div className="grid-2">
+                  <div className="feature-card">
+                    <label htmlFor="username" className="block text-sm font-semibold mb-2">
                       Username *
                     </label>
                     <input
                       type="text"
                       id="username"
                       value={formData.username || ''}
-                      onChange={(e) => {
-                        console.log('Username input changed:', e.target.value);
-                        handleInputChange('username', e.target.value);
-                      }}
+                      onChange={(e) => handleInputChange('username', e.target.value)}
                       placeholder="Your username"
-                      className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-lg font-medium bg-white/80 backdrop-blur-sm"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <div className="feature-card">
+                    <label className="block text-sm font-semibold mb-3">
                       I am a: *
                     </label>
                     <div className="space-y-3">
@@ -438,57 +445,47 @@ const MyAccountPage: React.FC = () => {
                         { value: 'ideas', label: 'Ideas', icon: '💡' },
                         { value: 'both', label: 'Both', icon: '🚀' }
                       ].map((option) => (
-                        <label key={option.value} className="flex items-center space-x-4 cursor-pointer p-4 rounded-2xl border-2 border-gray-200 hover:border-blue-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all transform hover:scale-105">
+                        <label key={option.value} className="flex items-center space-x-4 cursor-pointer p-4 rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
                           <input
                             type="radio"
                             name="userType"
                             value={option.value}
                             checked={formData.userType === option.value}
-                            onChange={(e) => {
-                              console.log('User type changed:', e.target.value);
-                              handleInputChange('userType', e.target.value as 'builder' | 'ideas' | 'both');
-                            }}
-                            className="h-5 w-5 text-blue-600 focus:ring-4 focus:ring-blue-500/20 border-2 border-gray-300"
+                            onChange={(e) => handleInputChange('userType', e.target.value as 'builder' | 'ideas' | 'both')}
+                            className="h-5 w-5 text-orange-600 focus:ring-2 focus:ring-orange-500 border-2 border-gray-300"
                           />
                           <span className="text-2xl">{option.icon}</span>
-                          <span className="text-gray-700 font-bold text-lg">{option.label}</span>
+                          <span className="text-gray-700 font-bold">{option.label}</span>
                         </label>
                       ))}
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Personal Story Card */}
-              <div className="bg-gradient-to-br from-white via-purple-50 to-pink-50 rounded-3xl shadow-2xl p-10 border border-purple-200">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-8 flex items-center">
-                  <span className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mr-4 text-white text-xl">
-                    📖
-                  </span>
-                  Your Story
-                </h2>
+                {/* Personal Story Card */}
+                <div className="section-header">
+                  <div className="feature-icon">📖</div>
+                  <h2 className="section-title">Your Story</h2>
+                </div>
                 
-                <div className="space-y-6">
-                  <div>
-                    <label htmlFor="bio" className="block text-sm font-semibold text-gray-700 mb-2">
+                <div className="content-block">
+                  <div className="feature-card">
+                    <label htmlFor="bio" className="block text-sm font-semibold mb-2">
                       Bio
                     </label>
                     <textarea
                       id="bio"
                       value={formData.bio || ''}
-                      onChange={(e) => {
-                        console.log('Bio textarea changed:', e.target.value);
-                        handleInputChange('bio', e.target.value);
-                      }}
+                      onChange={(e) => handleInputChange('bio', e.target.value)}
                       placeholder="Tell us about yourself in a few sentences..."
                       rows={3}
-                      className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 resize-vertical transition-all text-lg font-medium bg-white/80 backdrop-blur-sm"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="experience" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <div className="grid-2">
+                    <div className="feature-card">
+                      <label htmlFor="experience" className="block text-sm font-semibold mb-2">
                         Experience
                       </label>
                       <textarea
@@ -497,12 +494,12 @@ const MyAccountPage: React.FC = () => {
                         onChange={(e) => handleInputChange('experience', e.target.value)}
                         placeholder="What's your background and experience?"
                         rows={4}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-vertical transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
                     </div>
 
-                    <div>
-                      <label htmlFor="passions" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <div className="feature-card">
+                      <label htmlFor="passions" className="block text-sm font-semibold mb-2">
                         Passions
                       </label>
                       <textarea
@@ -511,14 +508,14 @@ const MyAccountPage: React.FC = () => {
                         onChange={(e) => handleInputChange('passions', e.target.value)}
                         placeholder="What are you passionate about?"
                         rows={4}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-vertical transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="values" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <div className="grid-2">
+                    <div className="feature-card">
+                      <label htmlFor="values" className="block text-sm font-semibold mb-2">
                         Values
                       </label>
                       <textarea
@@ -527,12 +524,12 @@ const MyAccountPage: React.FC = () => {
                         onChange={(e) => handleInputChange('values', e.target.value)}
                         placeholder="What values are important to you?"
                         rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-vertical transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
                     </div>
 
-                    <div>
-                      <label htmlFor="contributionGoals" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <div className="feature-card">
+                      <label htmlFor="contributionGoals" className="block text-sm font-semibold mb-2">
                         What are you looking to contribute to?
                       </label>
                       <textarea
@@ -541,59 +538,53 @@ const MyAccountPage: React.FC = () => {
                         onChange={(e) => handleInputChange('contributionGoals', e.target.value)}
                         placeholder="What type of projects or causes do you want to contribute to?"
                         rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-vertical transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Skills Card */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                    🛠️
-                  </span>
-                  Skills & Expertise
-                </h2>
-                
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {[
-                    'JavaScript', 'TypeScript', 'React', 'Vue', 'Angular', 'Node.js',
-                    'Python', 'Java', 'C#', 'PHP', 'Ruby', 'Go', 'Rust',
-                    'UX Design', 'UI Design', 'CX Design', 'Graphic Design',
-                    'Frontend Development', 'Backend Development', 'Full Stack',
-                    'Mobile Development', 'DevOps', 'Cloud Computing',
-                    'Data Science', 'Machine Learning', 'AI', 'Blockchain',
-                    'Product Management', 'Project Management', 'Marketing',
-                    'Content Creation', 'Video Production', 'Photography',
-                    'Writing', 'Editing', 'Research', 'Strategy'
-                  ].map((skill) => (
-                    <label key={skill} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
-                      <input
-                        type="checkbox"
-                        checked={getSkillsArray(formData.skills).includes(skill)}
-                        onChange={() => handleSkillToggle(skill)}
-                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                      />
-                      <span className="text-sm text-gray-700 font-medium">{skill}</span>
-                    </label>
-                  ))}
+                {/* Skills Card */}
+                <div className="section-header">
+                  <div className="feature-icon">🛠️</div>
+                  <h2 className="section-title">Skills & Expertise</h2>
                 </div>
-              </div>
-
-              {/* Social Links Card */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
-                    🔗
-                  </span>
-                  Social Links & Portfolio
-                </h2>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="linkedinUrl" className="block text-sm font-semibold text-gray-700 mb-2">
+                <div className="feature-card">
+                  <div className="grid-2">
+                    {[
+                      'JavaScript', 'TypeScript', 'React', 'Vue', 'Angular', 'Node.js',
+                      'Python', 'Java', 'C#', 'PHP', 'Ruby', 'Go', 'Rust',
+                      'UX Design', 'UI Design', 'CX Design', 'Graphic Design',
+                      'Frontend Development', 'Backend Development', 'Full Stack',
+                      'Mobile Development', 'DevOps', 'Cloud Computing',
+                      'Data Science', 'Machine Learning', 'AI', 'Blockchain',
+                      'Product Management', 'Project Management', 'Marketing',
+                      'Content Creation', 'Video Production', 'Photography',
+                      'Writing', 'Editing', 'Research', 'Strategy'
+                    ].map((skill) => (
+                      <label key={skill} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-orange-50 transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={getSkillsArray(formData.skills).includes(skill)}
+                          onChange={() => handleSkillToggle(skill)}
+                          className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-gray-700 font-medium">{skill}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Social Links Card */}
+                <div className="section-header">
+                  <div className="feature-icon">🔗</div>
+                  <h2 className="section-title">Social Links & Portfolio</h2>
+                </div>
+                
+                <div className="grid-2">
+                  <div className="feature-card">
+                    <label htmlFor="linkedinUrl" className="block text-sm font-semibold mb-2">
                       LinkedIn URL
                     </label>
                     <input
@@ -602,12 +593,12 @@ const MyAccountPage: React.FC = () => {
                       value={formData.linkedinUrl}
                       onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
                       placeholder="https://linkedin.com/in/yourprofile"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="githubUrl" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <div className="feature-card">
+                    <label htmlFor="githubUrl" className="block text-sm font-semibold mb-2">
                       GitHub URL
                     </label>
                     <input
@@ -616,12 +607,12 @@ const MyAccountPage: React.FC = () => {
                       value={formData.githubUrl}
                       onChange={(e) => handleInputChange('githubUrl', e.target.value)}
                       placeholder="https://github.com/yourusername"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="portfolioUrl" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <div className="feature-card">
+                    <label htmlFor="portfolioUrl" className="block text-sm font-semibold mb-2">
                       Portfolio URL
                     </label>
                     <input
@@ -630,12 +621,12 @@ const MyAccountPage: React.FC = () => {
                       value={formData.portfolioUrl}
                       onChange={(e) => handleInputChange('portfolioUrl', e.target.value)}
                       placeholder="https://yourportfolio.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="websiteUrl" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <div className="feature-card">
+                    <label htmlFor="websiteUrl" className="block text-sm font-semibold mb-2">
                       Personal Website
                     </label>
                     <input
@@ -644,12 +635,12 @@ const MyAccountPage: React.FC = () => {
                       value={formData.websiteUrl}
                       onChange={(e) => handleInputChange('websiteUrl', e.target.value)}
                       placeholder="https://yourwebsite.com"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="twitterUrl" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <div className="feature-card">
+                    <label htmlFor="twitterUrl" className="block text-sm font-semibold mb-2">
                       Twitter/X URL
                     </label>
                     <input
@@ -658,12 +649,12 @@ const MyAccountPage: React.FC = () => {
                       value={formData.twitterUrl}
                       onChange={(e) => handleInputChange('twitterUrl', e.target.value)}
                       placeholder="https://twitter.com/yourusername"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="instagramUrl" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <div className="feature-card">
+                    <label htmlFor="instagramUrl" className="block text-sm font-semibold mb-2">
                       Instagram URL
                     </label>
                     <input
@@ -672,23 +663,19 @@ const MyAccountPage: React.FC = () => {
                       value={formData.instagramUrl}
                       onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
                       placeholder="https://instagram.com/yourusername"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                     />
                   </div>
                 </div>
-              </div>
 
-              {/* Project Details Card */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                    🎯
-                  </span>
-                  Project Details
-                </h2>
+                {/* Project Details Card */}
+                <div className="section-header">
+                  <div className="feature-icon">🎯</div>
+                  <h2 className="section-title">Project Details</h2>
+                </div>
                 
-                <div>
-                  <label htmlFor="projectDetails" className="block text-sm font-semibold text-gray-700 mb-2">
+                <div className="feature-card">
+                  <label htmlFor="projectDetails" className="block text-sm font-semibold mb-2">
                     Tell us about your project or what you're looking for
                   </label>
                   <textarea
@@ -700,37 +687,39 @@ const MyAccountPage: React.FC = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                   />
                 </div>
-              </div>
 
-              {/* Submit Buttons */}
-              <div className="flex flex-col sm:flex-row gap-6">
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="flex-1 bg-gradient-to-r from-orange-500 via-red-500 to-teal-500 text-white py-6 px-10 rounded-2xl hover:from-orange-600 hover:via-red-600 hover:to-teal-600 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:ring-offset-4 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold text-xl shadow-2xl transform hover:scale-105"
-                >
-                  {isSaving ? '💾 Saving...' : '💾 Save Profile'}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="px-10 py-6 border-3 border-gray-300 text-gray-700 rounded-2xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 transition-all font-bold text-xl transform hover:scale-105"
-                >
-                  ❌ Cancel
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Profile Overview Card */}
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 sticky top-8">
+                {/* Submit Buttons */}
+                <div className="cta-buttons">
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="btn btn-primary btn-large"
+                  >
+                    {isSaving ? '💾 Saving...' : '💾 Save Profile'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="btn btn-outline btn-large"
+                  >
+                    ❌ Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+        ) : (
+          <section className="section">
+            <div className="content-card">
+              <div className="grid-2">
+                {/* Profile Overview Card */}
+                <div className="feature-card">
                   <div className="text-center mb-6">
                     <div className="w-24 h-24 bg-gradient-to-br from-orange-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-3xl font-bold">
                       {profile?.username?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{profile?.username || 'User'}</h2>
-                    <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    <h2 className="text-2xl font-bold mb-2">{profile?.username || 'User'}</h2>
+                    <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
                       {profile?.userType === 'builder' ? '🔨 Builder' : 
                        profile?.userType === 'ideas' ? '💡 Ideas' : '🚀 Both'}
                     </div>
@@ -744,10 +733,10 @@ const MyAccountPage: React.FC = () => {
 
                   {getSkillsArray(profile?.skills || '').length > 0 && (
                     <div className="mb-6">
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Skills</h3>
+                      <h3 className="text-sm font-semibold mb-3">Skills</h3>
                       <div className="flex flex-wrap gap-2">
                         {getSkillsArray(profile?.skills || '').slice(0, 6).map((skill) => (
-                          <span key={skill} className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                          <span key={skill} className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-3 py-1 rounded-full text-xs font-medium">
                             {skill}
                           </span>
                         ))}
@@ -760,115 +749,115 @@ const MyAccountPage: React.FC = () => {
 
                   {(profile?.linkedinUrl || profile?.githubUrl || profile?.portfolioUrl || profile?.twitterUrl || profile?.instagramUrl || profile?.websiteUrl) && (
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Connect</h3>
+                      <h3 className="text-sm font-semibold mb-3">Connect</h3>
                       <div className="space-y-2">
-                                                 {profile.linkedinUrl && (
-                           <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
-                             <span className="mr-2">🔗</span> LinkedIn
-                           </a>
-                         )}
-                         {profile.githubUrl && (
-                           <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-gray-900 transition-colors">
-                             <span className="mr-2">🐙</span> GitHub
-                           </a>
-                         )}
-                         {profile.portfolioUrl && (
-                           <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-purple-600 hover:text-purple-800 transition-colors">
-                             <span className="mr-2">🎨</span> Portfolio
-                           </a>
-                         )}
-                         {profile.websiteUrl && (
-                           <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-green-600 hover:text-green-800 transition-colors">
-                             <span className="mr-2">🌐</span> Website
-                           </a>
-                         )}
-                         {profile.twitterUrl && (
-                           <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-400 hover:text-blue-600 transition-colors">
-                             <span className="mr-2">🐦</span> Twitter/X
-                           </a>
-                         )}
-                         {profile.instagramUrl && (
-                           <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-pink-600 hover:text-pink-800 transition-colors">
-                             <span className="mr-2">📷</span> Instagram
-                           </a>
-                         )}
+                        {profile.linkedinUrl && (
+                          <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                            <span className="mr-2">🔗</span> LinkedIn
+                          </a>
+                        )}
+                        {profile.githubUrl && (
+                          <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:text-gray-900 transition-colors">
+                            <span className="mr-2">🐙</span> GitHub
+                          </a>
+                        )}
+                        {profile.portfolioUrl && (
+                          <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-purple-600 hover:text-purple-800 transition-colors">
+                            <span className="mr-2">🎨</span> Portfolio
+                          </a>
+                        )}
+                        {profile.websiteUrl && (
+                          <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-green-600 hover:text-green-800 transition-colors">
+                            <span className="mr-2">🌐</span> Website
+                          </a>
+                        )}
+                        {profile.twitterUrl && (
+                          <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-blue-400 hover:text-blue-600 transition-colors">
+                            <span className="mr-2">🐦</span> Twitter/X
+                          </a>
+                        )}
+                        {profile.instagramUrl && (
+                          <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center text-pink-600 hover:text-pink-800 transition-colors">
+                            <span className="mr-2">📷</span> Instagram
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Profile Details Cards */}
+                <div className="space-y-6">
+                  {profile?.experience && (
+                    <div className="feature-card">
+                      <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <span className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center mr-3">💼</span>
+                        Experience
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">{profile.experience}</p>
+                    </div>
+                  )}
+
+                  {profile?.passions && (
+                    <div className="feature-card">
+                      <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <span className="w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center mr-3">🔥</span>
+                        Passions
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">{profile.passions}</p>
+                    </div>
+                  )}
+
+                  {profile?.values && (
+                    <div className="feature-card">
+                      <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <span className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center mr-3">💎</span>
+                        Values
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">{profile.values}</p>
+                    </div>
+                  )}
+
+                  {profile?.contributionGoals && (
+                    <div className="feature-card">
+                      <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <span className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center mr-3">🎯</span>
+                        Looking to Contribute To
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">{profile.contributionGoals}</p>
+                    </div>
+                  )}
+
+                  {profile?.projectDetails && (
+                    <div className="feature-card">
+                      <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <span className="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center mr-3">🚀</span>
+                        Project Details
+                      </h3>
+                      <p className="text-gray-700 leading-relaxed">{profile.projectDetails}</p>
+                    </div>
+                  )}
+
+                  {getSkillsArray(profile?.skills || '').length > 0 && (
+                    <div className="feature-card">
+                      <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <span className="w-6 h-6 bg-teal-100 rounded-lg flex items-center justify-center mr-3">🛠️</span>
+                        All Skills
+                      </h3>
+                      <div className="flex flex-wrap gap-3">
+                        {getSkillsArray(profile?.skills || '').map((skill) => (
+                          <span key={skill} className="bg-gradient-to-r from-teal-500 to-orange-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md">
+                            {skill}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   )}
                 </div>
               </div>
-
-              {/* Profile Details Cards */}
-              <div className="lg:col-span-2 space-y-8">
-                {profile?.experience && (
-                  <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center mr-3">💼</span>
-                      Experience
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed">{profile.experience}</p>
-                  </div>
-                )}
-
-                {profile?.passions && (
-                  <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center mr-3">🔥</span>
-                      Passions
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed">{profile.passions}</p>
-                  </div>
-                )}
-
-                {profile?.values && (
-                  <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center mr-3">💎</span>
-                      Values
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed">{profile.values}</p>
-                  </div>
-                )}
-
-                {profile?.contributionGoals && (
-                  <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center mr-3">🎯</span>
-                      Looking to Contribute To
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed">{profile.contributionGoals}</p>
-                  </div>
-                )}
-
-                {profile?.projectDetails && (
-                  <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center mr-3">🚀</span>
-                      Project Details
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed">{profile.projectDetails}</p>
-                  </div>
-                )}
-
-                {getSkillsArray(profile?.skills || '').length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                      <span className="w-6 h-6 bg-teal-100 rounded-lg flex items-center justify-center mr-3">🛠️</span>
-                      All Skills
-                    </h3>
-                    <div className="flex flex-wrap gap-3">
-                      {getSkillsArray(profile?.skills || '').map((skill) => (
-                        <span key={skill} className="bg-gradient-to-r from-teal-500 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
-          )}
-        </div>
+          </section>
+        )}
       </div>
     </div>
   );
