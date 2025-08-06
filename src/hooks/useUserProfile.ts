@@ -3,7 +3,8 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
 
-const client = generateClient<Schema>();
+// Generate client inside the hook to ensure it's fresh
+const getClient = () => generateClient<Schema>();
 
 type UserProfile = Schema["UserProfile"]["type"];
 
@@ -12,6 +13,27 @@ export const useUserProfile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Test function to verify client is working
+  const testClient = async () => {
+    try {
+      const client = getClient();
+      console.log('Testing client connection...');
+      console.log('Client models available:', Object.keys(client.models || {}));
+      
+      if (client.models.UserProfile) {
+        console.log('✅ UserProfile model is available');
+        return true;
+      } else {
+        console.log('❌ UserProfile model is NOT available');
+        console.log('Available models:', Object.keys(client.models || {}));
+        return false;
+      }
+    } catch (err) {
+      console.error('❌ Client test failed:', err);
+      return false;
+    }
+  };
 
   useEffect(() => {
     console.log('useUserProfile - Auth status:', authStatus);
@@ -39,15 +61,16 @@ export const useUserProfile = () => {
       setIsLoading(true);
       setError(null);
 
-      console.log('Loading profile for user:', user?.userId);
-
-      // Check if UserProfile model exists
-      if (!client.models.UserProfile) {
-        console.error('UserProfile model not found in client.models');
-        setError('UserProfile model not available');
+      // Test client first
+      const clientWorking = await testClient();
+      if (!clientWorking) {
+        setError('Backend connection failed - please wait for deployment to complete');
         setIsLoading(false);
         return;
       }
+
+      const client = getClient();
+      console.log('Loading profile for user:', user?.userId);
 
       // Try to find existing profile
       const profilePromise = client.models.UserProfile.list({
@@ -109,6 +132,7 @@ export const useUserProfile = () => {
     console.log('Updating profile with data:', updates);
 
     try {
+      const client = getClient();
       console.log('Updating existing profile with ID:', profile.id);
       const result = await client.models.UserProfile.update({
         id: profile.id,
@@ -128,6 +152,7 @@ export const useUserProfile = () => {
     isLoading,
     error,
     updateProfile,
-    refreshProfile: loadOrCreateProfile
+    refreshProfile: loadOrCreateProfile,
+    testClient
   };
 }; 
