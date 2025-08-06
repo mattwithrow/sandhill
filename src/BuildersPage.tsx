@@ -28,7 +28,7 @@ const BuildersPage: React.FC = () => {
             </p>
             <div className="cta-buttons">
               <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-                🚀 Post Your Idea
+                Post Your Idea
               </button>
             </div>
             <div className="scroll-indicator float">
@@ -42,14 +42,13 @@ const BuildersPage: React.FC = () => {
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="eyebrow">👥 Featured Builders</div>
+              <div className="eyebrow">Featured Builders</div>
               <h2 className="section-title">
                 Skilled professionals ready to help bring your ideas to life
               </h2>
             </div>
             <div className="grid-3">
               <div className="feature-card">
-                <div className="feature-icon">💻</div>
                 <h3>Sarah Chen</h3>
                 <p>Full-stack developer with 8+ years experience in React, Node.js, and cloud architecture. Passionate about social impact projects.</p>
                 <div className="builder-meta">
@@ -58,7 +57,6 @@ const BuildersPage: React.FC = () => {
                 </div>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🎨</div>
                 <h3>Marcus Rodriguez</h3>
                 <p>Product designer specializing in user experience and accessibility. Has helped launch 15+ successful products.</p>
                 <div className="builder-meta">
@@ -67,7 +65,6 @@ const BuildersPage: React.FC = () => {
                 </div>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">📈</div>
                 <h3>Priya Patel</h3>
                 <p>Marketing strategist with expertise in growth hacking and community building. Loves working with mission-driven startups.</p>
                 <div className="builder-meta">
@@ -83,14 +80,13 @@ const BuildersPage: React.FC = () => {
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="eyebrow">🔧 Skills & Categories</div>
+              <div className="eyebrow">Skills & Categories</div>
               <h2 className="section-title">
                 Find builders with the skills you need
               </h2>
             </div>
             <div className="grid-3">
               <div className="feature-card">
-                <div className="feature-icon">💻</div>
                 <h3>Development</h3>
                 <p>Frontend, backend, mobile, and full-stack developers ready to build your technical solutions.</p>
                 <ul className="skill-list">
@@ -100,7 +96,6 @@ const BuildersPage: React.FC = () => {
                 </ul>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🎨</div>
                 <h3>Design</h3>
                 <p>UX/UI designers, graphic designers, and creative professionals to bring your vision to life.</p>
                 <ul className="skill-list">
@@ -110,7 +105,6 @@ const BuildersPage: React.FC = () => {
                 </ul>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">📊</div>
                 <h3>Business</h3>
                 <p>Marketing, operations, and strategy experts to help grow and scale your project.</p>
                 <ul className="skill-list">
@@ -125,19 +119,18 @@ const BuildersPage: React.FC = () => {
 
         {/* Call to Action Section */}
         <section className="cta-section fade-in">
-          <div className="section-header">
-            <div className="feature-icon">⭐</div>
-            <h2 className="section-title">Ready to find your team?</h2>
-          </div>
+                      <div className="section-header">
+              <h2 className="section-title">Ready to find your team?</h2>
+            </div>
           <p className="cta-text">
             Post your idea and connect with builders who share your vision and values.
           </p>
           <div className="cta-buttons">
             <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-              🚀 Sign Up
+              Sign Up
             </button>
             <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
-              🔑 Log In
+              Log In
             </button>
           </div>
           <div className="trust-indicators">

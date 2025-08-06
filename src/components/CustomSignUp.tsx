@@ -208,7 +208,7 @@ const CustomSignUp: React.FC = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? "👁️" : "👁️‍🗨️"}
+                {showPassword ? "Show" : "Hide"}
               </button>
             </div>
             <div className="password-requirements">
@@ -252,7 +252,7 @@ const CustomSignUp: React.FC = () => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 aria-label={showConfirmPassword ? "Hide password" : "Show password"}
               >
-                {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
+                {showConfirmPassword ? "Show" : "Hide"}
               </button>
             </div>
           </div>

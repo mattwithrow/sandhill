@@ -28,7 +28,7 @@ const IdeasPage: React.FC = () => {
             </p>
             <div className="cta-buttons">
               <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-                🚀 Join as Builder
+                Join as Builder
               </button>
             </div>
             <div className="scroll-indicator float">
@@ -42,14 +42,13 @@ const IdeasPage: React.FC = () => {
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="eyebrow">💡 Featured Ideas</div>
+              <div className="eyebrow">Featured Ideas</div>
               <h2 className="section-title">
                 Projects that need your skills and passion
               </h2>
             </div>
             <div className="grid-3">
               <div className="feature-card">
-                <div className="feature-icon">🌱</div>
                 <h3>Sustainable Food Platform</h3>
                 <p>Connecting local farmers with urban consumers to reduce food waste and support sustainable agriculture.</p>
                 <div className="idea-meta">
@@ -58,7 +57,6 @@ const IdeasPage: React.FC = () => {
                 </div>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🎓</div>
                 <h3>Education Access App</h3>
                 <p>Making quality education accessible to underserved communities through mobile learning technology.</p>
                 <div className="idea-meta">
@@ -67,7 +65,6 @@ const IdeasPage: React.FC = () => {
                 </div>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🏥</div>
                 <h3>Mental Health Support</h3>
                 <p>Creating a peer-to-peer mental health support network for young professionals.</p>
                 <div className="idea-meta">
@@ -83,24 +80,21 @@ const IdeasPage: React.FC = () => {
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="eyebrow">⚡ How It Works</div>
+              <div className="eyebrow">How It Works</div>
               <h2 className="section-title">
                 Find the perfect project to contribute to
               </h2>
             </div>
             <div className="grid-3">
               <div className="feature-card">
-                <div className="feature-icon">🔍</div>
                 <h3>Browse Ideas</h3>
                 <p>Explore projects that match your skills, interests, and values. Filter by category, location, and commitment level.</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">💬</div>
                 <h3>Connect & Discuss</h3>
                 <p>Reach out to idea owners, ask questions, and discuss how you can contribute to their vision.</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🚀</div>
                 <h3>Start Building</h3>
                 <p>Join the team and start making a difference. Your skills can help turn ideas into reality.</p>
               </div>
@@ -110,16 +104,15 @@ const IdeasPage: React.FC = () => {
 
         {/* Call to Action Section */}
         <section className="cta-section fade-in">
-          <div className="section-header">
-            <div className="feature-icon">⭐</div>
-            <h2 className="section-title">Ready to find your next project?</h2>
-          </div>
+                      <div className="section-header">
+              <h2 className="section-title">Ready to find your next project?</h2>
+            </div>
           <p className="cta-text">
             Join our community of builders and help bring amazing ideas to life.
           </p>
           <div className="cta-buttons">
             <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-              🚀 Sign Up
+              Sign Up
             </button>
             <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
               🔑 Log In

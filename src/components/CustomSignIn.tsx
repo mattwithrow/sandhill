@@ -203,7 +203,7 @@ const CustomSignIn: React.FC = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? "👁️" : "👁️‍🗨️"}
+                {showPassword ? "Show" : "Hide"}
               </button>
             </div>
             <div className="form-helper">

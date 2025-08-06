@@ -32,7 +32,6 @@ const AboutPage: React.FC = () => {
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="feature-icon">🏔️</div>
               <h2 className="section-title">Who We Are</h2>
             </div>
             <div className="grid-2">
@@ -53,13 +52,11 @@ const AboutPage: React.FC = () => {
               <div className="image-grid">
                 <div className="image-placeholder">
                   <div className="placeholder-content">
-                    <span className="placeholder-icon float">👥</span>
                     <p>Team Collaboration</p>
                   </div>
                 </div>
                 <div className="image-placeholder">
                   <div className="placeholder-content">
-                    <span className="placeholder-icon float">💡</span>
                     <p>Innovation</p>
                   </div>
                 </div>
@@ -72,7 +69,6 @@ const AboutPage: React.FC = () => {
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="feature-icon">🎯</div>
               <h2 className="section-title">Our Mission</h2>
             </div>
             <div className="content-block">
@@ -89,7 +85,6 @@ const AboutPage: React.FC = () => {
         <section className="section">
           <div className="content-card">
             <div className="section-header">
-              <div className="feature-icon">🤝</div>
               <h2 className="section-title">Why You Might Want to Join</h2>
             </div>
             <div className="content-block">
@@ -115,7 +110,6 @@ const AboutPage: React.FC = () => {
           {/* Call to Action Section */}
           <section className="cta-section">
             <div className="section-header">
-              <div className="feature-icon">🚀</div>
               <h2 className="section-title">Ready to Build with Purpose?</h2>
             </div>
             <p className="cta-text">
@@ -123,10 +117,10 @@ const AboutPage: React.FC = () => {
             </p>
             <div className="cta-buttons">
               <button className="btn btn-primary btn-large" onClick={handleNavigateToStart}>
-                🚀 Sign Up
+                Sign Up
               </button>
               <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
-                🔑 Sign In
+                Sign In
               </button>
             </div>
           </section>
@@ -134,7 +128,6 @@ const AboutPage: React.FC = () => {
           {/* Contact Section */}
           <section className="content-card">
             <div className="section-header">
-              <div className="feature-icon">📧</div>
               <h2 className="section-title">Get in Touch</h2>
             </div>
             <div className="contact-content">
@@ -143,11 +136,11 @@ const AboutPage: React.FC = () => {
               </p>
               <div className="contact-info">
                 <div className="contact-item">
-                  <strong>📧 Email:</strong>
+                  <strong>Email:</strong>
                   <a href="mailto:hello@sandhill.com">hello@sandhill.com</a>
                 </div>
                 <div className="contact-item">
-                  <strong>💼 LinkedIn:</strong>
+                  <strong>LinkedIn:</strong>
                   <a href="https://linkedin.com/company/sandhill" target="_blank" rel="noopener noreferrer">
                     @sandhill
                   </a>

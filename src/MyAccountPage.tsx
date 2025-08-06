@@ -290,7 +290,7 @@ const MyAccountPage: React.FC = () => {
           <section className="hero">
             <div className="hero-content">
               <h1 className="hero-title">
-                Welcome to <span className="gradient-text">Sandhill</span>! 🚀
+                Welcome to <span className="gradient-text">Sandhill</span>!
               </h1>
               <p className="hero-subtitle">
                 Let's build something amazing together
@@ -300,10 +300,9 @@ const MyAccountPage: React.FC = () => {
 
           <section className="section">
             <div className="content-card">
-              <div className="section-header">
-                <div className="feature-icon">💡</div>
-                <h2 className="section-title">Set Up Your Profile</h2>
-              </div>
+                              <div className="section-header">
+                  <h2 className="section-title">Set Up Your Profile</h2>
+                </div>
               <div className="content-block">
                 <p>
                   Set up your professional profile to connect with the right people and opportunities. 
@@ -319,7 +318,7 @@ const MyAccountPage: React.FC = () => {
                   onClick={() => setIsEditing(true)}
                   className="btn btn-primary btn-large"
                 >
-                  ✨ Set Up Your Profile
+                  Set Up Your Profile
                 </button>
               </div>
             </div>
@@ -654,7 +653,6 @@ const MyAccountPage: React.FC = () => {
 
                 {/* Skills Card */}
                 <div className="section-header">
-                  <div className="feature-icon">🛠️</div>
                   <h2 className="section-title">Skills & Expertise</h2>
                 </div>
                 
@@ -686,7 +684,6 @@ const MyAccountPage: React.FC = () => {
 
                 {/* Links & Portfolio Card */}
                 <div className="section-header">
-                  <div className="feature-icon">🔗</div>
                   <h2 className="section-title">Links & Portfolio</h2>
                 </div>
                 
@@ -780,7 +777,6 @@ const MyAccountPage: React.FC = () => {
                 {(formData.userType === 'ideas' || formData.userType === 'both') && (
                   <>
                     <div className="section-header">
-                      <div className="feature-icon">🎯</div>
                       <h2 className="section-title">Project Details</h2>
                     </div>
                     
@@ -807,14 +803,14 @@ const MyAccountPage: React.FC = () => {
                     disabled={isSaving || !formData.username || formData.username.trim().length < 3}
                     className="btn btn-primary btn-large"
                   >
-                    {isSaving ? '💾 Saving...' : '💾 Save Profile'}
+                    {isSaving ? 'Saving...' : 'Save Profile'}
                   </button>
                   <button
                     type="button"
                     onClick={handleCancel}
                     className="btn btn-outline btn-large"
                   >
-                    ❌ Cancel
+                    Cancel
                   </button>
                 </div>
               </form>
