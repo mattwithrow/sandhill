@@ -238,13 +238,16 @@ const MyAccountPage: React.FC = () => {
             <div className="text-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Loading Your Profile</h2>
-              <p className="text-gray-600 mb-6">Setting up your professional space...</p>
-              <button
-                onClick={handleRetry}
-                className="bg-gradient-to-r from-orange-500 to-teal-500 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-600 transition-all font-medium"
-              >
-                🔄 Retry Loading
-              </button>
+              <p className="text-gray-600 mb-6">Please wait while we load your profile...</p>
+              <div className="mt-8">
+                <p className="text-sm text-gray-500 mb-4">If your profile doesn't load within a minute, try refreshing:</p>
+                <button
+                  onClick={handleRetry}
+                  className="bg-gradient-to-r from-orange-500 to-teal-500 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-600 transition-all font-medium"
+                >
+                  Refresh Page
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -459,37 +462,39 @@ const MyAccountPage: React.FC = () => {
               </div>
             </div>
             
-            {!isEditing && !isViewingProfile && (
+            {!isEditing && (
               <div className="cta-buttons">
-                <button
-                  onClick={() => setIsViewingProfile(true)}
-                  className="btn btn-primary btn-large"
-                >
-                  View My Profile
-                </button>
-                <button
-                  onClick={handleEdit}
-                  className="btn btn-outline btn-large"
-                >
-                  Edit Profile
-                </button>
-              </div>
-            )}
-            
-            {isViewingProfile && (
-              <div className="cta-buttons">
-                <button
-                  onClick={() => setIsViewingProfile(false)}
-                  className="btn btn-outline btn-large"
-                >
-                  Back to Overview
-                </button>
-                <button
-                  onClick={handleEdit}
-                  className="btn btn-primary btn-large"
-                >
-                  Edit Profile
-                </button>
+                {!isViewingProfile ? (
+                  <>
+                    <button
+                      onClick={() => setIsViewingProfile(true)}
+                      className="btn btn-primary btn-large"
+                    >
+                      View My Profile
+                    </button>
+                    <button
+                      onClick={handleEdit}
+                      className="btn btn-outline btn-large"
+                    >
+                      Edit Profile
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setIsViewingProfile(false)}
+                      className="btn btn-outline btn-large"
+                    >
+                      Back to Overview
+                    </button>
+                    <button
+                      onClick={handleEdit}
+                      className="btn btn-primary btn-large"
+                    >
+                      Edit Profile
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>

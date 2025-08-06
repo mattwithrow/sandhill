@@ -348,13 +348,14 @@ p {
 
 .btn-outline {
   background: transparent;
-  color: var(--text-white);
-  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-secondary);
+  border: 2px solid var(--primary-orange);
 }
 
 .btn-outline:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: var(--primary-orange);
+  color: var(--text-white);
+  border-color: var(--primary-orange);
 }
 
 .btn-ghost {
