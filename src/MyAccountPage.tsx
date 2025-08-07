@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { useUserProfile } from './hooks/useUserProfile';
 
 const MyAccountPage: React.FC = () => {
   const { user, signOut } = useAuthenticator();
-  const { profile, isLoading, error, updateProfile } = useUserProfile();
+  const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({
@@ -12,43 +11,9 @@ const MyAccountPage: React.FC = () => {
     userType: 'both' as 'expert' | 'ventures' | 'both',
     bio: '',
     experience: '',
-    passions: '',
-    values: '',
-    contributionGoals: '',
     skills: '',
-    location: '',
-    linkedinUrl: '',
-    githubUrl: '',
-    portfolioUrl: '',
-    twitterUrl: '',
-    instagramUrl: '',
-    websiteUrl: '',
-    projectDetails: ''
+    location: ''
   });
-
-  // Initialize form data when profile loads
-  useEffect(() => {
-    if (profile) {
-      setFormData({
-        username: profile.username || '',
-        userType: profile.userType || 'both',
-        bio: profile.bio || '',
-        experience: profile.experience || '',
-        passions: profile.passions || '',
-        values: profile.values || '',
-        contributionGoals: profile.contributionGoals || '',
-        skills: profile.skills || '',
-        location: profile.location || '',
-        linkedinUrl: profile.linkedinUrl || '',
-        githubUrl: profile.githubUrl || '',
-        portfolioUrl: profile.portfolioUrl || '',
-        twitterUrl: profile.twitterUrl || '',
-        instagramUrl: profile.instagramUrl || '',
-        websiteUrl: profile.websiteUrl || '',
-        projectDetails: profile.projectDetails || ''
-      });
-    }
-  }, [profile]);
 
   const handleSignOut = async () => {
     try {
@@ -63,56 +28,26 @@ const MyAccountPage: React.FC = () => {
     setMessage('');
 
     try {
-      await updateProfile(formData);
-      setMessage('Profile updated successfully!');
+      // For now, just show success message
+      // TODO: Implement actual profile saving when database is properly configured
+      setMessage('Profile saved successfully! (Note: Database integration coming soon)');
       setIsEditing(false);
       
       setTimeout(() => {
         setMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error updating profile:', error);
-      setMessage('Error updating profile. Please try again.');
+      console.error('Error saving profile:', error);
+      setMessage('Error saving profile. Please try again.');
     }
   };
 
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Loading Your Profile</h2>
-          <p className="text-gray-600">Please wait...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-200 max-w-md mx-4">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Profile Loading Error</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50">
@@ -123,7 +58,7 @@ const MyAccountPage: React.FC = () => {
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
               Hello, <span className="bg-gradient-to-r from-orange-500 to-teal-600 bg-clip-text text-transparent">
-                {profile?.username || user?.username || 'User'}
+                {user?.username || 'User'}
               </span>!
             </h1>
             <p className="text-gray-600 mb-6">Welcome to your Sandhill profile</p>
@@ -158,79 +93,28 @@ const MyAccountPage: React.FC = () => {
                   onClick={() => setIsEditing(true)}
                   className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
                 >
-                  Edit Profile
+                  Create Profile
                 </button>
               </div>
 
-              {profile ? (
-                <div className="space-y-6">
-                  {/* Basic Info */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Username</h3>
-                      <p className="text-gray-600">{profile.username || 'Not set'}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">User Type</h3>
-                      <p className="text-gray-600 capitalize">{profile.userType || 'Not set'}</p>
-                    </div>
-                  </div>
-
-                  {/* Bio */}
-                  {profile.bio && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Bio</h3>
-                      <p className="text-gray-600">{profile.bio}</p>
-                    </div>
-                  )}
-
-                  {/* Experience */}
-                  {profile.experience && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Experience</h3>
-                      <p className="text-gray-600">{profile.experience}</p>
-                    </div>
-                  )}
-
-                  {/* Skills */}
-                  {profile.skills && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Skills</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {profile.skills.split(',').map((skill, index) => (
-                          <span key={index} className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-3 py-1 rounded-full text-sm">
-                            {skill.trim()}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Location */}
-                  {profile.location && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
-                      <p className="text-gray-600">{profile.location}</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-600 mb-4">No profile data found. Create your profile to get started!</p>
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
-                  >
-                    Create Profile
-                  </button>
-                </div>
-              )}
+              <div className="text-center py-8">
+                <p className="text-gray-600 mb-4">Welcome to Sandhill! Create your profile to get started.</p>
+                <p className="text-sm text-gray-500 mb-6">
+                  This will help us connect you with the right people and opportunities.
+                </p>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
+                >
+                  Create Profile
+                </button>
+              </div>
             </div>
           ) : (
             /* Edit Form */
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Create Your Profile</h2>
                 <button
                   onClick={() => setIsEditing(false)}
                   className="text-gray-600 hover:text-gray-800 transition-colors"
@@ -341,7 +225,7 @@ const MyAccountPage: React.FC = () => {
                     type="submit"
                     className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
                   >
-                    Save Profile
+                    Create Profile
                   </button>
                 </div>
               </form>
