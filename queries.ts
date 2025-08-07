@@ -28,6 +28,7 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
     id
     instagramUrl
     linkedinUrl
+    location
     owner
     passions
     portfolioUrl
@@ -80,6 +81,7 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       id
       instagramUrl
       linkedinUrl
+      location
       owner
       passions
       portfolioUrl

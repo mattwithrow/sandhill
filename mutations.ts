@@ -37,6 +37,7 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     id
     instagramUrl
     linkedinUrl
+    location
     owner
     passions
     portfolioUrl
@@ -85,6 +86,7 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     id
     instagramUrl
     linkedinUrl
+    location
     owner
     passions
     portfolioUrl
@@ -133,6 +135,7 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     id
     instagramUrl
     linkedinUrl
+    location
     owner
     passions
     portfolioUrl

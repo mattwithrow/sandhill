@@ -34,6 +34,7 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
     id
     instagramUrl
     linkedinUrl
+    location
     owner
     passions
     portfolioUrl
@@ -79,6 +80,7 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
     id
     instagramUrl
     linkedinUrl
+    location
     owner
     passions
     portfolioUrl
@@ -124,6 +126,7 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
     id
     instagramUrl
     linkedinUrl
+    location
     owner
     passions
     portfolioUrl

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../amplify/data/resource";
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
@@ -21,7 +19,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   
   const [profile, setProfile] = useState<null | typeof formData>(null);
 
-  // Diagnostic useEffect to check all the issues
+  // Load profile from localStorage on component mount
   useEffect(() => {
     const runDiagnostics = async () => {
       console.log('🔍 Starting MyAccountPage diagnostics...');
@@ -40,50 +38,26 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       console.log('📊 Auth Diagnostics:', diagnostics);
 
       if (authStatus === 'authenticated' && user?.userId) {
-        console.log('✅ User is authenticated, checking database...');
+        console.log('✅ User is authenticated, loading profile...');
         
         try {
           setIsLoading(true);
           setError(null);
           
-          // Load user profile
-          console.log('🔍 Loading user profile...');
-          const client = generateClient<Schema>();
-          
-          try {
-            const result = await client.models.UserProfile.list({
-              filter: { userId: { eq: user.userId } }
-            });
-            
-            console.log('✅ Profile query successful:', result.data.length, 'profiles found');
-            
-            if (result.data.length > 0) {
-              const userProfile = result.data[0];
-              console.log('📄 Found existing profile:', userProfile);
-              
-              // Update both profile and form data
-              const profileData = {
-                username: userProfile.username || '',
-                userType: (userProfile.userType || 'both') as 'expert' | 'ventures' | 'both',
-                bio: userProfile.bio || '',
-                experience: userProfile.experience || '',
-                skills: userProfile.skills || '',
-                location: userProfile.location || ''
-              };
-              
-              setProfile(profileData);
-              setFormData(profileData);
-            } else {
-              console.log('📝 No existing profile found');
-            }
-          } catch (listError) {
-            console.log('⚠️ Error loading profile:', listError);
-            // Don't set error state, allow user to create profile
+          // Load profile from localStorage
+          const savedProfile = localStorage.getItem(`profile_${user.userId}`);
+          if (savedProfile) {
+            const profileData = JSON.parse(savedProfile);
+            console.log('📄 Found saved profile:', profileData);
+            setProfile(profileData);
+            setFormData(profileData);
+          } else {
+            console.log('📝 No saved profile found');
           }
           
         } catch (err) {
-          console.error('❌ Database error:', err);
-          setError(`Database error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+          console.error('❌ Error loading profile:', err);
+          setError(`Error loading profile: ${err instanceof Error ? err.message : 'Unknown error'}`);
         } finally {
           setIsLoading(false);
         }
@@ -113,68 +87,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     setMessage('');
 
     try {
-      console.log('💾 Attempting to save profile...');
+      console.log('💾 Saving profile to localStorage...');
       
-      // Save to database
-      console.log('💾 Saving profile to database...');
-      const client = generateClient<Schema>();
-      
-      // Check if profile exists
-      const existingProfiles = await client.models.UserProfile.list({
-        filter: { userId: { eq: user?.userId } }
-      });
-      
-      let savedProfile;
-      if (existingProfiles.data.length > 0) {
-        // Update existing profile
-        savedProfile = await client.models.UserProfile.update({
-          id: existingProfiles.data[0].id,
-          userId: user?.userId || '',
-          username: formData.username,
-          userType: formData.userType,
-          bio: formData.bio,
-          experience: formData.experience,
-          skills: formData.skills,
-          location: formData.location,
-          // Set empty strings for optional fields
-          passions: '',
-          values: '',
-          contributionGoals: '',
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          twitterUrl: '',
-          instagramUrl: '',
-          websiteUrl: '',
-          projectDetails: ''
-        });
-      } else {
-        // Create new profile
-        savedProfile = await client.models.UserProfile.create({
-          userId: user?.userId || '',
-          username: formData.username,
-          userType: formData.userType,
-          bio: formData.bio,
-          experience: formData.experience,
-          skills: formData.skills,
-          location: formData.location,
-          // Set empty strings for optional fields
-          passions: '',
-          values: '',
-          contributionGoals: '',
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          twitterUrl: '',
-          instagramUrl: '',
-          websiteUrl: '',
-          projectDetails: ''
-        });
+      // Save to localStorage
+      if (user?.userId) {
+        localStorage.setItem(`profile_${user.userId}`, JSON.stringify(formData));
       }
       
-      console.log('✅ Profile saved successfully:', savedProfile);
+      console.log('✅ Profile saved successfully:', formData);
       setProfile(formData);
-      setMessage('Profile saved successfully!');
+      setMessage('Profile saved successfully! (Stored locally)');
       setIsEditing(false);
       
       setTimeout(() => {
@@ -491,7 +413,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     type="submit"
                     className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
                   >
-                    Create Profile
+                    {profile ? 'Update Profile' : 'Create Profile'}
                   </button>
                 </div>
               </form>
