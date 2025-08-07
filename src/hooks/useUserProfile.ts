@@ -3,16 +3,6 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
 
-// Generate client function to ensure fresh connection
-const getClient = () => {
-  try {
-    return generateClient<Schema>();
-  } catch (error) {
-    console.error('Error generating client:', error);
-    return null;
-  }
-};
-
 type UserProfile = Schema["UserProfile"]["type"];
 
 export const useUserProfile = () => {
@@ -20,42 +10,6 @@ export const useUserProfile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Test function to verify client is working
-  const testClient = async () => {
-    try {
-      console.log('Testing client connection...');
-      const client = getClient();
-      
-      if (!client) {
-        console.log('❌ Failed to generate client');
-        return false;
-      }
-      
-      console.log('Client object:', client);
-      console.log('Client models:', client.models);
-      
-      // Check if client is properly initialized
-      if (!client.models) {
-        console.log('❌ Client is not properly initialized');
-        return false;
-      }
-      
-      console.log('Available models:', Object.keys(client.models || {}));
-      
-      if (client.models.UserProfile) {
-        console.log('✅ UserProfile model is available');
-        return true;
-      } else {
-        console.log('❌ UserProfile model is NOT available');
-        console.log('Available models:', Object.keys(client.models || {}));
-        return false;
-      }
-    } catch (err) {
-      console.error('❌ Client test failed:', err);
-      return false;
-    }
-  };
 
   useEffect(() => {
     console.log('useUserProfile - Auth status:', authStatus);
@@ -83,53 +37,18 @@ export const useUserProfile = () => {
       setIsLoading(true);
       setError(null);
 
-      // Test client with retry mechanism
-      let clientWorking = false;
-      let retryCount = 0;
-      const maxRetries = 5;
-      
-      // Initial delay to ensure backend is ready
-      console.log('Waiting 3 seconds for backend to be fully ready...');
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      while (!clientWorking && retryCount < maxRetries) {
-        console.log(`Client test attempt ${retryCount + 1}/${maxRetries}`);
-        clientWorking = await testClient();
-        
-        if (!clientWorking) {
-          retryCount++;
-          if (retryCount < maxRetries) {
-            console.log(`Client test failed, retrying in 3 seconds...`);
-            await new Promise(resolve => setTimeout(resolve, 3000));
-          }
-        }
-      }
-      
-      if (!clientWorking) {
-        setError('Backend connection failed after multiple attempts - please check your network connection and try refreshing the page');
-        setIsLoading(false);
-        return;
-      }
-
       console.log('Loading profile for user:', user?.userId);
 
-      const client = getClient();
-      if (!client) {
-        throw new Error('Failed to generate client');
-      }
+      // Generate client fresh for each request
+      const client = generateClient<Schema>();
+      console.log('Client generated successfully');
 
       // Try to find existing profile
-      const profilePromise = client.models.UserProfile.list({
+      const { data: profiles } = await client.models.UserProfile.list({
         filter: {
           userId: { eq: user?.userId }
         }
       });
-
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database timeout')), 10000)
-      );
-      
-      const { data: profiles } = await Promise.race([profilePromise, timeoutPromise]) as any;
 
       console.log('Found profiles:', profiles.length);
 
@@ -179,15 +98,15 @@ export const useUserProfile = () => {
 
     try {
       console.log('Updating existing profile with ID:', profile.id);
-      const client = getClient();
-      if (!client) {
-        throw new Error('Failed to generate client');
-      }
+      
+      // Generate client fresh for each request
+      const client = generateClient<Schema>();
       
       const result = await client.models.UserProfile.update({
         id: profile.id,
         ...updates
       });
+      
       console.log('Successfully updated profile:', result.data);
       setProfile(result.data);
       return result.data;
@@ -202,7 +121,6 @@ export const useUserProfile = () => {
     isLoading,
     error,
     updateProfile,
-    refreshProfile: loadOrCreateProfile,
-    testClient
+    refreshProfile: loadOrCreateProfile
   };
 }; 
