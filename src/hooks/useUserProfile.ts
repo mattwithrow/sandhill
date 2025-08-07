@@ -3,8 +3,8 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
 
-// Generate client inside the hook to ensure it's fresh
-const getClient = () => generateClient<Schema>();
+// Generate client once at module level
+const client = generateClient<Schema>();
 
 type UserProfile = Schema["UserProfile"]["type"];
 
@@ -17,9 +17,10 @@ export const useUserProfile = () => {
   // Test function to verify client is working
   const testClient = async () => {
     try {
-      const client = getClient();
       console.log('Testing client connection...');
-      console.log('Client models available:', Object.keys(client.models || {}));
+      console.log('Client object:', client);
+      console.log('Client models:', client.models);
+      console.log('Available models:', Object.keys(client.models || {}));
       
       if (client.models.UserProfile) {
         console.log('✅ UserProfile model is available');
@@ -61,15 +62,30 @@ export const useUserProfile = () => {
       setIsLoading(true);
       setError(null);
 
-      // Test client first
-      const clientWorking = await testClient();
+      // Test client with retry mechanism
+      let clientWorking = false;
+      let retryCount = 0;
+      const maxRetries = 3;
+      
+      while (!clientWorking && retryCount < maxRetries) {
+        console.log(`Client test attempt ${retryCount + 1}/${maxRetries}`);
+        clientWorking = await testClient();
+        
+        if (!clientWorking) {
+          retryCount++;
+          if (retryCount < maxRetries) {
+            console.log(`Client test failed, retrying in 2 seconds...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        }
+      }
+      
       if (!clientWorking) {
-        setError('Backend connection failed - please wait for deployment to complete');
+        setError('Backend connection failed after multiple attempts - please check your network connection and try refreshing the page');
         setIsLoading(false);
         return;
       }
 
-      const client = getClient();
       console.log('Loading profile for user:', user?.userId);
 
       // Try to find existing profile
@@ -132,7 +148,6 @@ export const useUserProfile = () => {
     console.log('Updating profile with data:', updates);
 
     try {
-      const client = getClient();
       console.log('Updating existing profile with ID:', profile.id);
       const result = await client.models.UserProfile.update({
         id: profile.id,
