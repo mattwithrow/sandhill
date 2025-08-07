@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
+import type { Schema } from "../amplify/data/resource";
 
-const MyAccountPage: React.FC = () => {
+const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,16 +46,40 @@ const MyAccountPage: React.FC = () => {
           setIsLoading(true);
           setError(null);
           
-          // Test client generation
-          console.log('🔧 Testing client generation...');
-          const client = generateClient();
-          console.log('✅ Client generated successfully');
+          // Load user profile
+          console.log('🔍 Loading user profile...');
+          const client = generateClient<Schema>();
           
-          // Check available models
-          console.log('📋 Available models:', Object.keys(client.models || {}));
-          
-          // Since models aren't loading properly, let's proceed with a simple approach
-          console.log('📝 Proceeding with simple profile creation mode');
+          try {
+            const result = await client.models.UserProfile.list({
+              filter: { userId: { eq: user.userId } }
+            });
+            
+            console.log('✅ Profile query successful:', result.data.length, 'profiles found');
+            
+            if (result.data.length > 0) {
+              const userProfile = result.data[0];
+              console.log('📄 Found existing profile:', userProfile);
+              
+              // Update both profile and form data
+              const profileData = {
+                username: userProfile.username || '',
+                userType: (userProfile.userType || 'both') as 'expert' | 'ventures' | 'both',
+                bio: userProfile.bio || '',
+                experience: userProfile.experience || '',
+                skills: userProfile.skills || '',
+                location: userProfile.location || ''
+              };
+              
+              setProfile(profileData);
+              setFormData(profileData);
+            } else {
+              console.log('📝 No existing profile found');
+            }
+          } catch (listError) {
+            console.log('⚠️ Error loading profile:', listError);
+            // Don't set error state, allow user to create profile
+          }
           
         } catch (err) {
           console.error('❌ Database error:', err);
@@ -90,8 +115,64 @@ const MyAccountPage: React.FC = () => {
     try {
       console.log('💾 Attempting to save profile...');
       
-      // Save the profile data to state
-      console.log('✅ Profile data collected:', formData);
+      // Save to database
+      console.log('💾 Saving profile to database...');
+      const client = generateClient<Schema>();
+      
+      // Check if profile exists
+      const existingProfiles = await client.models.UserProfile.list({
+        filter: { userId: { eq: user?.userId } }
+      });
+      
+      let savedProfile;
+      if (existingProfiles.data.length > 0) {
+        // Update existing profile
+        savedProfile = await client.models.UserProfile.update({
+          id: existingProfiles.data[0].id,
+          userId: user?.userId || '',
+          username: formData.username,
+          userType: formData.userType,
+          bio: formData.bio,
+          experience: formData.experience,
+          skills: formData.skills,
+          location: formData.location,
+          // Set empty strings for optional fields
+          passions: '',
+          values: '',
+          contributionGoals: '',
+          linkedinUrl: '',
+          githubUrl: '',
+          portfolioUrl: '',
+          twitterUrl: '',
+          instagramUrl: '',
+          websiteUrl: '',
+          projectDetails: ''
+        });
+      } else {
+        // Create new profile
+        savedProfile = await client.models.UserProfile.create({
+          userId: user?.userId || '',
+          username: formData.username,
+          userType: formData.userType,
+          bio: formData.bio,
+          experience: formData.experience,
+          skills: formData.skills,
+          location: formData.location,
+          // Set empty strings for optional fields
+          passions: '',
+          values: '',
+          contributionGoals: '',
+          linkedinUrl: '',
+          githubUrl: '',
+          portfolioUrl: '',
+          twitterUrl: '',
+          instagramUrl: '',
+          websiteUrl: '',
+          projectDetails: ''
+        });
+      }
+      
+      console.log('✅ Profile saved successfully:', savedProfile);
       setProfile(formData);
       setMessage('Profile saved successfully!');
       setIsEditing(false);
