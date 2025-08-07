@@ -98,7 +98,7 @@ export const useUserProfile = () => {
           const result = await client.models.UserProfile.create({
             userId: user?.userId || '',
             username: '',
-            userType: 'both',
+            userType: 'expert',
             bio: '',
             experience: '',
             passions: '',

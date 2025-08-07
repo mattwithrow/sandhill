@@ -9,7 +9,7 @@ const MyAccountPage: React.FC = () => {
   const [isViewingProfile, setIsViewingProfile] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
-    userType: 'both' as 'builder' | 'ideas' | 'both',
+            userType: 'both' as 'expert' | 'ventures' | 'both',
     bio: '',
     experience: '',
     passions: '',
@@ -338,7 +338,7 @@ const MyAccountPage: React.FC = () => {
         <section className="hero">
           <div className="hero-content">
             <h1 className="hero-title">
-              Hello, <span className="gradient-text">{profile?.username || 'Builder'}</span>!
+              Hello, <span className="gradient-text">{profile?.username || 'Expert'}</span>!
             </h1>
             <p className="hero-subtitle">
               Welcome to your professional profile on Sandhill
@@ -353,10 +353,10 @@ const MyAccountPage: React.FC = () => {
             profile?.passions, profile?.values, profile?.skills
           ];
           // Add conditional fields based on user type
-          if (profile?.userType === 'builder' || profile?.userType === 'both') {
+          if (profile?.userType === 'expert' || profile?.userType === 'both') {
             fields.push(profile?.contributionGoals);
           }
-          if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+          if (profile?.userType === 'ventures' || profile?.userType === 'both') {
             fields.push(profile?.projectDetails);
           }
           
@@ -422,10 +422,10 @@ const MyAccountPage: React.FC = () => {
                         profile?.passions, profile?.values, profile?.skills
                       ];
                       // Add conditional fields based on user type
-                      if (profile?.userType === 'builder' || profile?.userType === 'both') {
+                      if (profile?.userType === 'expert' || profile?.userType === 'both') {
                         fields.push(profile?.contributionGoals);
                       }
-                      if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+                      if (profile?.userType === 'ventures' || profile?.userType === 'both') {
                         fields.push(profile?.projectDetails);
                       }
                       
@@ -446,10 +446,10 @@ const MyAccountPage: React.FC = () => {
                           profile?.passions, profile?.values, profile?.skills
                         ];
                         // Add conditional fields based on user type
-                        if (profile?.userType === 'builder' || profile?.userType === 'both') {
+                        if (profile?.userType === 'expert' || profile?.userType === 'both') {
                           fields.push(profile?.contributionGoals);
                         }
-                        if (profile?.userType === 'ideas' || profile?.userType === 'both') {
+                        if (profile?.userType === 'ventures' || profile?.userType === 'both') {
                           fields.push(profile?.projectDetails);
                         }
                         
@@ -553,8 +553,8 @@ const MyAccountPage: React.FC = () => {
                     </label>
                     <div className="space-y-3">
                       {[
-                        { value: 'builder', label: 'Builder' },
-                        { value: 'ideas', label: 'Ideas' },
+                        { value: 'expert', label: 'Expert' },
+                        { value: 'ventures', label: 'Ventures' },
                         { value: 'both', label: 'Both' }
                       ].map((option) => (
                         <label key={option.value} className="flex items-center space-x-4 cursor-pointer p-4 rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all">
@@ -563,7 +563,7 @@ const MyAccountPage: React.FC = () => {
                             name="userType"
                             value={option.value}
                             checked={formData.userType === option.value}
-                            onChange={(e) => handleInputChange('userType', e.target.value as 'builder' | 'ideas' | 'both')}
+                            onChange={(e) => handleInputChange('userType', e.target.value as 'expert' | 'ventures' | 'both')}
                             className="h-5 w-5 text-orange-600 focus:ring-2 focus:ring-orange-500 border-2 border-gray-300"
                           />
                           <span className="text-gray-700 font-bold">{option.label}</span>
@@ -638,7 +638,7 @@ const MyAccountPage: React.FC = () => {
                       />
                     </div>
 
-                    {(formData.userType === 'builder' || formData.userType === 'both') && (
+                    {(formData.userType === 'expert' || formData.userType === 'both') && (
                       <div className="feature-card">
                         <label htmlFor="contributionGoals" className="block text-sm font-semibold mb-2">
                           What are you looking to contribute to?
@@ -778,8 +778,8 @@ const MyAccountPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Project Details Card - Only for Ideas or Both */}
-                {(formData.userType === 'ideas' || formData.userType === 'both') && (
+                {/* Project Details Card - Only for Ventures or Both */}
+                {(formData.userType === 'ventures' || formData.userType === 'both') && (
                   <>
                     <div className="section-header">
                       <h2 className="section-title">Project Details</h2>
@@ -835,9 +835,9 @@ const MyAccountPage: React.FC = () => {
                       {profile?.username?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
                     <h2 className="text-2xl font-bold mb-2">{profile?.username || 'User'}</h2>
-                    <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
-                      {profile?.userType === 'builder' ? 'Builder' : 
-                       profile?.userType === 'ideas' ? 'Ideas' : 'Both'}
+                                          <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
+                      {profile?.userType === 'expert' ? 'Expert' : 
+                       profile?.userType === 'ventures' ? 'Ventures' : 'Both'}
                     </div>
                   </div>
 
@@ -931,7 +931,7 @@ const MyAccountPage: React.FC = () => {
                     </div>
                   )}
 
-                  {(profile?.userType === 'builder' || profile?.userType === 'both') && profile?.contributionGoals && (
+                  {(profile?.userType === 'expert' || profile?.userType === 'both') && profile?.contributionGoals && (
                     <div className="feature-card">
                       <h3 className="text-xl font-bold mb-4">
                         Looking to Contribute To
@@ -940,7 +940,7 @@ const MyAccountPage: React.FC = () => {
                     </div>
                   )}
 
-                  {(profile?.userType === 'ideas' || profile?.userType === 'both') && profile?.projectDetails && (
+                  {(profile?.userType === 'ventures' || profile?.userType === 'both') && profile?.projectDetails && (
                     <div className="feature-card">
                       <h3 className="text-xl font-bold mb-4">
                         Project Details
@@ -981,7 +981,7 @@ const MyAccountPage: React.FC = () => {
                   <h3 className="font-semibold mb-2">Quick Stats:</h3>
                   <ul className="space-y-1 text-sm text-gray-600">
                     <li>• Username: {profile?.username || 'Not set'}</li>
-                    <li>• User Type: {profile?.userType === 'builder' ? 'Builder' : profile?.userType === 'ideas' ? 'Ideas' : 'Both'}</li>
+                    <li>• User Type: {profile?.userType === 'expert' ? 'Expert' : profile?.userType === 'ventures' ? 'Ventures' : 'Both'}</li>
                     <li>• Bio: {profile?.bio ? 'Set' : 'Not set'}</li>
                     <li>• Experience: {profile?.experience ? 'Set' : 'Not set'}</li>
                     <li>• Skills: {getSkillsArray(profile?.skills || '').length} selected</li>
@@ -1017,7 +1017,7 @@ const MyAccountPage: React.FC = () => {
               <p className="gradient-text" style={{fontWeight: '600', fontStyle: 'italic'}}>
                 <strong>Your privacy matters:</strong> None of your personal details will ever be sold. 
                 We're here to help you build cool shit, not exploit your data. 
-                This platform exists to enable creators, builders, and innovators like you.
+                This platform exists to enable creators, experts, and innovators like you.
               </p>
             </div>
           </div>

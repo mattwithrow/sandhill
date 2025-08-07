@@ -58,7 +58,7 @@ const EarlyCollaboratorsModal: React.FC<EarlyCollaboratorsModalProps> = ({ isOpe
           </h2>
           
           <p className="text-gray-600 mb-6 leading-relaxed">
-            The more ideas and builders that join in, the more creative, meaningful things we can bring to life together.
+            The more ideas and experts that join in, the more creative, meaningful things we can bring to life together.
           </p>
           
           <div className="space-y-4">

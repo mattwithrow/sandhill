@@ -9,8 +9,8 @@ import AboutPage from "./AboutPage";
 import StartPage from "./StartPage";
 import LoginPage from "./LoginPage";
 import AuthHomePage from "./AuthHomePage";
-import IdeasPage from "./IdeasPage";
-import BuildersPage from "./BuildersPage";
+import VenturesPage from "./VenturesPage";
+import ExpertsPage from "./ExpertsPage";
 import MyAccountPage from "./MyAccountPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -31,14 +31,14 @@ function App() {
             <MyAccountPage />
           </ProtectedRoute>
         } />
-        <Route path="/ideas" element={
+        <Route path="/ventures" element={
           <ProtectedRoute>
-            <IdeasPage />
+            <VenturesPage />
           </ProtectedRoute>
         } />
-        <Route path="/builders" element={
+        <Route path="/experts" element={
           <ProtectedRoute>
-            <BuildersPage />
+            <ExpertsPage />
           </ProtectedRoute>
         } />
       </Routes>

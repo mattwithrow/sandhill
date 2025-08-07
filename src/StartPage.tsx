@@ -61,8 +61,8 @@ const StartPage: React.FC = () => {
                 <button className="btn btn-primary btn-large" onClick={() => navigate('/ideas')}>
                   Browse Ideas
                 </button>
-                <button className="btn btn-outline btn-large" onClick={() => navigate('/builders')}>
-                  Find Builders
+                              <button className="btn btn-outline btn-large" onClick={() => navigate('/experts')}>
+                Find Experts
                 </button>
               </div>
               )}
@@ -88,7 +88,7 @@ const StartPage: React.FC = () => {
                   <p>People with a mission, a goal, or a spark worth pursuing</p>
                 </div>
                 <div className="feature-card">
-                  <h3>Builders & Creators</h3>
+                  <h3>Experts & Creators</h3>
                   <p>Skilled individuals ready to collaborate and help shape what's next</p>
                 </div>
               </div>
@@ -109,7 +109,7 @@ const StartPage: React.FC = () => {
                 <ul className="feature-list">
                   <li>Post your mission, challenge, or early-stage concept</li>
                   <li>Share your values, goals, and what kind of support you're looking for</li>
-                  <li>Attract builders who genuinely care about the same things</li>
+                  <li>Attract experts who genuinely care about the same things</li>
                   <li>Get moving—whether you're starting a nonprofit, app, brand, or campaign</li>
                 </ul>
               </div>
@@ -140,7 +140,7 @@ const StartPage: React.FC = () => {
           </div>
             <p className="cta-text">
               {isAuthenticated 
-                ? 'Explore ideas, connect with builders, and start creating something meaningful.'
+                ? 'Explore ideas, connect with experts, and start creating something meaningful.'
                 : 'Join a community of people who care about making a difference, not just making a profit.'
               }
             </p>
@@ -166,7 +166,7 @@ const StartPage: React.FC = () => {
             <div className="trust-indicators">
               <div className="trust-item">
                 <span className="trust-number">1,000+</span>
-                <span className="trust-label">Builders joined</span>
+                <span className="trust-label">Experts joined</span>
               </div>
               <div className="trust-item">
                 <span className="trust-number">500+</span>

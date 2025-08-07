@@ -28,8 +28,8 @@ const Navigation: React.FC = () => {
   const authenticatedNavItems: NavItem[] = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Builders', path: '/builders', requiresAuth: true },
-    { name: 'Ideas', path: '/ideas', requiresAuth: true },
+    { name: 'Experts', path: '/experts', requiresAuth: true },
+    { name: 'Ventures', path: '/ventures', requiresAuth: true },
   ];
 
   const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems;
