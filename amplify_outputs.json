@@ -176,6 +176,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "location": {
+              "name": "location",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "linkedinUrl": {
               "name": "linkedinUrl",
               "isArray": false,
@@ -287,7 +294,7 @@
         "UserProfileUserType": {
           "name": "UserProfileUserType",
           "values": [
-            "builder",
+            "expert",
             "ventures",
             "both"
           ]

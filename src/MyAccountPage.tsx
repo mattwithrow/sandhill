@@ -55,28 +55,34 @@ const MyAccountPage: React.FC = () => {
           if (client.models.UserProfile) {
             console.log('✅ UserProfile model found');
             
-            // Try to list profiles
+            // Try to list profiles - this might fail due to authorization
             console.log('🔍 Attempting to list profiles...');
-            const result = await client.models.UserProfile.list({
-              filter: {
-                userId: { eq: user.userId }
-              }
-            });
-            
-            console.log('✅ Profile query successful:', result.data.length, 'profiles found');
-            
-            if (result.data.length > 0) {
-              console.log('📄 Found existing profile:', result.data[0]);
-              setFormData({
-                username: result.data[0].username || '',
-                userType: result.data[0].userType || 'both',
-                bio: result.data[0].bio || '',
-                experience: result.data[0].experience || '',
-                skills: result.data[0].skills || '',
-                location: result.data[0].location || ''
+            try {
+              const result = await client.models.UserProfile.list({
+                filter: {
+                  userId: { eq: user.userId }
+                }
               });
-            } else {
-              console.log('📝 No existing profile found, ready to create new one');
+              
+              console.log('✅ Profile query successful:', result.data.length, 'profiles found');
+              
+              if (result.data.length > 0) {
+                console.log('📄 Found existing profile:', result.data[0]);
+                setFormData({
+                  username: result.data[0].username || '',
+                  userType: result.data[0].userType || 'both',
+                  bio: result.data[0].bio || '',
+                  experience: result.data[0].experience || '',
+                  skills: result.data[0].skills || '',
+                  location: result.data[0].location || ''
+                });
+              } else {
+                console.log('📝 No existing profile found, ready to create new one');
+              }
+            } catch (listError) {
+              console.log('⚠️ Profile list failed (likely authorization), proceeding to create mode');
+              console.log('Error details:', listError);
+              // Don't set error, just proceed to create mode
             }
           } else {
             console.error('❌ UserProfile model not found!');
@@ -123,9 +129,25 @@ const MyAccountPage: React.FC = () => {
         throw new Error('UserProfile model not available');
       }
       
+      // Try to create the profile
       const result = await client.models.UserProfile.create({
         userId: user?.userId || '',
-        ...formData
+        username: formData.username,
+        userType: formData.userType,
+        bio: formData.bio,
+        experience: formData.experience,
+        skills: formData.skills,
+        location: formData.location,
+        passions: '',
+        values: '',
+        contributionGoals: '',
+        linkedinUrl: '',
+        githubUrl: '',
+        portfolioUrl: '',
+        twitterUrl: '',
+        instagramUrl: '',
+        websiteUrl: '',
+        projectDetails: ''
       });
       
       console.log('✅ Profile saved successfully:', result.data);
