@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { generateClient } from 'aws-amplify/data';
-import type { Schema } from '../../amplify/data/resource';
-
-const client = generateClient<Schema>();
 
 const CustomSignUp: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -63,16 +59,8 @@ const CustomSignUp: React.FC = () => {
         setUserId(newUserId);
         setShowVerification(true);
       } else if (isSignUpComplete && newUserId) {
-        // Create user profile with the username
-        await client.models.UserProfile.create({
-          userId: newUserId,
-          username: formData.username,
-          userType: 'both', // Default value
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          projectDetails: '',
-        });
+        // TODO: Create user profile with the username (database integration pending)
+        console.log('User profile creation pending for userId:', newUserId);
 
         // Sign in the user with email
         await signIn({ username: formData.email, password: formData.password });
@@ -96,16 +84,8 @@ const CustomSignUp: React.FC = () => {
       });
 
       if (isSignUpComplete) {
-        // Create user profile with the username
-        await client.models.UserProfile.create({
-          userId,
-          username: formData.username,
-          userType: 'both', // Default value
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          projectDetails: '',
-        });
+        // TODO: Create user profile with the username (database integration pending)
+        console.log('User profile creation pending for userId:', userId);
 
         // Sign in the user with email
         await signIn({ username: formData.email, password: formData.password });

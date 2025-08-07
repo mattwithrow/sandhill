@@ -7,10 +7,7 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 
 import { useEffect, useState } from "react";
 
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-
-const client = generateClient<Schema>();
+// Database integration temporarily disabled
 
 const AuthHomePage: React.FC = () => {
   //const navigate = useNavigate();
@@ -25,21 +22,22 @@ const AuthHomePage: React.FC = () => {
 };
 */
 
-const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+const [todos, setTodos] = useState<Array<any>>([]);
   const { signOut } = useAuthenticator();
 
 useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
+    // TODO: Database integration temporarily disabled
+    console.log('Todo loading disabled - database integration pending');
   }, []); 
 
   function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+    // TODO: Database integration temporarily disabled
+    console.log('Todo creation disabled - database integration pending');
   }
 
   function deleteTodo(id: string) {
-    client.models.Todo.delete({ id })
+    // TODO: Database integration temporarily disabled
+    console.log('Todo deletion disabled - database integration pending');
   }
 
   return (
