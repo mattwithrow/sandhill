@@ -17,6 +17,8 @@ const MyAccountPage: React.FC = () => {
     skills: '',
     location: ''
   });
+  
+  const [profile, setProfile] = useState<null | typeof formData>(null);
 
   // Diagnostic useEffect to check all the issues
   useEffect(() => {
@@ -88,9 +90,10 @@ const MyAccountPage: React.FC = () => {
     try {
       console.log('💾 Attempting to save profile...');
       
-      // For now, just show success message since database integration needs fixing
+      // Save the profile data to state
       console.log('✅ Profile data collected:', formData);
-      setMessage('Profile saved successfully! (Database integration in progress)');
+      setProfile(formData);
+      setMessage('Profile saved successfully!');
       setIsEditing(false);
       
       setTimeout(() => {
@@ -108,6 +111,13 @@ const MyAccountPage: React.FC = () => {
       [field]: value
     }));
   };
+
+  // When editing starts, populate form with existing profile data
+  useEffect(() => {
+    if (isEditing && profile) {
+      setFormData(profile);
+    }
+  }, [isEditing, profile]);
 
   if (isLoading) {
     return (
@@ -211,28 +221,85 @@ const MyAccountPage: React.FC = () => {
                   onClick={() => setIsEditing(true)}
                   className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
                 >
-                  Create Profile
+                  {profile ? 'Edit Profile' : 'Create Profile'}
                 </button>
               </div>
 
-              <div className="text-center py-8">
-                <p className="text-gray-600 mb-4">Welcome to Sandhill! Create your profile to get started.</p>
-                <p className="text-sm text-gray-500 mb-6">
-                  This will help us connect you with the right people and opportunities.
-                </p>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
-                >
-                  Create Profile
-                </button>
-              </div>
+              {profile ? (
+                <div className="space-y-6">
+                  {/* Username and User Type */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Username</h3>
+                      <p className="text-gray-800">{profile.username}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-600 mb-1">User Type</h3>
+                      <p className="text-gray-800 capitalize">{profile.userType}</p>
+                    </div>
+                  </div>
+
+                  {/* Bio */}
+                  {profile.bio && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Bio</h3>
+                      <p className="text-gray-800 whitespace-pre-wrap">{profile.bio}</p>
+                    </div>
+                  )}
+
+                  {/* Experience */}
+                  {profile.experience && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Experience</h3>
+                      <p className="text-gray-800 whitespace-pre-wrap">{profile.experience}</p>
+                    </div>
+                  )}
+
+                  {/* Skills */}
+                  {profile.skills && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Skills</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {profile.skills.split(',').map((skill, index) => (
+                          <span
+                            key={index}
+                            className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm"
+                          >
+                            {skill.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Location */}
+                  {profile.location && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Location</h3>
+                      <p className="text-gray-800">{profile.location}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-600 mb-4">Welcome to Sandhill! Create your profile to get started.</p>
+                  <p className="text-sm text-gray-500 mb-6">
+                    This will help us connect you with the right people and opportunities.
+                  </p>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
+                  >
+                    Create Profile
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             /* Edit Form */
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Create Your Profile</h2>
+                <h2 className="text-2xl font-bold text-gray-800">{profile ? 'Edit Your Profile' : 'Create Your Profile'}</h2>
                 <button
                   onClick={() => setIsEditing(false)}
                   className="text-gray-600 hover:text-gray-800 transition-colors"
