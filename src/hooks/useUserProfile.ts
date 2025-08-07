@@ -3,8 +3,15 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
 
-// Generate client once at module level
-const client = generateClient<Schema>();
+// Generate client function to ensure fresh connection
+const getClient = () => {
+  try {
+    return generateClient<Schema>();
+  } catch (error) {
+    console.error('Error generating client:', error);
+    return null;
+  }
+};
 
 type UserProfile = Schema["UserProfile"]["type"];
 
@@ -18,8 +25,22 @@ export const useUserProfile = () => {
   const testClient = async () => {
     try {
       console.log('Testing client connection...');
+      const client = getClient();
+      
+      if (!client) {
+        console.log('❌ Failed to generate client');
+        return false;
+      }
+      
       console.log('Client object:', client);
       console.log('Client models:', client.models);
+      
+      // Check if client is properly initialized
+      if (!client.models) {
+        console.log('❌ Client is not properly initialized');
+        return false;
+      }
+      
       console.log('Available models:', Object.keys(client.models || {}));
       
       if (client.models.UserProfile) {
@@ -65,7 +86,11 @@ export const useUserProfile = () => {
       // Test client with retry mechanism
       let clientWorking = false;
       let retryCount = 0;
-      const maxRetries = 3;
+      const maxRetries = 5;
+      
+      // Initial delay to ensure backend is ready
+      console.log('Waiting 3 seconds for backend to be fully ready...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
       
       while (!clientWorking && retryCount < maxRetries) {
         console.log(`Client test attempt ${retryCount + 1}/${maxRetries}`);
@@ -74,8 +99,8 @@ export const useUserProfile = () => {
         if (!clientWorking) {
           retryCount++;
           if (retryCount < maxRetries) {
-            console.log(`Client test failed, retrying in 2 seconds...`);
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            console.log(`Client test failed, retrying in 3 seconds...`);
+            await new Promise(resolve => setTimeout(resolve, 3000));
           }
         }
       }
@@ -87,6 +112,11 @@ export const useUserProfile = () => {
       }
 
       console.log('Loading profile for user:', user?.userId);
+
+      const client = getClient();
+      if (!client) {
+        throw new Error('Failed to generate client');
+      }
 
       // Try to find existing profile
       const profilePromise = client.models.UserProfile.list({
@@ -149,6 +179,11 @@ export const useUserProfile = () => {
 
     try {
       console.log('Updating existing profile with ID:', profile.id);
+      const client = getClient();
+      if (!client) {
+        throw new Error('Failed to generate client');
+      }
+      
       const result = await client.models.UserProfile.update({
         id: profile.id,
         ...updates
