@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "../amplify/data/resource";
 
 const MyAccountPage: React.FC = () => {
-  const { user, signOut } = useAuthenticator();
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, signOut, authStatus } = useAuthenticator();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<any>({});
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({
@@ -14,6 +18,89 @@ const MyAccountPage: React.FC = () => {
     skills: '',
     location: ''
   });
+
+  // Diagnostic useEffect to check all the issues
+  useEffect(() => {
+    const runDiagnostics = async () => {
+      console.log('🔍 Starting MyAccountPage diagnostics...');
+      
+      const diagnostics = {
+        authStatus,
+        user: user ? {
+          userId: user.userId,
+          username: user.username,
+          email: user.signInDetails?.loginId
+        } : null,
+        timestamp: new Date().toISOString()
+      };
+
+      setDebugInfo(diagnostics);
+      console.log('📊 Auth Diagnostics:', diagnostics);
+
+      if (authStatus === 'authenticated' && user?.userId) {
+        console.log('✅ User is authenticated, checking database...');
+        
+        try {
+          setIsLoading(true);
+          setError(null);
+          
+          // Test client generation
+          console.log('🔧 Testing client generation...');
+          const client = generateClient<Schema>();
+          console.log('✅ Client generated successfully');
+          
+          // Check available models
+          console.log('📋 Available models:', Object.keys(client.models || {}));
+          
+          if (client.models.UserProfile) {
+            console.log('✅ UserProfile model found');
+            
+            // Try to list profiles
+            console.log('🔍 Attempting to list profiles...');
+            const result = await client.models.UserProfile.list({
+              filter: {
+                userId: { eq: user.userId }
+              }
+            });
+            
+            console.log('✅ Profile query successful:', result.data.length, 'profiles found');
+            
+            if (result.data.length > 0) {
+              console.log('📄 Found existing profile:', result.data[0]);
+              setFormData({
+                username: result.data[0].username || '',
+                userType: result.data[0].userType || 'both',
+                bio: result.data[0].bio || '',
+                experience: result.data[0].experience || '',
+                skills: result.data[0].skills || '',
+                location: result.data[0].location || ''
+              });
+            } else {
+              console.log('📝 No existing profile found, ready to create new one');
+            }
+          } else {
+            console.error('❌ UserProfile model not found!');
+            setError('UserProfile model not available in database schema');
+          }
+          
+        } catch (err) {
+          console.error('❌ Database error:', err);
+          setError(`Database error: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        } finally {
+          setIsLoading(false);
+        }
+      } else if (authStatus === 'unauthenticated') {
+        console.log('❌ User is not authenticated');
+        setError('User is not authenticated');
+        setIsLoading(false);
+      } else {
+        console.log('⏳ Waiting for authentication...');
+        setIsLoading(false);
+      }
+    };
+
+    runDiagnostics();
+  }, [authStatus, user?.userId]);
 
   const handleSignOut = async () => {
     try {
@@ -28,17 +115,29 @@ const MyAccountPage: React.FC = () => {
     setMessage('');
 
     try {
-      // For now, just show success message
-      // TODO: Implement actual profile saving when database is properly configured
-      setMessage('Profile saved successfully! (Note: Database integration coming soon)');
+      console.log('💾 Attempting to save profile...');
+      
+      const client = generateClient<Schema>();
+      
+      if (!client.models.UserProfile) {
+        throw new Error('UserProfile model not available');
+      }
+      
+      const result = await client.models.UserProfile.create({
+        userId: user?.userId || '',
+        ...formData
+      });
+      
+      console.log('✅ Profile saved successfully:', result.data);
+      setMessage('Profile saved successfully!');
       setIsEditing(false);
       
       setTimeout(() => {
         setMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error saving profile:', error);
-      setMessage('Error saving profile. Please try again.');
+      console.error('❌ Error saving profile:', error);
+      setMessage(`Error saving profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -48,6 +147,54 @@ const MyAccountPage: React.FC = () => {
       [field]: value
     }));
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Loading Your Profile</h2>
+          <p className="text-gray-600">Please wait...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-200 max-w-2xl mx-4">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Profile Loading Error</h2>
+            <p className="text-gray-600 mb-6">{error}</p>
+            
+            {/* Debug Information */}
+            <div className="bg-gray-50 p-4 rounded-lg text-left mb-6">
+              <h3 className="font-semibold mb-2">Debug Information:</h3>
+              <pre className="text-xs text-gray-700 overflow-auto">
+                {JSON.stringify(debugInfo, null, 2)}
+              </pre>
+            </div>
+            
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium"
+              >
+                Try Again
+              </button>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                Create Profile Anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50">
@@ -81,6 +228,16 @@ const MyAccountPage: React.FC = () => {
                 : 'bg-green-100 border border-green-300 text-green-800'
             }`}>
               {message}
+            </div>
+          )}
+
+          {/* Debug Information (only in development) */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <h3 className="font-semibold mb-2 text-blue-800">Debug Info:</h3>
+              <pre className="text-xs text-blue-700 overflow-auto">
+                {JSON.stringify(debugInfo, null, 2)}
+              </pre>
             </div>
           )}
 
