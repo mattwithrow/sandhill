@@ -2,12 +2,18 @@ import { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../../amplify/data/resource";
+import { 
+  CompleteUserProfile, 
+  validateAndMigrateProfile, 
+  createCompleteProfile, 
+  needsMigration 
+} from '../utils/profileUtils';
 
 type UserProfile = Schema["UserProfile"]["type"];
 
 export const useUserProfile = () => {
   const { user, authStatus } = useAuthenticator();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<CompleteUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -89,33 +95,70 @@ export const useUserProfile = () => {
 
       if (profiles.length > 0) {
         console.log('Using existing profile:', profiles[0]);
-        setProfile(profiles[0]);
+        // Validate and migrate the existing profile
+        const migratedProfile = validateAndMigrateProfile(profiles[0]);
+        setProfile(migratedProfile);
+        
+        // If the profile was migrated (missing fields), update it in the database
+        if (needsMigration(profiles[0])) {
+          console.log('Profile needs migration, updating in database...');
+          try {
+            const updateData = {
+              id: migratedProfile.id,
+              username: migratedProfile.username,
+              userType: migratedProfile.userType,
+              bio: migratedProfile.bio,
+              experience: migratedProfile.experience,
+              passions: migratedProfile.passions,
+              values: migratedProfile.values,
+              contributionGoals: migratedProfile.contributionGoals,
+              skills: migratedProfile.skills,
+              location: migratedProfile.location,
+              linkedinUrl: migratedProfile.linkedinUrl,
+              githubUrl: migratedProfile.githubUrl,
+              portfolioUrl: migratedProfile.portfolioUrl,
+              twitterUrl: migratedProfile.twitterUrl,
+              instagramUrl: migratedProfile.instagramUrl,
+              websiteUrl: migratedProfile.websiteUrl,
+              projectDetails: migratedProfile.projectDetails,
+            };
+            
+            const updatedResult = await client.models.UserProfile.update(updateData);
+            console.log('Profile migrated and updated successfully:', updatedResult.data);
+            setProfile(validateAndMigrateProfile(updatedResult.data));
+          } catch (updateError) {
+            console.error('Failed to migrate profile:', updateError);
+            // Don't throw error here, the profile is still usable
+          }
+        }
       } else {
         console.log('Creating new profile for user:', user?.userId);
         
         // Create new profile if none exists
         try {
+          const completeProfile = createCompleteProfile(user?.userId || '');
           const result = await client.models.UserProfile.create({
-            userId: user?.userId || '',
-            username: '',
-            userType: 'expert',
-            bio: '',
-            experience: '',
-            passions: '',
-            values: '',
-            contributionGoals: '',
-            skills: '',
-            linkedinUrl: '',
-            githubUrl: '',
-            portfolioUrl: '',
-            twitterUrl: '',
-            instagramUrl: '',
-            websiteUrl: '',
-            projectDetails: ''
+            userId: completeProfile.userId,
+            username: completeProfile.username,
+            userType: completeProfile.userType,
+            bio: completeProfile.bio,
+            experience: completeProfile.experience,
+            passions: completeProfile.passions,
+            values: completeProfile.values,
+            contributionGoals: completeProfile.contributionGoals,
+            skills: completeProfile.skills,
+            location: completeProfile.location,
+            linkedinUrl: completeProfile.linkedinUrl,
+            githubUrl: completeProfile.githubUrl,
+            portfolioUrl: completeProfile.portfolioUrl,
+            twitterUrl: completeProfile.twitterUrl,
+            instagramUrl: completeProfile.instagramUrl,
+            websiteUrl: completeProfile.websiteUrl,
+            projectDetails: completeProfile.projectDetails,
           });
           
           console.log('Created new profile:', result.data);
-          setProfile(result.data);
+          setProfile(validateAndMigrateProfile(result.data));
         } catch (createError) {
           console.error('Error creating profile:', createError);
           throw new Error('Failed to create profile: ' + (createError instanceof Error ? createError.message : 'Unknown error'));
@@ -129,7 +172,7 @@ export const useUserProfile = () => {
     }
   };
 
-  const updateProfile = async (updates: Partial<UserProfile>) => {
+  const updateProfile = async (updates: Partial<CompleteUserProfile>) => {
     if (!profile?.id) {
       throw new Error('No profile to update');
     }
@@ -153,8 +196,9 @@ export const useUserProfile = () => {
       });
       
       console.log('Successfully updated profile:', result.data);
-      setProfile(result.data);
-      return result.data;
+      const updatedProfile = validateAndMigrateProfile(result.data);
+      setProfile(updatedProfile);
+      return updatedProfile;
     } catch (err) {
       console.error('Error updating profile:', err);
       throw err;

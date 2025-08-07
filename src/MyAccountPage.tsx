@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUserProfile } from './hooks/useUserProfile';
+import { CompleteUserProfile, getProfileField, validateProfileData } from './utils/profileUtils';
 
 const MyAccountPage: React.FC = () => {
   const { profile, isLoading, error, updateProfile, refreshProfile } = useUserProfile();
@@ -7,15 +8,16 @@ const MyAccountPage: React.FC = () => {
   const [message, setMessage] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isViewingProfile, setIsViewingProfile] = useState(false);
-  const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
     username: '',
-            userType: 'both' as 'expert' | 'ventures' | 'both',
+    userType: 'both' as 'expert' | 'ventures' | 'both',
     bio: '',
     experience: '',
     passions: '',
     values: '',
     contributionGoals: '',
     skills: '',
+    location: '',
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
@@ -38,6 +40,7 @@ const MyAccountPage: React.FC = () => {
         values: profile.values || '',
         contributionGoals: profile.contributionGoals || '',
         skills: profile.skills || '',
+        location: profile.location || '',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
@@ -67,9 +70,10 @@ const MyAccountPage: React.FC = () => {
     setIsSaving(true);
     setMessage('');
 
-    // Validate required fields
-    if (!formData.username || formData.username.trim().length < 3) {
-      setMessage('Username is required and must be at least 3 characters long.');
+    // Validate profile data
+    const validation = validateProfileData(formData);
+    if (!validation.isValid) {
+      setMessage('Validation errors: ' + validation.errors.join(', '));
       setIsSaving(false);
       return;
     }
@@ -87,6 +91,7 @@ const MyAccountPage: React.FC = () => {
         values: formData.values?.trim() || '',
         contributionGoals: formData.contributionGoals?.trim() || '',
         skills: formData.skills?.trim() || '',
+        location: formData.location?.trim() || '',
         linkedinUrl: formData.linkedinUrl?.trim() || '',
         githubUrl: formData.githubUrl?.trim() || '',
         portfolioUrl: formData.portfolioUrl?.trim() || '',
@@ -168,6 +173,7 @@ const MyAccountPage: React.FC = () => {
         values: profile.values || '',
         contributionGoals: profile.contributionGoals || '',
         skills: profile.skills || '',
+        location: profile.location || '',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
@@ -188,6 +194,7 @@ const MyAccountPage: React.FC = () => {
         values: '',
         contributionGoals: '',
         skills: '',
+        location: '',
         linkedinUrl: '',
         githubUrl: '',
         portfolioUrl: '',
@@ -215,6 +222,7 @@ const MyAccountPage: React.FC = () => {
         values: profile.values || '',
         contributionGoals: profile.contributionGoals || '',
         skills: profile.skills || '',
+        location: profile.location || '',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
@@ -687,6 +695,28 @@ const MyAccountPage: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Location Card */}
+                <div className="section-header">
+                  <h2 className="section-title">Location</h2>
+                </div>
+                
+                <div className="feature-card">
+                  <label htmlFor="location" className="block text-sm font-semibold mb-2">
+                    Your Location
+                  </label>
+                  <input
+                    type="text"
+                    id="location"
+                    value={formData.location}
+                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    placeholder="e.g., San Francisco, CA or 94102 or Remote"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Share your city/state, zip code, or indicate if you're remote. This helps people connect for local collaboration.
+                  </p>
+                </div>
+
                 {/* Links & Portfolio Card */}
                 <div className="section-header">
                   <h2 className="section-title">Links & Portfolio</h2>
@@ -839,6 +869,14 @@ const MyAccountPage: React.FC = () => {
                       {profile?.userType === 'expert' ? 'Expert' : 
                        profile?.userType === 'ventures' ? 'Ventures' : 'Both'}
                     </div>
+                    
+                    {profile?.location && (
+                      <div className="mt-3">
+                        <p className="text-sm text-gray-600">
+                          📍 {profile.location}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {profile?.bio && (
@@ -982,6 +1020,7 @@ const MyAccountPage: React.FC = () => {
                   <ul className="space-y-1 text-sm text-gray-600">
                     <li>• Username: {profile?.username || 'Not set'}</li>
                     <li>• User Type: {profile?.userType === 'expert' ? 'Expert' : profile?.userType === 'ventures' ? 'Ventures' : 'Both'}</li>
+                    <li>• Location: {profile?.location || 'Not set'}</li>
                     <li>• Bio: {profile?.bio ? 'Set' : 'Not set'}</li>
                     <li>• Experience: {profile?.experience ? 'Set' : 'Not set'}</li>
                     <li>• Skills: {getSkillsArray(profile?.skills || '').length} selected</li>
