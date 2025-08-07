@@ -48,7 +48,9 @@ const Navigation: React.FC = () => {
 
   const handleSignOut = async (): Promise<void> => {
     try {
+      console.log('Sign out initiated...');
       await signOut();
+      console.log('Sign out successful');
       closeMobileMenu();
     } catch (error) {
       console.error('Error signing out:', error);
@@ -100,7 +102,20 @@ const Navigation: React.FC = () => {
               <Link to="/my-account" className="btn btn-secondary">
                 My Account
               </Link>
-              <button className="btn btn-ghost" onClick={handleSignOut}>
+              <button 
+                className="btn btn-ghost" 
+                onClick={handleSignOut}
+                style={{ 
+                  cursor: 'pointer',
+                  padding: '8px 16px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  backgroundColor: 'transparent',
+                  color: 'var(--text-secondary)',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease'
+                }}
+              >
                 Sign Out
               </button>
             </>
@@ -180,6 +195,16 @@ const Navigation: React.FC = () => {
                 <button 
                   className="btn btn-ghost" 
                   onClick={handleSignOut}
+                  style={{ 
+                    cursor: 'pointer',
+                    padding: '8px 16px',
+                    border: 'none',
+                    borderRadius: '6px',
+                    backgroundColor: 'transparent',
+                    color: 'var(--text-secondary)',
+                    fontWeight: '500',
+                    transition: 'all 0.3s ease'
+                  }}
                 >
                   Sign Out
                 </button>

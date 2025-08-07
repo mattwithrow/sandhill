@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useUserProfile } from './hooks/useUserProfile';
 import { CompleteUserProfile, getProfileField, validateProfileData } from './utils/profileUtils';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 const MyAccountPage: React.FC = () => {
   const { profile, isLoading, error, updateProfile, refreshProfile } = useUserProfile();
+  const { signOut } = useAuthenticator();
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -351,6 +353,32 @@ const MyAccountPage: React.FC = () => {
             <p className="hero-subtitle">
               Welcome to your professional profile on Sandhill
             </p>
+            <div className="mt-6">
+              <button
+                onClick={async () => {
+                  try {
+                    console.log('MyAccountPage: Sign out initiated...');
+                    await signOut();
+                    console.log('MyAccountPage: Sign out successful');
+                  } catch (error) {
+                    console.error('MyAccountPage: Error signing out:', error);
+                  }
+                }}
+                className="btn btn-outline"
+                style={{ 
+                  cursor: 'pointer',
+                  padding: '12px 24px',
+                  border: '2px solid var(--primary-orange)',
+                  borderRadius: '8px',
+                  backgroundColor: 'transparent',
+                  color: 'var(--primary-orange)',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </section>
 
@@ -1029,6 +1057,33 @@ const MyAccountPage: React.FC = () => {
                       return links.filter(link => link && link.trim() !== '').length;
                     })()} added</li>
                   </ul>
+                </div>
+                
+                <div className="mt-6 flex justify-center">
+                  <button
+                    onClick={async () => {
+                      try {
+                        console.log('MyAccountPage: Sign out initiated...');
+                        await signOut();
+                        console.log('MyAccountPage: Sign out successful');
+                      } catch (error) {
+                        console.error('MyAccountPage: Error signing out:', error);
+                      }
+                    }}
+                    className="btn btn-outline"
+                    style={{ 
+                      cursor: 'pointer',
+                      padding: '12px 24px',
+                      border: '2px solid var(--primary-orange)',
+                      borderRadius: '8px',
+                      backgroundColor: 'transparent',
+                      color: 'var(--primary-orange)',
+                      fontWeight: '600',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    Sign Out
+                  </button>
                 </div>
                 
                 {/* Debug Info - Only show in development */}
