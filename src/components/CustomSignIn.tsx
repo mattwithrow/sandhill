@@ -35,7 +35,8 @@ const CustomSignIn: React.FC = () => {
 
     try {
       console.log('Attempting sign in with:', formData.usernameOrEmail);
-      await signIn({ 
+      
+      const result = await signIn({ 
         username: formData.usernameOrEmail, 
         password: formData.password 
       });
@@ -45,7 +46,25 @@ const CustomSignIn: React.FC = () => {
       
     } catch (err: any) {
       console.error('Sign in error:', err);
-      setError(err.message || 'Invalid username/email or password');
+      
+      // Provide more specific error messages
+      let errorMessage = 'Sign in failed';
+      
+      if (err.name === 'NotAuthorizedException') {
+        errorMessage = 'Invalid email or password';
+      } else if (err.name === 'UserNotConfirmedException') {
+        errorMessage = 'Please check your email and confirm your account';
+      } else if (err.name === 'UserNotFoundException') {
+        errorMessage = 'User not found. Please check your email address';
+      } else if (err.name === 'PasswordResetRequiredException') {
+        errorMessage = 'Password reset required. Please use the forgot password option';
+      } else if (err.name === 'TooManyRequestsException') {
+        errorMessage = 'Too many failed attempts. Please try again later';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -80,6 +99,7 @@ const CustomSignIn: React.FC = () => {
   // Check if user is already authenticated
   useEffect(() => {
     console.log('Auth status changed:', authStatus);
+    
     if (authStatus === 'authenticated' && user) {
       console.log('User already authenticated, redirecting to My Account');
       navigate('/my-account');
