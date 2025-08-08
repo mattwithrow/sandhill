@@ -58,7 +58,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       // Try multiple ways to get the user email
       const userEmail = user?.signInDetails?.loginId || (user as any)?.email || user?.username;
       
-      if (authStatus === 'authenticated' && userEmail) {
+      if (authStatus === 'authenticated' && user && userEmail) {
         console.log('✅ User is authenticated, loading profile from AWS...');
         console.log('✅ User email:', userEmail);
         
@@ -74,15 +74,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             const client = generateClient();
             console.log('✅ AWS API client generated successfully');
             
-                         // Query the AWS database for user's profile by email
-             const result = await client.graphql({
-               query: listUserProfiles,
-               variables: {
-                 filter: {
-                   email: { eq: userEmail }
-                 }
-               }
-             });
+            // Query the AWS database for user's profile by email
+            const result = await client.graphql({
+              query: listUserProfiles,
+              variables: {
+                filter: {
+                  email: { eq: userEmail }
+                }
+              }
+            });
             
             console.log('✅ AWS GraphQL query successful, result:', result);
             
@@ -150,9 +150,11 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         } finally {
           setIsLoading(false);
         }
+      } else if (authStatus === 'authenticated' && !user) {
+        console.log('⏳ Waiting for user object to load...');
+        // Don't set loading to false here - keep loading until user object is available
       } else if (authStatus === 'unauthenticated') {
-        console.log('❌ User is not authenticated');
-        setError('User is not authenticated');
+        console.log('🔒 User not authenticated');
         setIsLoading(false);
       } else {
         console.log('⏳ Waiting for authentication...');
