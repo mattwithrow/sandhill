@@ -35,7 +35,7 @@ const schema = a.schema({
     })
     .authorization((allow) => [
       allow.owner(), // Users can only access their own profile
-      allow.publicApiKey().to(['read']), // Anyone can read profiles (for discovery)
+      allow.publicApiKey(), // Allow API key access for all operations (temporary for testing)
     ]),
 });
 

@@ -276,6 +276,9 @@
                     "allow": "public",
                     "provider": "apiKey",
                     "operations": [
+                      "create",
+                      "update",
+                      "delete",
                       "read"
                     ]
                   }

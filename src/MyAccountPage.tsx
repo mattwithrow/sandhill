@@ -191,6 +191,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       
       const client = generateClient();
       console.log('✅ AWS API client generated successfully');
+      console.log('🔍 Current auth status:', authStatus);
+      console.log('🔍 Current user:', user);
+      console.log('🔍 User ID for profile:', user.userId);
       
       console.log('✅ AWS client ready, checking for existing profile...');
       
@@ -268,6 +271,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           projectDetails: ''
         };
         
+        console.log('🔍 Create input data:', createInput);
+        
         const createResult = await client.graphql({
           query: createUserProfile,
           variables: {
@@ -294,7 +299,20 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       }, 3000);
     } catch (error) {
       console.error('❌ Error saving profile to AWS:', error);
-      setMessage(`Error saving profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      
+      // Log detailed error information
+      if (error && typeof error === 'object' && 'errors' in error) {
+        console.error('❌ GraphQL Errors:', (error as any).errors);
+        const graphqlErrors = (error as any).errors;
+        if (graphqlErrors && graphqlErrors.length > 0) {
+          const errorMessage = graphqlErrors.map((err: any) => err.message).join(', ');
+          setMessage(`GraphQL Error: ${errorMessage}`);
+        } else {
+          setMessage(`Error saving profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      } else {
+        setMessage(`Error saving profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
     }
   };
 
