@@ -46,6 +46,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           
           // Load profile from localStorage with multiple fallback strategies
           let profileData = null;
+          console.log('🔍 Starting profile loading process...');
+          console.log('Current user ID:', user.userId);
+          console.log('Current user email:', user.signInDetails?.loginId);
           
           // Try loading by current user ID first
           const savedProfile = localStorage.getItem(`profile_${user.userId}`);
@@ -99,6 +102,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             setFormData(profileData);
           } else {
             console.log('📝 No saved profile found');
+            // Debug: Show all localStorage keys
+            console.log('🔍 All localStorage keys:', Object.keys(localStorage));
+            const profileKeys = Object.keys(localStorage).filter(key => key.startsWith('profile_'));
+            console.log('🔍 Profile-related keys:', profileKeys);
+            profileKeys.forEach(key => {
+              console.log(`🔍 Key: ${key}, Value:`, localStorage.getItem(key));
+            });
           }
           
         } catch (err) {
@@ -122,9 +132,22 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
   const handleSignOut = async () => {
     try {
+      console.log('🔄 Attempting to sign out...');
+      console.log('Current auth status:', authStatus);
+      console.log('Current user:', user);
+      
       await signOut();
+      
+      console.log('✅ Sign out completed successfully');
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error('❌ Error signing out:', error);
+      // Try alternative sign out method
+      try {
+        console.log('🔄 Trying alternative sign out method...');
+        window.location.href = '/'; // Force redirect to home
+      } catch (redirectError) {
+        console.error('❌ Alternative sign out also failed:', redirectError);
+      }
     }
   };
 
@@ -134,21 +157,36 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
     try {
       console.log('💾 Saving profile to localStorage...');
+      console.log('User ID:', user?.userId);
+      console.log('User email:', user?.signInDetails?.loginId);
+      console.log('Form data to save:', formData);
       
       // Save to localStorage with multiple keys for better persistence
       if (user?.userId) {
         const profileJson = JSON.stringify(formData);
+        console.log('Profile JSON:', profileJson);
         
         // Save with user ID
         localStorage.setItem(`profile_${user.userId}`, profileJson);
+        console.log('✅ Saved with user ID key: profile_${user.userId}');
         
         // Also save with email for better persistence across sessions
         if (user.signInDetails?.loginId) {
           localStorage.setItem(`profile_email_${user.signInDetails.loginId}`, profileJson);
+          console.log('✅ Saved with email key: profile_email_${user.signInDetails.loginId}');
         }
         
         // Save timestamp for tracking
         localStorage.setItem(`profile_timestamp_${user.userId}`, Date.now().toString());
+        console.log('✅ Saved timestamp');
+        
+        // Verify the save worked
+        const verifyUserID = localStorage.getItem(`profile_${user.userId}`);
+        const verifyEmail = user.signInDetails?.loginId ? localStorage.getItem(`profile_email_${user.signInDetails.loginId}`) : null;
+        console.log('Verification - User ID key exists:', !!verifyUserID);
+        console.log('Verification - Email key exists:', !!verifyEmail);
+      } else {
+        console.error('❌ No user ID available for saving profile');
       }
       
       console.log('✅ Profile saved successfully:', formData);

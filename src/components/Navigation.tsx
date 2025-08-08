@@ -48,12 +48,25 @@ const Navigation: React.FC = () => {
 
   const handleSignOut = async (): Promise<void> => {
     try {
-      console.log('Sign out initiated...');
+      console.log('🔄 Navigation: Sign out initiated...');
+      console.log('Navigation: Current auth status:', authStatus);
+      
       await signOut();
-      console.log('Sign out successful');
+      
+      console.log('✅ Navigation: Sign out successful');
       closeMobileMenu();
+      
+      // Force redirect to home page
+      window.location.href = '/';
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error('❌ Navigation: Error signing out:', error);
+      // Try alternative sign out method
+      try {
+        console.log('🔄 Navigation: Trying alternative sign out method...');
+        window.location.href = '/'; // Force redirect to home
+      } catch (redirectError) {
+        console.error('❌ Navigation: Alternative sign out also failed:', redirectError);
+      }
     }
   };
 
