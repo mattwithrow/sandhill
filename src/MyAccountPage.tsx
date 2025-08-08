@@ -55,9 +55,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       setDebugInfo(diagnostics);
       console.log('📊 Auth Diagnostics:', diagnostics);
 
-      if (authStatus === 'authenticated' && user?.signInDetails?.loginId) {
+      // Try multiple ways to get the user email
+      const userEmail = user?.signInDetails?.loginId || (user as any)?.email || user?.username;
+      
+      if (authStatus === 'authenticated' && userEmail) {
         console.log('✅ User is authenticated, loading profile from AWS...');
-        console.log('✅ User email:', user.signInDetails.loginId);
+        console.log('✅ User email:', userEmail);
         
         try {
           setIsLoading(true);
@@ -65,7 +68,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           
           // Load profile from AWS database using email
           let profileData = null;
-          const userEmail = user.signInDetails.loginId;
           console.log('🔍 Searching for profile by email:', userEmail);
           
           try {
@@ -159,7 +161,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     };
 
     runDiagnostics();
-  }, [authStatus, user?.signInDetails?.loginId]);
+  }, [authStatus, user?.signInDetails?.loginId, user?.username, (user as any)?.email]);
 
   const handleSignOut = async () => {
     try {
@@ -188,17 +190,23 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
     try {
       console.log('💾 Saving profile to AWS database...');
-      console.log('User email:', user?.signInDetails?.loginId);
+      console.log('🔍 Full user object:', user);
+      console.log('🔍 User signInDetails:', user?.signInDetails);
+      console.log('🔍 User email (signInDetails.loginId):', user?.signInDetails?.loginId);
+      console.log('🔍 User email (user.email):', (user as any)?.email);
+      console.log('🔍 User username:', user?.username);
+      console.log('🔍 User userId:', user?.userId);
       console.log('Form data to save:', formData);
       
-      if (!user?.signInDetails?.loginId) {
+      // Try multiple ways to get the user email
+      let userEmail = user?.signInDetails?.loginId || (user as any)?.email || user?.username;
+      
+      if (!userEmail) {
         throw new Error('No user email available for saving profile');
       }
       
       const client = generateClient();
       console.log('✅ AWS API client generated successfully');
-      
-      const userEmail = user.signInDetails.loginId;
       console.log('🔍 Checking for existing profile by email:', userEmail);
       
              // Check if profile already exists by email
