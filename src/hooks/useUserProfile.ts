@@ -61,7 +61,7 @@ export const useUserProfile = () => {
         // Query the database for user's profile
         const result = await client.models.UserProfile.list({
           filter: {
-            userId: { eq: user?.userId }
+            email: { eq: user?.signInDetails?.loginId }
           }
         });
         
@@ -139,7 +139,7 @@ export const useUserProfile = () => {
       // Check if profile already exists
       const existingProfiles = await client.models.UserProfile.list({
         filter: {
-          userId: { eq: user.userId }
+          email: { eq: user.signInDetails?.loginId }
         }
       });
       
@@ -149,7 +149,7 @@ export const useUserProfile = () => {
         
         await client.models.UserProfile.update({
           id: existingProfile.id,
-          userId: user.userId,
+          email: user.signInDetails?.loginId,
           username: updatedProfile.username,
           userType: updatedProfile.userType,
           bio: updatedProfile.bio,
@@ -173,7 +173,7 @@ export const useUserProfile = () => {
       } else {
         // Create new profile
         await client.models.UserProfile.create({
-          userId: user.userId,
+          email: user.signInDetails?.loginId,
           username: updatedProfile.username,
           userType: updatedProfile.userType,
           bio: updatedProfile.bio,
@@ -226,7 +226,7 @@ export const useUserProfile = () => {
       
       // Create new profile in database
       await client.models.UserProfile.create({
-        userId: user.userId,
+        email: user.signInDetails?.loginId,
         username: profileData.username,
         userType: profileData.userType,
         bio: profileData.bio,

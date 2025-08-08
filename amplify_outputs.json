@@ -111,8 +111,8 @@
               "isRequired": true,
               "attributes": []
             },
-            "userId": {
-              "name": "userId",
+            "email": {
+              "name": "email",
               "isArray": false,
               "type": "String",
               "isRequired": false,

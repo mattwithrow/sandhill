@@ -55,36 +55,32 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       setDebugInfo(diagnostics);
       console.log('📊 Auth Diagnostics:', diagnostics);
 
-      if (authStatus === 'authenticated' && user?.userId) {
+      if (authStatus === 'authenticated' && user?.signInDetails?.loginId) {
         console.log('✅ User is authenticated, loading profile from AWS...');
-        
-        // Save user ID to localStorage for fallback
-        localStorage.setItem('current_user_id', user.userId);
-        console.log('✅ Saved user ID to localStorage:', user.userId);
+        console.log('✅ User email:', user.signInDetails.loginId);
         
         try {
           setIsLoading(true);
           setError(null);
           
-          // Load profile from AWS database
+          // Load profile from AWS database using email
           let profileData = null;
-          console.log('🔍 Starting AWS database profile loading process...');
-          console.log('Current user ID:', user.userId);
-          console.log('Current user email:', user.signInDetails?.loginId);
+          const userEmail = user.signInDetails.loginId;
+          console.log('🔍 Searching for profile by email:', userEmail);
           
           try {
             const client = generateClient();
             console.log('✅ AWS API client generated successfully');
             
-            // Query the AWS database for user's profile
-            const result = await client.graphql({
-              query: listUserProfiles,
-              variables: {
-                filter: {
-                  userId: { eq: user.userId }
-                }
-              }
-            });
+                         // Query the AWS database for user's profile by email
+             const result = await client.graphql({
+               query: listUserProfiles,
+               variables: {
+                 filter: {
+                   userId: { eq: userEmail }
+                 }
+               }
+             });
             
             console.log('✅ AWS GraphQL query successful, result:', result);
             
@@ -95,26 +91,26 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               const dbProfile = profiles[0];
               console.log('📄 Found profile in AWS database:', dbProfile);
               
-                             // Convert database profile to form data format
-               profileData = {
-                 username: dbProfile.username || '',
-                 userType: dbProfile.userType || UserProfileUserType.both,
-                 bio: dbProfile.bio || '',
-                 experience: dbProfile.experience || '',
-                 skills: dbProfile.skills || '',
-                 location: dbProfile.location || ''
-               };
+              // Convert database profile to form data format
+              profileData = {
+                username: dbProfile.username || '',
+                userType: dbProfile.userType || UserProfileUserType.both,
+                bio: dbProfile.bio || '',
+                experience: dbProfile.experience || '',
+                skills: dbProfile.skills || '',
+                location: dbProfile.location || ''
+              };
               
               console.log('📄 Converted profile data:', profileData);
             } else {
-              console.log('📝 No profile found in AWS database for user:', user.userId);
+              console.log('📝 No profile found in AWS database for email:', userEmail);
             }
           } catch (dbError) {
             console.error('❌ AWS database error:', dbError);
             // Fallback to localStorage if database fails
             console.log('🔄 Falling back to localStorage...');
             
-            const savedProfile = localStorage.getItem(`profile_${user.userId}`);
+            const savedProfile = localStorage.getItem(`profile_email_${userEmail}`);
             if (savedProfile) {
               try {
                 profileData = JSON.parse(savedProfile);
@@ -130,13 +126,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             setFormData(profileData);
           } else {
             console.log('📝 No saved profile found');
-            // Debug: Show all localStorage keys
-            console.log('🔍 All localStorage keys:', Object.keys(localStorage));
-            const profileKeys = Object.keys(localStorage).filter(key => key.startsWith('profile_'));
-            console.log('🔍 Profile-related keys:', profileKeys);
-            profileKeys.forEach(key => {
-              console.log(`🔍 Key: ${key}, Value:`, localStorage.getItem(key));
-            });
           }
           
         } catch (err) {
@@ -156,7 +145,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     };
 
     runDiagnostics();
-  }, [authStatus, user?.userId]);
+  }, [authStatus, user?.signInDetails?.loginId]);
 
   const handleSignOut = async () => {
     try {
@@ -185,159 +174,28 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
     try {
       console.log('💾 Saving profile to AWS database...');
-      console.log('User ID:', user?.userId);
       console.log('User email:', user?.signInDetails?.loginId);
       console.log('Form data to save:', formData);
       
-              // Check if user is authenticated
-        if (!user?.userId) {
-          console.log('❌ User not authenticated, trying to get user info...');
-          console.log('🔍 Current user object:', user);
-          console.log('🔍 Auth status:', authStatus);
-          console.log('🔍 User keys:', user ? Object.keys(user) : 'No user object');
-          
-          // Try to get user ID from different properties
-          const possibleUserId = user?.userId || (user as any)?.id || (user as any)?.sub || user?.username;
-          console.log('🔍 Possible user ID:', possibleUserId);
-        
-                          // Try to get user from localStorage as fallback
-         const savedUserId = localStorage.getItem('current_user_id');
-         if (savedUserId || possibleUserId) {
-           const fallbackUserId = savedUserId || possibleUserId;
-                      console.log('✅ Found user ID for fallback:', fallbackUserId);
-           // Use fallback user ID
-          
-          const client = generateClient();
-          console.log('✅ AWS API client generated successfully');
-          
-          // Create profile with fallback user ID
-          const createInput: CreateUserProfileInput = {
-            userId: fallbackUserId,
-            username: formData.username,
-            userType: formData.userType,
-            bio: formData.bio,
-            experience: formData.experience,
-            skills: formData.skills,
-            location: formData.location,
-            // Set empty strings for optional fields
-            passions: '',
-            values: '',
-            contributionGoals: '',
-            linkedinUrl: '',
-            githubUrl: '',
-            portfolioUrl: '',
-            twitterUrl: '',
-            instagramUrl: '',
-            websiteUrl: '',
-            projectDetails: ''
-          };
-          
-          console.log('🔍 Create input data with fallback user ID:', createInput);
-          
-          const createResult = await client.graphql({
-            query: createUserProfile,
-            variables: {
-              input: createInput
-            }
-          });
-          
-          const savedProfile = createResult.data?.createUserProfile;
-          console.log('✅ Profile created successfully in AWS with fallback user ID:', savedProfile);
-          
-          // Also save to localStorage as backup
-          const profileJson = JSON.stringify(formData);
-          localStorage.setItem(`profile_${fallbackUserId}`, profileJson);
-          console.log('✅ Also saved to localStorage as backup');
-          
-          console.log('✅ Profile saved successfully to AWS:', formData);
-          setProfile(formData);
-          setMessage('Profile saved successfully! (Stored in AWS database)');
-          setIsEditing(false);
-          
-          setTimeout(() => {
-            setMessage('');
-          }, 3000);
-          return;
-                 } else {
-           // Generate a unique user ID as last resort
-           console.log('⚠️ No user ID found, generating unique ID...');
-           const generatedUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-           console.log('✅ Generated user ID:', generatedUserId);
-           
-           // Save the generated user ID
-           localStorage.setItem('current_user_id', generatedUserId);
-           
-           const client = generateClient();
-           console.log('✅ AWS API client generated successfully');
-           
-           // Create profile with generated user ID
-           const createInput: CreateUserProfileInput = {
-             userId: generatedUserId,
-             username: formData.username,
-             userType: formData.userType,
-             bio: formData.bio,
-             experience: formData.experience,
-             skills: formData.skills,
-             location: formData.location,
-             // Set empty strings for optional fields
-             passions: '',
-             values: '',
-             contributionGoals: '',
-             linkedinUrl: '',
-             githubUrl: '',
-             portfolioUrl: '',
-             twitterUrl: '',
-             instagramUrl: '',
-             websiteUrl: '',
-             projectDetails: ''
-           };
-           
-           console.log('🔍 Create input data with generated user ID:', createInput);
-           
-           const createResult = await client.graphql({
-             query: createUserProfile,
-             variables: {
-               input: createInput
-             }
-           });
-           
-           const savedProfile = createResult.data?.createUserProfile;
-           console.log('✅ Profile created successfully in AWS with generated user ID:', savedProfile);
-           
-           // Also save to localStorage as backup
-           const profileJson = JSON.stringify(formData);
-           localStorage.setItem(`profile_${generatedUserId}`, profileJson);
-           console.log('✅ Also saved to localStorage as backup');
-           
-           console.log('✅ Profile saved successfully to AWS:', formData);
-           setProfile(formData);
-           setMessage('Profile saved successfully! (Stored in AWS database)');
-           setIsEditing(false);
-           
-           setTimeout(() => {
-             setMessage('');
-           }, 3000);
-           return;
-         }
+      if (!user?.signInDetails?.loginId) {
+        throw new Error('No user email available for saving profile');
       }
       
       const client = generateClient();
       console.log('✅ AWS API client generated successfully');
-      console.log('🔍 Current auth status:', authStatus);
-      console.log('🔍 Current user:', user);
-      console.log('🔍 User ID for profile:', user.userId);
       
-      console.log('✅ AWS client ready, checking for existing profile...');
+      const userEmail = user.signInDetails.loginId;
+      console.log('🔍 Checking for existing profile by email:', userEmail);
       
-      // Check if profile already exists
-      const existingResult = await client.graphql({
-        query: listUserProfiles,
-        variables: {
-          filter: {
-            userId: { eq: user.userId }
-          }
-        }
-      });
+             // Check if profile already exists by email
+       const existingResult = await client.graphql({
+         query: listUserProfiles,
+         variables: {
+           filter: {
+             userId: { eq: userEmail }
+           }
+         }
+       });
       
       const existingProfiles = existingResult.data?.listUserProfiles?.items || [];
       let savedProfile;
@@ -347,10 +205,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         console.log('📝 Updating existing profile in AWS...');
         const existingProfile = existingProfiles[0];
         
-        const updateInput: UpdateUserProfileInput = {
-          id: existingProfile.id,
-          userId: user.userId,
-          username: formData.username,
+                 const updateInput: UpdateUserProfileInput = {
+           id: existingProfile.id,
+           userId: userEmail,
+           username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
           experience: formData.experience,
@@ -382,9 +240,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         // Create new profile
         console.log('📝 Creating new profile in AWS...');
         
-        const createInput: CreateUserProfileInput = {
-          userId: user.userId,
-          username: formData.username,
+                 const createInput: CreateUserProfileInput = {
+           userId: userEmail,
+           username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
           experience: formData.experience,
@@ -403,8 +261,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           projectDetails: ''
         };
         
-        console.log('🔍 Create input data:', createInput);
-        
         const createResult = await client.graphql({
           query: createUserProfile,
           variables: {
@@ -418,7 +274,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       
       // Also save to localStorage as backup
       const profileJson = JSON.stringify(formData);
-      localStorage.setItem(`profile_${user.userId}`, profileJson);
+      localStorage.setItem(`profile_email_${userEmail}`, profileJson);
       console.log('✅ Also saved to localStorage as backup');
       
       console.log('✅ Profile saved successfully to AWS:', formData);

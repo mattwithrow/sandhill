@@ -15,7 +15,7 @@ const schema = a.schema({
   
   UserProfile: a
     .model({
-      userId: a.string(),
+      email: a.string(),
       username: a.string(),
       userType: a.enum(['expert', 'ventures', 'both']),
       bio: a.string(),
