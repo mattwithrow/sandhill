@@ -21,14 +21,21 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({
     username: '',
-    userType: 'both' as 'expert' | 'ventures' | 'both',
+    userType: UserProfileUserType.both,
     bio: '',
     experience: '',
     skills: '',
     location: ''
   });
   
-  const [profile, setProfile] = useState<null | typeof formData>(null);
+  const [profile, setProfile] = useState<null | {
+    username: string;
+    userType: UserProfileUserType;
+    bio: string;
+    experience: string;
+    skills: string;
+    location: string;
+  }>(null);
 
   // Load profile from AWS database on component mount
   useEffect(() => {
@@ -84,15 +91,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               const dbProfile = profiles[0];
               console.log('📄 Found profile in AWS database:', dbProfile);
               
-              // Convert database profile to form data format
-              profileData = {
-                username: dbProfile.username || '',
-                userType: (dbProfile.userType || 'both') as 'expert' | 'ventures' | 'both',
-                bio: dbProfile.bio || '',
-                experience: dbProfile.experience || '',
-                skills: dbProfile.skills || '',
-                location: dbProfile.location || ''
-              };
+                             // Convert database profile to form data format
+               profileData = {
+                 username: dbProfile.username || '',
+                 userType: dbProfile.userType || UserProfileUserType.both,
+                 bio: dbProfile.bio || '',
+                 experience: dbProfile.experience || '',
+                 skills: dbProfile.skills || '',
+                 location: dbProfile.location || ''
+               };
               
               console.log('📄 Converted profile data:', profileData);
             } else {
@@ -294,7 +301,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: field === 'userType' ? value as UserProfileUserType : value
     }));
   };
 
@@ -517,12 +524,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     </label>
                     <select
                       value={formData.userType}
-                      onChange={(e) => handleInputChange('userType', e.target.value as 'expert' | 'ventures' | 'both')}
+                      onChange={(e) => handleInputChange('userType', e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     >
-                      <option value="expert">Expert</option>
-                      <option value="ventures">Ventures</option>
-                      <option value="both">Both</option>
+                      <option value={UserProfileUserType.expert}>Expert</option>
+                      <option value={UserProfileUserType.ventures}>Ventures</option>
+                      <option value={UserProfileUserType.both}>Both</option>
                     </select>
                   </div>
                 </div>
