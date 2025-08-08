@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "../../amplify/data/resource";
 
-// Simplified profile type for localStorage
+// Profile type matching database schema
 interface SimpleUserProfile {
   username: string;
   userType: 'expert' | 'ventures' | 'both';
@@ -42,52 +44,59 @@ export const useUserProfile = () => {
 
       console.log('Loading profile for user:', user?.userId);
 
-      // Load from localStorage with multiple fallback strategies
+      // Load from database with localStorage fallback
       let profileData = null;
       
-      // Try loading by current user ID first
-      const savedProfile = localStorage.getItem(`profile_${user?.userId}`);
-      if (savedProfile) {
-        try {
-          profileData = JSON.parse(savedProfile);
-          console.log('Found profile in localStorage by user ID:', profileData);
-        } catch (error) {
-          console.error('Error parsing profile by user ID:', error);
+      try {
+        const client = generateClient<Schema>();
+        console.log('✅ Database client generated successfully');
+        
+        // Check if UserProfile model is available
+        if (!client.models.UserProfile) {
+          throw new Error('UserProfile model not available in database schema');
         }
-      }
-      
-      // If not found by user ID, try loading by email (more stable)
-      if (!profileData && user?.signInDetails?.loginId) {
-        const emailProfile = localStorage.getItem(`profile_email_${user.signInDetails.loginId}`);
-        if (emailProfile) {
-          try {
-            profileData = JSON.parse(emailProfile);
-            console.log('Found profile in localStorage by email:', profileData);
-            // Save it with the current user ID for future use
-            localStorage.setItem(`profile_${user.userId}`, emailProfile);
-          } catch (error) {
-            console.error('Error parsing profile by email:', error);
+        
+        console.log('✅ UserProfile model found, querying database...');
+        
+        // Query the database for user's profile
+        const result = await client.models.UserProfile.list({
+          filter: {
+            userId: { eq: user?.userId }
           }
+        });
+        
+        console.log('✅ Database query successful, found profiles:', result.data.length);
+        
+        if (result.data.length > 0) {
+          const dbProfile = result.data[0];
+          console.log('📄 Found profile in database:', dbProfile);
+          
+          // Convert database profile to form data format
+          profileData = {
+            username: dbProfile.username || '',
+            userType: (dbProfile.userType || 'both') as 'expert' | 'ventures' | 'both',
+            bio: dbProfile.bio || '',
+            experience: dbProfile.experience || '',
+            skills: dbProfile.skills || '',
+            location: dbProfile.location || ''
+          };
+          
+          console.log('📄 Converted profile data:', profileData);
+        } else {
+          console.log('📝 No profile found in database for user:', user?.userId);
         }
-      }
-      
-      // If still not found, try loading the most recent profile
-      if (!profileData) {
-        const allKeys = Object.keys(localStorage);
-        const profileKeys = allKeys.filter(key => key.startsWith('profile_') && !key.includes('email_') && !key.includes('timestamp_'));
-        if (profileKeys.length > 0) {
-          // Get the most recent profile
-          const mostRecentKey = profileKeys[profileKeys.length - 1];
-          const mostRecentProfile = localStorage.getItem(mostRecentKey);
-          if (mostRecentProfile) {
-            try {
-              profileData = JSON.parse(mostRecentProfile);
-              console.log('Found profile in localStorage by fallback:', profileData);
-              // Save it with the current user ID for future use
-              localStorage.setItem(`profile_${user.userId}`, mostRecentProfile);
-            } catch (error) {
-              console.error('Error parsing fallback profile:', error);
-            }
+      } catch (dbError) {
+        console.error('❌ Database error:', dbError);
+        // Fallback to localStorage if database fails
+        console.log('🔄 Falling back to localStorage...');
+        
+        const savedProfile = localStorage.getItem(`profile_${user?.userId}`);
+        if (savedProfile) {
+          try {
+            profileData = JSON.parse(savedProfile);
+            console.log('📄 Found fallback profile in localStorage:', profileData);
+          } catch (error) {
+            console.error('Error parsing localStorage profile:', error);
           }
         }
       }
@@ -116,21 +125,80 @@ export const useUserProfile = () => {
       
       const updatedProfile = { ...profile, ...updates } as SimpleUserProfile;
       
-      // Save to localStorage with multiple keys for better persistence
-      if (user?.userId) {
-        const profileJson = JSON.stringify(updatedProfile);
-        
-        // Save with user ID
-        localStorage.setItem(`profile_${user.userId}`, profileJson);
-        
-        // Also save with email for better persistence across sessions
-        if (user.signInDetails?.loginId) {
-          localStorage.setItem(`profile_email_${user.signInDetails.loginId}`, profileJson);
-        }
-        
-        // Save timestamp for tracking
-        localStorage.setItem(`profile_timestamp_${user.userId}`, Date.now().toString());
+      if (!user?.userId) {
+        throw new Error('No user ID available for updating profile');
       }
+      
+      const client = generateClient<Schema>();
+      
+      // Check if UserProfile model is available
+      if (!client.models.UserProfile) {
+        throw new Error('UserProfile model not available in database schema');
+      }
+      
+      // Check if profile already exists
+      const existingProfiles = await client.models.UserProfile.list({
+        filter: {
+          userId: { eq: user.userId }
+        }
+      });
+      
+      if (existingProfiles.data.length > 0) {
+        // Update existing profile
+        const existingProfile = existingProfiles.data[0];
+        
+        await client.models.UserProfile.update({
+          id: existingProfile.id,
+          userId: user.userId,
+          username: updatedProfile.username,
+          userType: updatedProfile.userType,
+          bio: updatedProfile.bio,
+          experience: updatedProfile.experience,
+          skills: updatedProfile.skills,
+          location: updatedProfile.location,
+          // Set empty strings for optional fields
+          passions: '',
+          values: '',
+          contributionGoals: '',
+          linkedinUrl: '',
+          githubUrl: '',
+          portfolioUrl: '',
+          twitterUrl: '',
+          instagramUrl: '',
+          websiteUrl: '',
+          projectDetails: ''
+        });
+        
+        console.log('Profile updated successfully in database');
+      } else {
+        // Create new profile
+        await client.models.UserProfile.create({
+          userId: user.userId,
+          username: updatedProfile.username,
+          userType: updatedProfile.userType,
+          bio: updatedProfile.bio,
+          experience: updatedProfile.experience,
+          skills: updatedProfile.skills,
+          location: updatedProfile.location,
+          // Set empty strings for optional fields
+          passions: '',
+          values: '',
+          contributionGoals: '',
+          linkedinUrl: '',
+          githubUrl: '',
+          portfolioUrl: '',
+          twitterUrl: '',
+          instagramUrl: '',
+          websiteUrl: '',
+          projectDetails: ''
+        });
+        
+        console.log('Profile created successfully in database');
+      }
+      
+      // Also save to localStorage as backup
+      const profileJson = JSON.stringify(updatedProfile);
+      localStorage.setItem(`profile_${user.userId}`, profileJson);
       
       setProfile(updatedProfile);
       console.log('Profile updated successfully');
@@ -145,21 +213,44 @@ export const useUserProfile = () => {
     try {
       console.log('Creating profile:', profileData);
       
-      // Save to localStorage with multiple keys for better persistence
-      if (user?.userId) {
-        const profileJson = JSON.stringify(profileData);
-        
-        // Save with user ID
-        localStorage.setItem(`profile_${user.userId}`, profileJson);
-        
-        // Also save with email for better persistence across sessions
-        if (user.signInDetails?.loginId) {
-          localStorage.setItem(`profile_email_${user.signInDetails.loginId}`, profileJson);
-        }
-        
-        // Save timestamp for tracking
-        localStorage.setItem(`profile_timestamp_${user.userId}`, Date.now().toString());
+      if (!user?.userId) {
+        throw new Error('No user ID available for creating profile');
       }
+      
+      const client = generateClient<Schema>();
+      
+      // Check if UserProfile model is available
+      if (!client.models.UserProfile) {
+        throw new Error('UserProfile model not available in database schema');
+      }
+      
+      // Create new profile in database
+      await client.models.UserProfile.create({
+        userId: user.userId,
+        username: profileData.username,
+        userType: profileData.userType,
+        bio: profileData.bio,
+        experience: profileData.experience,
+        skills: profileData.skills,
+        location: profileData.location,
+        // Set empty strings for optional fields
+        passions: '',
+        values: '',
+        contributionGoals: '',
+        linkedinUrl: '',
+        githubUrl: '',
+        portfolioUrl: '',
+        twitterUrl: '',
+        instagramUrl: '',
+        websiteUrl: '',
+        projectDetails: ''
+      });
+      
+      console.log('Profile created successfully in database');
+      
+      // Also save to localStorage as backup
+      const profileJson = JSON.stringify(profileData);
+      localStorage.setItem(`profile_${user.userId}`, profileJson);
       
       setProfile(profileData);
       console.log('Profile created successfully');
