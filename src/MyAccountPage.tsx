@@ -44,11 +44,57 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           setIsLoading(true);
           setError(null);
           
-          // Load profile from localStorage
+          // Load profile from localStorage with multiple fallback strategies
+          let profileData = null;
+          
+          // Try loading by current user ID first
           const savedProfile = localStorage.getItem(`profile_${user.userId}`);
           if (savedProfile) {
-            const profileData = JSON.parse(savedProfile);
-            console.log('📄 Found saved profile:', profileData);
+            try {
+              profileData = JSON.parse(savedProfile);
+              console.log('📄 Found saved profile by user ID:', profileData);
+            } catch (error) {
+              console.error('Error parsing profile by user ID:', error);
+            }
+          }
+          
+          // If not found by user ID, try loading by email (more stable)
+          if (!profileData && user.signInDetails?.loginId) {
+            const emailProfile = localStorage.getItem(`profile_email_${user.signInDetails.loginId}`);
+            if (emailProfile) {
+              try {
+                profileData = JSON.parse(emailProfile);
+                console.log('📄 Found saved profile by email:', profileData);
+                // Save it with the current user ID for future use
+                localStorage.setItem(`profile_${user.userId}`, emailProfile);
+              } catch (error) {
+                console.error('Error parsing profile by email:', error);
+              }
+            }
+          }
+          
+          // If still not found, try loading the most recent profile
+          if (!profileData) {
+            const allKeys = Object.keys(localStorage);
+            const profileKeys = allKeys.filter(key => key.startsWith('profile_'));
+            if (profileKeys.length > 0) {
+              // Get the most recent profile (you could also check timestamps if needed)
+              const mostRecentKey = profileKeys[profileKeys.length - 1];
+              const mostRecentProfile = localStorage.getItem(mostRecentKey);
+              if (mostRecentProfile) {
+                try {
+                  profileData = JSON.parse(mostRecentProfile);
+                  console.log('📄 Found saved profile by fallback:', profileData);
+                  // Save it with the current user ID for future use
+                  localStorage.setItem(`profile_${user.userId}`, mostRecentProfile);
+                } catch (error) {
+                  console.error('Error parsing fallback profile:', error);
+                }
+              }
+            }
+          }
+          
+          if (profileData) {
             setProfile(profileData);
             setFormData(profileData);
           } else {
@@ -89,9 +135,20 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     try {
       console.log('💾 Saving profile to localStorage...');
       
-      // Save to localStorage
+      // Save to localStorage with multiple keys for better persistence
       if (user?.userId) {
-        localStorage.setItem(`profile_${user.userId}`, JSON.stringify(formData));
+        const profileJson = JSON.stringify(formData);
+        
+        // Save with user ID
+        localStorage.setItem(`profile_${user.userId}`, profileJson);
+        
+        // Also save with email for better persistence across sessions
+        if (user.signInDetails?.loginId) {
+          localStorage.setItem(`profile_email_${user.signInDetails.loginId}`, profileJson);
+        }
+        
+        // Save timestamp for tracking
+        localStorage.setItem(`profile_timestamp_${user.userId}`, Date.now().toString());
       }
       
       console.log('✅ Profile saved successfully:', formData);

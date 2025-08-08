@@ -42,18 +42,58 @@ export const useUserProfile = () => {
 
       console.log('Loading profile for user:', user?.userId);
 
-      // Load from localStorage
-      const savedProfile = localStorage.getItem(`profile_${user?.userId}`);
+      // Load from localStorage with multiple fallback strategies
+      let profileData = null;
       
+      // Try loading by current user ID first
+      const savedProfile = localStorage.getItem(`profile_${user?.userId}`);
       if (savedProfile) {
         try {
-          const profileData = JSON.parse(savedProfile);
-          console.log('Found profile in localStorage:', profileData);
-          setProfile(profileData);
+          profileData = JSON.parse(savedProfile);
+          console.log('Found profile in localStorage by user ID:', profileData);
         } catch (error) {
-          console.error('Error parsing localStorage profile:', error);
-          setError('Error loading profile data');
+          console.error('Error parsing profile by user ID:', error);
         }
+      }
+      
+      // If not found by user ID, try loading by email (more stable)
+      if (!profileData && user?.signInDetails?.loginId) {
+        const emailProfile = localStorage.getItem(`profile_email_${user.signInDetails.loginId}`);
+        if (emailProfile) {
+          try {
+            profileData = JSON.parse(emailProfile);
+            console.log('Found profile in localStorage by email:', profileData);
+            // Save it with the current user ID for future use
+            localStorage.setItem(`profile_${user.userId}`, emailProfile);
+          } catch (error) {
+            console.error('Error parsing profile by email:', error);
+          }
+        }
+      }
+      
+      // If still not found, try loading the most recent profile
+      if (!profileData) {
+        const allKeys = Object.keys(localStorage);
+        const profileKeys = allKeys.filter(key => key.startsWith('profile_') && !key.includes('email_') && !key.includes('timestamp_'));
+        if (profileKeys.length > 0) {
+          // Get the most recent profile
+          const mostRecentKey = profileKeys[profileKeys.length - 1];
+          const mostRecentProfile = localStorage.getItem(mostRecentKey);
+          if (mostRecentProfile) {
+            try {
+              profileData = JSON.parse(mostRecentProfile);
+              console.log('Found profile in localStorage by fallback:', profileData);
+              // Save it with the current user ID for future use
+              localStorage.setItem(`profile_${user.userId}`, mostRecentProfile);
+            } catch (error) {
+              console.error('Error parsing fallback profile:', error);
+            }
+          }
+        }
+      }
+      
+      if (profileData) {
+        setProfile(profileData);
       } else {
         console.log('No profile found in localStorage');
         setProfile(null);
@@ -76,9 +116,20 @@ export const useUserProfile = () => {
       
       const updatedProfile = { ...profile, ...updates } as SimpleUserProfile;
       
-      // Save to localStorage
+      // Save to localStorage with multiple keys for better persistence
       if (user?.userId) {
-        localStorage.setItem(`profile_${user.userId}`, JSON.stringify(updatedProfile));
+        const profileJson = JSON.stringify(updatedProfile);
+        
+        // Save with user ID
+        localStorage.setItem(`profile_${user.userId}`, profileJson);
+        
+        // Also save with email for better persistence across sessions
+        if (user.signInDetails?.loginId) {
+          localStorage.setItem(`profile_email_${user.signInDetails.loginId}`, profileJson);
+        }
+        
+        // Save timestamp for tracking
+        localStorage.setItem(`profile_timestamp_${user.userId}`, Date.now().toString());
       }
       
       setProfile(updatedProfile);
@@ -94,9 +145,20 @@ export const useUserProfile = () => {
     try {
       console.log('Creating profile:', profileData);
       
-      // Save to localStorage
+      // Save to localStorage with multiple keys for better persistence
       if (user?.userId) {
-        localStorage.setItem(`profile_${user.userId}`, JSON.stringify(profileData));
+        const profileJson = JSON.stringify(profileData);
+        
+        // Save with user ID
+        localStorage.setItem(`profile_${user.userId}`, profileJson);
+        
+        // Also save with email for better persistence across sessions
+        if (user.signInDetails?.loginId) {
+          localStorage.setItem(`profile_email_${user.signInDetails.loginId}`, profileJson);
+        }
+        
+        // Save timestamp for tracking
+        localStorage.setItem(`profile_timestamp_${user.userId}`, Date.now().toString());
       }
       
       setProfile(profileData);
