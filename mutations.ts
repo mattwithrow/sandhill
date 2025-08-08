@@ -32,6 +32,7 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     bio
     contributionGoals
     createdAt
+    email
     experience
     githubUrl
     id
@@ -45,7 +46,6 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     skills
     twitterUrl
     updatedAt
-    userId
     userType
     username
     values
@@ -81,6 +81,7 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     bio
     contributionGoals
     createdAt
+    email
     experience
     githubUrl
     id
@@ -94,7 +95,6 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     skills
     twitterUrl
     updatedAt
-    userId
     userType
     username
     values
@@ -130,6 +130,7 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     bio
     contributionGoals
     createdAt
+    email
     experience
     githubUrl
     id
@@ -143,7 +144,6 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     skills
     twitterUrl
     updatedAt
-    userId
     userType
     username
     values

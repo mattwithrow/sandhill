@@ -29,6 +29,7 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
     bio
     contributionGoals
     createdAt
+    email
     experience
     githubUrl
     id
@@ -42,7 +43,6 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
     skills
     twitterUrl
     updatedAt
-    userId
     userType
     username
     values
@@ -75,6 +75,7 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
     bio
     contributionGoals
     createdAt
+    email
     experience
     githubUrl
     id
@@ -88,7 +89,6 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
     skills
     twitterUrl
     updatedAt
-    userId
     userType
     username
     values
@@ -121,6 +121,7 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
     bio
     contributionGoals
     createdAt
+    email
     experience
     githubUrl
     id
@@ -134,7 +135,6 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
     skills
     twitterUrl
     updatedAt
-    userId
     userType
     username
     values

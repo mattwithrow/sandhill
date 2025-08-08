@@ -23,6 +23,7 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
     bio
     contributionGoals
     createdAt
+    email
     experience
     githubUrl
     id
@@ -36,7 +37,6 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
     skills
     twitterUrl
     updatedAt
-    userId
     userType
     username
     values
@@ -76,6 +76,7 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       bio
       contributionGoals
       createdAt
+      email
       experience
       githubUrl
       id
@@ -89,7 +90,6 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       skills
       twitterUrl
       updatedAt
-      userId
       userType
       username
       values

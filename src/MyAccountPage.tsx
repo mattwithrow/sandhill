@@ -77,7 +77,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                query: listUserProfiles,
                variables: {
                  filter: {
-                   userId: { eq: userEmail }
+                   email: { eq: userEmail }
                  }
                }
              });
@@ -107,6 +107,20 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             }
           } catch (dbError) {
             console.error('❌ AWS database error:', dbError);
+            
+            // Log detailed GraphQL error information
+            if (dbError && typeof dbError === 'object' && 'errors' in dbError) {
+              console.error('❌ GraphQL Errors:', (dbError as any).errors);
+              const graphqlErrors = (dbError as any).errors;
+              if (graphqlErrors && graphqlErrors.length > 0) {
+                console.error('❌ GraphQL Error Details:', graphqlErrors.map((err: any) => ({
+                  message: err.message,
+                  path: err.path,
+                  extensions: err.extensions
+                })));
+              }
+            }
+            
             // Fallback to localStorage if database fails
             console.log('🔄 Falling back to localStorage...');
             
@@ -192,7 +206,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
          query: listUserProfiles,
          variables: {
            filter: {
-             userId: { eq: userEmail }
+             email: { eq: userEmail }
            }
          }
        });
@@ -207,7 +221,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         
                  const updateInput: UpdateUserProfileInput = {
            id: existingProfile.id,
-           userId: userEmail,
+           email: userEmail,
            username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
@@ -241,7 +255,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         console.log('📝 Creating new profile in AWS...');
         
                  const createInput: CreateUserProfileInput = {
-           userId: userEmail,
+           email: userEmail,
            username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
