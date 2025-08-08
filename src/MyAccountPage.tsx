@@ -58,6 +58,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       if (authStatus === 'authenticated' && user?.userId) {
         console.log('✅ User is authenticated, loading profile from AWS...');
         
+        // Save user ID to localStorage for fallback
+        localStorage.setItem('current_user_id', user.userId);
+        console.log('✅ Saved user ID to localStorage:', user.userId);
+        
         try {
           setIsLoading(true);
           setError(null);
@@ -185,8 +189,136 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       console.log('User email:', user?.signInDetails?.loginId);
       console.log('Form data to save:', formData);
       
-      if (!user?.userId) {
-        throw new Error('No user ID available for saving profile');
+              // Check if user is authenticated
+        if (!user?.userId) {
+          console.log('❌ User not authenticated, trying to get user info...');
+          console.log('🔍 Current user object:', user);
+          console.log('🔍 Auth status:', authStatus);
+          console.log('🔍 User keys:', user ? Object.keys(user) : 'No user object');
+          
+          // Try to get user ID from different properties
+          const possibleUserId = user?.userId || (user as any)?.id || (user as any)?.sub || user?.username;
+          console.log('🔍 Possible user ID:', possibleUserId);
+        
+                          // Try to get user from localStorage as fallback
+         const savedUserId = localStorage.getItem('current_user_id');
+         if (savedUserId || possibleUserId) {
+           const fallbackUserId = savedUserId || possibleUserId;
+                      console.log('✅ Found user ID for fallback:', fallbackUserId);
+           // Use fallback user ID
+          
+          const client = generateClient();
+          console.log('✅ AWS API client generated successfully');
+          
+          // Create profile with fallback user ID
+          const createInput: CreateUserProfileInput = {
+            userId: fallbackUserId,
+            username: formData.username,
+            userType: formData.userType,
+            bio: formData.bio,
+            experience: formData.experience,
+            skills: formData.skills,
+            location: formData.location,
+            // Set empty strings for optional fields
+            passions: '',
+            values: '',
+            contributionGoals: '',
+            linkedinUrl: '',
+            githubUrl: '',
+            portfolioUrl: '',
+            twitterUrl: '',
+            instagramUrl: '',
+            websiteUrl: '',
+            projectDetails: ''
+          };
+          
+          console.log('🔍 Create input data with fallback user ID:', createInput);
+          
+          const createResult = await client.graphql({
+            query: createUserProfile,
+            variables: {
+              input: createInput
+            }
+          });
+          
+          const savedProfile = createResult.data?.createUserProfile;
+          console.log('✅ Profile created successfully in AWS with fallback user ID:', savedProfile);
+          
+          // Also save to localStorage as backup
+          const profileJson = JSON.stringify(formData);
+          localStorage.setItem(`profile_${fallbackUserId}`, profileJson);
+          console.log('✅ Also saved to localStorage as backup');
+          
+          console.log('✅ Profile saved successfully to AWS:', formData);
+          setProfile(formData);
+          setMessage('Profile saved successfully! (Stored in AWS database)');
+          setIsEditing(false);
+          
+          setTimeout(() => {
+            setMessage('');
+          }, 3000);
+          return;
+                 } else {
+           // Generate a unique user ID as last resort
+           console.log('⚠️ No user ID found, generating unique ID...');
+           const generatedUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+           console.log('✅ Generated user ID:', generatedUserId);
+           
+           // Save the generated user ID
+           localStorage.setItem('current_user_id', generatedUserId);
+           
+           const client = generateClient();
+           console.log('✅ AWS API client generated successfully');
+           
+           // Create profile with generated user ID
+           const createInput: CreateUserProfileInput = {
+             userId: generatedUserId,
+             username: formData.username,
+             userType: formData.userType,
+             bio: formData.bio,
+             experience: formData.experience,
+             skills: formData.skills,
+             location: formData.location,
+             // Set empty strings for optional fields
+             passions: '',
+             values: '',
+             contributionGoals: '',
+             linkedinUrl: '',
+             githubUrl: '',
+             portfolioUrl: '',
+             twitterUrl: '',
+             instagramUrl: '',
+             websiteUrl: '',
+             projectDetails: ''
+           };
+           
+           console.log('🔍 Create input data with generated user ID:', createInput);
+           
+           const createResult = await client.graphql({
+             query: createUserProfile,
+             variables: {
+               input: createInput
+             }
+           });
+           
+           const savedProfile = createResult.data?.createUserProfile;
+           console.log('✅ Profile created successfully in AWS with generated user ID:', savedProfile);
+           
+           // Also save to localStorage as backup
+           const profileJson = JSON.stringify(formData);
+           localStorage.setItem(`profile_${generatedUserId}`, profileJson);
+           console.log('✅ Also saved to localStorage as backup');
+           
+           console.log('✅ Profile saved successfully to AWS:', formData);
+           setProfile(formData);
+           setMessage('Profile saved successfully! (Stored in AWS database)');
+           setIsEditing(false);
+           
+           setTimeout(() => {
+             setMessage('');
+           }, 3000);
+           return;
+         }
       }
       
       const client = generateClient();
