@@ -344,11 +344,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Loading Your Profile</h2>
-          <p className="text-gray-600">Please wait...</p>
+      <div className="my-account-page">
+        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Loading Your Profile</h2>
+            <p className="text-gray-600">Please wait...</p>
+          </div>
         </div>
       </div>
     );
@@ -356,33 +358,35 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-200 max-w-2xl mx-4">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Profile Loading Error</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
-            
-            {/* Debug Information */}
-            <div className="bg-gray-50 p-4 rounded-lg text-left mb-6">
-              <h3 className="font-semibold mb-2">Debug Information:</h3>
-              <pre className="text-xs text-gray-700 overflow-auto">
-                {JSON.stringify(debugInfo, null, 2)}
-              </pre>
-            </div>
-            
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={() => window.location.reload()}
-                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium"
-              >
-                Try Again
-              </button>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-              >
-                Create Profile Anyway
-              </button>
+      <div className="my-account-page">
+        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
+          <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-200 max-w-2xl mx-4">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Profile Loading Error</h2>
+              <p className="text-gray-600 mb-6">{error}</p>
+              
+              {/* Debug Information */}
+              <div className="bg-gray-50 p-4 rounded-lg text-left mb-6">
+                <h3 className="font-semibold mb-2">Debug Information:</h3>
+                <pre className="text-xs text-gray-700 overflow-auto">
+                  {JSON.stringify(debugInfo, null, 2)}
+                </pre>
+              </div>
+              
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={() => window.location.reload()}
+                  className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                >
+                  Try Again
+                </button>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Create Profile Anyway
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -391,45 +395,53 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              Hello, <span className="bg-gradient-to-r from-orange-500 to-teal-600 bg-clip-text text-transparent">
-                {user?.username || 'User'}
-              </span>!
+    <div className="my-account-page">
+      <div className="container">
+        {/* Hero Section */}
+        <section className="hero">
+          <div className="hero-content">
+            <h1 className="hero-title">
+              Hello, <span className="gradient-text">
+                {profile?.username || user?.username || 'User'}
+              </span>! 👋
             </h1>
-            <p className="text-gray-600 mb-6">Welcome to your Sandhill profile</p>
+            <p className="hero-subtitle">
+              Welcome to your Sandhill profile. This is where your journey begins.
+            </p>
             
-            <div className="flex justify-center space-x-4">
+            <div className="cta-buttons">
               <button
                 onClick={handleSignOut}
-                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                className="btn btn-outline"
               >
                 Sign Out
               </button>
             </div>
           </div>
+        </section>
+
+        {/* Main Content */}
+        <div className="max-w-4xl mx-auto">
 
           {/* Success/Error Messages */}
           {message && (
-            <div className={`mb-6 p-4 rounded-lg ${
+            <div className={`mb-8 p-6 rounded-2xl border-2 ${
               message.includes('Error') 
-                ? 'bg-red-100 border border-red-300 text-red-800' 
-                : 'bg-green-100 border border-green-300 text-green-800'
+                ? 'bg-red-50 border-red-200 text-red-800 shadow-lg' 
+                : 'bg-green-50 border-green-200 text-green-800 shadow-lg'
             }`}>
-              {message}
+              <div className="flex items-center">
+                <div className={`text-2xl mr-3 ${message.includes('Error') ? '🔴' : '✅'}`}></div>
+                <p className="font-medium text-lg">{message}</p>
+              </div>
             </div>
           )}
 
           {/* Debug Information (only in development) */}
           {process.env.NODE_ENV === 'development' && (
-            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="font-semibold mb-2 text-blue-800">Debug Info:</h3>
-              <pre className="text-xs text-blue-700 overflow-auto">
+            <div className="mb-8 p-6 bg-blue-50 rounded-2xl border-2 border-blue-200 shadow-lg">
+              <h3 className="font-semibold mb-3 text-blue-800 text-lg">Debug Info:</h3>
+              <pre className="text-sm text-blue-700 overflow-auto bg-blue-100 p-4 rounded-lg">
                 {JSON.stringify(debugInfo, null, 2)}
               </pre>
             </div>
@@ -437,208 +449,236 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
           {/* Profile Content */}
           {!isEditing ? (
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Your Profile</h2>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
-                >
-                  {profile ? 'Edit Profile' : 'Create Profile'}
-                </button>
-              </div>
+            <section className="section">
+              <div className="content-card">
+                <div className="section-header">
+                  <div className="eyebrow">Your Profile</div>
+                  <h2 className="section-title">Manage your personal information and preferences</h2>
+                </div>
 
-              {profile ? (
-                <div className="space-y-6">
-                  {/* Username and User Type */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Username</h3>
-                      <p className="text-gray-800">{profile.username}</p>
+                <div className="flex justify-end mb-8">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="btn btn-primary"
+                  >
+                    {profile ? 'Edit Profile' : 'Create Profile'}
+                  </button>
+                </div>
+
+                {profile ? (
+                  <div className="space-y-8">
+                    {/* Username and User Type */}
+                    <div className="grid-2">
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">Username</h3>
+                        <p className="text-gray-700 text-lg">{profile.username}</p>
+                      </div>
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">User Type</h3>
+                        <p className="text-gray-700 text-lg capitalize">{profile.userType}</p>
+                      </div>
                     </div>
+
+                    {/* Bio */}
+                    {profile.bio && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Bio</h3>
+                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.bio}</p>
+                      </div>
+                    )}
+
+                    {/* Experience */}
+                    {profile.experience && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Experience</h3>
+                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.experience}</p>
+                      </div>
+                    )}
+
+                    {/* Skills */}
+                    {profile.skills && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Skills</h3>
+                        <div className="flex flex-wrap gap-3">
+                          {profile.skills.split(',').map((skill, index) => (
+                            <span
+                              key={index}
+                              className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300"
+                            >
+                              {skill.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Location */}
+                    {profile.location && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
+                        <p className="text-gray-700 text-lg">{profile.location}</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="max-w-md mx-auto">
+                      <div className="text-6xl mb-6">🚀</div>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-4">Welcome to Sandhill!</h3>
+                      <p className="text-gray-600 mb-6">Create your profile to get started and connect with amazing people.</p>
+                      <p className="text-sm text-gray-500 mb-8">
+                        This will help us connect you with the right people and opportunities.
+                      </p>
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="btn btn-primary btn-large"
+                      >
+                        Create Profile
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          ) : (
+            /* Edit Form */
+            <section className="section">
+              <div className="content-card">
+                <div className="section-header">
+                  <div className="eyebrow">{profile ? 'Edit Your Profile' : 'Create Your Profile'}</div>
+                  <h2 className="section-title">Update your information to help us connect you better</h2>
+                </div>
+
+                <div className="flex justify-end mb-8">
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="btn btn-ghost"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* Basic Information */}
+                  <div className="grid-2">
                     <div>
-                      <h3 className="text-sm font-semibold text-gray-600 mb-1">User Type</h3>
-                      <p className="text-gray-800 capitalize">{profile.userType}</p>
+                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        Username *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.username}
+                        onChange={(e) => handleInputChange('username', e.target.value)}
+                        placeholder="Your username"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        User Type *
+                      </label>
+                      <select
+                        value={formData.userType}
+                        onChange={(e) => handleInputChange('userType', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                      >
+                        <option value={UserProfileUserType.expert}>Expert</option>
+                        <option value={UserProfileUserType.ventures}>Ventures</option>
+                        <option value={UserProfileUserType.both}>Both</option>
+                      </select>
                     </div>
                   </div>
 
                   {/* Bio */}
-                  {profile.bio && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Bio</h3>
-                      <p className="text-gray-800 whitespace-pre-wrap">{profile.bio}</p>
-                    </div>
-                  )}
-
-                  {/* Experience */}
-                  {profile.experience && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Experience</h3>
-                      <p className="text-gray-800 whitespace-pre-wrap">{profile.experience}</p>
-                    </div>
-                  )}
-
-                  {/* Skills */}
-                  {profile.skills && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Skills</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {profile.skills.split(',').map((skill, index) => (
-                          <span
-                            key={index}
-                            className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm"
-                          >
-                            {skill.trim()}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Location */}
-                  {profile.location && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-600 mb-1">Location</h3>
-                      <p className="text-gray-800">{profile.location}</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-600 mb-4">Welcome to Sandhill! Create your profile to get started.</p>
-                  <p className="text-sm text-gray-500 mb-6">
-                    This will help us connect you with the right people and opportunities.
-                  </p>
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
-                  >
-                    Create Profile
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            /* Edit Form */
-            <div className="bg-white rounded-2xl shadow-xl p-8">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">{profile ? 'Edit Your Profile' : 'Create Your Profile'}</h2>
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="text-gray-600 hover:text-gray-800 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Basic Information */}
-                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-2">
-                      Username *
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Bio
                     </label>
-                    <input
-                      type="text"
-                      value={formData.username}
-                      onChange={(e) => handleInputChange('username', e.target.value)}
-                      placeholder="Your username"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      required
+                    <textarea
+                      value={formData.bio}
+                      onChange={(e) => handleInputChange('bio', e.target.value)}
+                      placeholder="Tell us about yourself..."
+                      rows={4}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                     />
                   </div>
 
+                  {/* Experience */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-800 mb-2">
-                      User Type *
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Experience
                     </label>
-                    <select
-                      value={formData.userType}
-                      onChange={(e) => handleInputChange('userType', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    >
-                      <option value={UserProfileUserType.expert}>Expert</option>
-                      <option value={UserProfileUserType.ventures}>Ventures</option>
-                      <option value={UserProfileUserType.both}>Both</option>
-                    </select>
+                    <textarea
+                      value={formData.experience}
+                      onChange={(e) => handleInputChange('experience', e.target.value)}
+                      placeholder="What's your background and experience?"
+                      rows={5}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                    />
                   </div>
-                </div>
 
-                {/* Bio */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-800 mb-2">
-                    Bio
-                  </label>
-                  <textarea
-                    value={formData.bio}
-                    onChange={(e) => handleInputChange('bio', e.target.value)}
-                    placeholder="Tell us about yourself..."
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical"
-                  />
-                </div>
+                  {/* Skills */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Skills (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.skills}
+                      onChange={(e) => handleInputChange('skills', e.target.value)}
+                      placeholder="JavaScript, React, Python, etc."
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                    />
+                  </div>
 
-                {/* Experience */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-800 mb-2">
-                    Experience
-                  </label>
-                  <textarea
-                    value={formData.experience}
-                    onChange={(e) => handleInputChange('experience', e.target.value)}
-                    placeholder="What's your background and experience?"
-                    rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical"
-                  />
-                </div>
+                  {/* Location */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.location}
+                      onChange={(e) => handleInputChange('location', e.target.value)}
+                      placeholder="San Francisco, CA or Remote"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                    />
+                  </div>
 
-                {/* Skills */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-800 mb-2">
-                    Skills (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.skills}
-                    onChange={(e) => handleInputChange('skills', e.target.value)}
-                    placeholder="JavaScript, React, Python, etc."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  />
-                </div>
-
-                {/* Location */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-800 mb-2">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    placeholder="San Francisco, CA or Remote"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  />
-                </div>
-
-                {/* Submit Buttons */}
-                <div className="flex justify-end space-x-4 pt-6">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-gradient-to-r from-orange-500 to-teal-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-teal-700 transition-all font-medium"
-                  >
-                    {profile ? 'Update Profile' : 'Create Profile'}
-                  </button>
-                </div>
-              </form>
-            </div>
+                  {/* Submit Buttons */}
+                  <div className="flex justify-end space-x-4 pt-8">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                      className="btn btn-outline"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                    >
+                      {profile ? 'Update Profile' : 'Create Profile'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
           )}
+
+          {/* Privacy Statement */}
+          <section className="section">
+            <div className="cta-section">
+              <div className="text-4xl mb-4">🔒</div>
+              <h3 className="section-title">Your Privacy Matters</h3>
+              <p className="cta-text">
+                We won't sell your information because like you, we want to see greatness being built. 
+                Your data is secure and will only be used to connect you with the right opportunities and people.
+              </p>
+            </div>
+          </section>
         </div>
       </div>
     </div>
