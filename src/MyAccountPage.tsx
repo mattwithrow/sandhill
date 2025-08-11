@@ -567,14 +567,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                            <p className="text-gray-700 text-lg">{profile.location}</p>
                          </div>
                        )}
-                       {/* TODO: Add back after schema deployment
                        {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
                          <div className="feature-card">
                            <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
                            <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
                          </div>
                        )}
-                       */}
                      </div>
 
                      {/* Expert Support Needed (for Ventures and Both) */}
@@ -765,7 +763,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                        />
                      </div>
 
-                     {/* TODO: Add back after schema deployment
                      {(formData.userType === 'expert' || formData.userType === 'both') && (
                        <div>
                          <label className="block text-lg font-semibold text-gray-800 mb-3">
@@ -785,7 +782,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                          </select>
                        </div>
                      )}
-                     */}
                    </div>
 
                    {/* Expert Support Needed (for Ventures and Both) */}
