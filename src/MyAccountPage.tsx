@@ -30,6 +30,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     location: '',
     values: '',
     timeCommitment: '',
+    expertSupportNeeded: '',
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
@@ -47,6 +48,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     location: string;
     values: string;
     timeCommitment: string;
+    expertSupportNeeded: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -121,6 +123,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 location: dbProfile.location || '',
                 values: dbProfile.values || '',
                 timeCommitment: '', // TODO: Add back after schema deployment
+                expertSupportNeeded: '', // TODO: Add back after schema deployment
                 linkedinUrl: dbProfile.linkedinUrl || '',
                 githubUrl: dbProfile.githubUrl || '',
                 portfolioUrl: dbProfile.portfolioUrl || '',
@@ -266,6 +269,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           location: formData.location,
           values: formData.values,
           // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
+          // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
           linkedinUrl: formData.linkedinUrl,
           githubUrl: formData.githubUrl,
           portfolioUrl: formData.portfolioUrl,
@@ -301,6 +305,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           location: formData.location,
           values: formData.values,
           // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
+          // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
           linkedinUrl: formData.linkedinUrl,
           githubUrl: formData.githubUrl,
           portfolioUrl: formData.portfolioUrl,
@@ -554,15 +559,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                    {/* Location and Time Commitment */}
-                    <div className="grid-2">
-                      {profile.location && (
-                        <div className="feature-card">
-                          <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
-                          <p className="text-gray-700 text-lg">{profile.location}</p>
-                        </div>
-                      )}
-                                             {/* TODO: Add back after schema deployment
+                                         {/* Location, Time Commitment, and Expert Support */}
+                     <div className="grid-2">
+                       {profile.location && (
+                         <div className="feature-card">
+                           <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
+                           <p className="text-gray-700 text-lg">{profile.location}</p>
+                         </div>
+                       )}
+                       {/* TODO: Add back after schema deployment
                        {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
                          <div className="feature-card">
                            <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
@@ -570,7 +575,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                          </div>
                        )}
                        */}
-                    </div>
+                     </div>
+
+                     {/* Expert Support Needed (for Ventures and Both) */}
+                     {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
+                       <div className="feature-card">
+                         <h3 className="text-lg font-semibold text-gray-800 mb-3">Expert Support Needed</h3>
+                         <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
+                       </div>
+                     )}
 
                     {/* Social Links */}
                     {(profile.linkedinUrl || profile.githubUrl || profile.portfolioUrl || profile.websiteUrl || profile.twitterUrl || profile.instagramUrl) && (
@@ -737,22 +750,22 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                  {/* Location and Time Commitment */}
-                  <div className="grid-2">
-                    <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
-                        Location
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.location}
-                        onChange={(e) => handleInputChange('location', e.target.value)}
-                        placeholder="San Francisco, CA or Remote"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                      />
-                    </div>
+                                     {/* Location, Time Commitment, and Expert Support */}
+                   <div className="grid-2">
+                     <div>
+                       <label className="block text-lg font-semibold text-gray-800 mb-3">
+                         Location
+                       </label>
+                       <input
+                         type="text"
+                         value={formData.location}
+                         onChange={(e) => handleInputChange('location', e.target.value)}
+                         placeholder="San Francisco, CA or Remote"
+                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                       />
+                     </div>
 
-                                         {/* TODO: Add back after schema deployment
+                     {/* TODO: Add back after schema deployment
                      {(formData.userType === 'expert' || formData.userType === 'both') && (
                        <div>
                          <label className="block text-lg font-semibold text-gray-800 mb-3">
@@ -773,7 +786,23 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                        </div>
                      )}
                      */}
-                  </div>
+                   </div>
+
+                   {/* Expert Support Needed (for Ventures and Both) */}
+                   {(formData.userType === 'ventures' || formData.userType === 'both') && (
+                     <div>
+                       <label className="block text-lg font-semibold text-gray-800 mb-3">
+                         Expert Support Needed
+                       </label>
+                       <textarea
+                         value={formData.expertSupportNeeded}
+                         onChange={(e) => handleInputChange('expertSupportNeeded', e.target.value)}
+                         placeholder="What type of expert support are you looking for? (e.g., technical development, design, marketing, business strategy, etc.)"
+                         rows={4}
+                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                       />
+                     </div>
+                   )}
 
                   {/* Social Links */}
                   <div>
