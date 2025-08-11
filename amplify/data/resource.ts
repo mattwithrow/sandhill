@@ -25,6 +25,7 @@ const schema = a.schema({
       contributionGoals: a.string(),
       skills: a.string(),
       location: a.string(),
+      timeCommitment: a.string(),
       linkedinUrl: a.string(),
       githubUrl: a.string(),
       portfolioUrl: a.string(),

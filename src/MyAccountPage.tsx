@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { useNavigate } from 'react-router-dom';
 import { generateClient } from "aws-amplify/api";
 import { 
   ListUserProfilesQuery, 
@@ -14,6 +15,7 @@ import { createUserProfile, updateUserProfile } from '../mutations';
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<any>({});
@@ -25,7 +27,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     bio: '',
     experience: '',
     skills: '',
-    location: ''
+    location: '',
+    values: '',
+    timeCommitment: '',
+    linkedinUrl: '',
+    githubUrl: '',
+    portfolioUrl: '',
+    websiteUrl: '',
+    twitterUrl: '',
+    instagramUrl: ''
   });
   
   const [profile, setProfile] = useState<null | {
@@ -35,6 +45,14 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     experience: string;
     skills: string;
     location: string;
+    values: string;
+    timeCommitment: string;
+    linkedinUrl: string;
+    githubUrl: string;
+    portfolioUrl: string;
+    websiteUrl: string;
+    twitterUrl: string;
+    instagramUrl: string;
   }>(null);
 
   // Load profile from AWS database on component mount
@@ -100,7 +118,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 bio: dbProfile.bio || '',
                 experience: dbProfile.experience || '',
                 skills: dbProfile.skills || '',
-                location: dbProfile.location || ''
+                location: dbProfile.location || '',
+                values: dbProfile.values || '',
+                timeCommitment: '', // TODO: Add back after schema deployment
+                linkedinUrl: dbProfile.linkedinUrl || '',
+                githubUrl: dbProfile.githubUrl || '',
+                portfolioUrl: dbProfile.portfolioUrl || '',
+                websiteUrl: dbProfile.websiteUrl || '',
+                twitterUrl: dbProfile.twitterUrl || '',
+                instagramUrl: dbProfile.instagramUrl || ''
               };
               
               console.log('📄 Converted profile data:', profileData);
@@ -238,16 +264,17 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
+          values: formData.values,
+          // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
+          linkedinUrl: formData.linkedinUrl,
+          githubUrl: formData.githubUrl,
+          portfolioUrl: formData.portfolioUrl,
+          websiteUrl: formData.websiteUrl,
+          twitterUrl: formData.twitterUrl,
+          instagramUrl: formData.instagramUrl,
           // Set empty strings for optional fields
           passions: '',
-          values: '',
           contributionGoals: '',
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          twitterUrl: '',
-          instagramUrl: '',
-          websiteUrl: '',
           projectDetails: ''
         };
         
@@ -272,16 +299,17 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
+          values: formData.values,
+          // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
+          linkedinUrl: formData.linkedinUrl,
+          githubUrl: formData.githubUrl,
+          portfolioUrl: formData.portfolioUrl,
+          websiteUrl: formData.websiteUrl,
+          twitterUrl: formData.twitterUrl,
+          instagramUrl: formData.instagramUrl,
           // Set empty strings for optional fields
           passions: '',
-          values: '',
           contributionGoals: '',
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          twitterUrl: '',
-          instagramUrl: '',
-          websiteUrl: '',
           projectDetails: ''
         };
         
@@ -403,7 +431,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             <h1 className="hero-title">
               Hello, <span className="gradient-text">
                 {profile?.username || user?.username || 'User'}
-              </span>! 👋
+              </span>!
             </h1>
             <p className="hero-subtitle">
               Welcome to your Sandhill profile. This is where your journey begins.
@@ -411,10 +439,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             
             <div className="cta-buttons">
               <button
-                onClick={handleSignOut}
-                className="btn btn-outline"
+                onClick={() => navigate('/experts')}
+                className="btn btn-primary btn-large"
               >
-                Sign Out
+                Find Experts
+              </button>
+              <button
+                onClick={() => navigate('/ventures')}
+                className="btn btn-outline btn-large"
+              >
+                Discover Ventures
               </button>
             </div>
           </div>
@@ -487,6 +521,14 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
+                    {/* Values */}
+                    {profile.values && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Values</h3>
+                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
+                      </div>
+                    )}
+
                     {/* Experience */}
                     {profile.experience && (
                       <div className="feature-card">
@@ -512,18 +554,66 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                    {/* Location */}
-                    {profile.location && (
+                    {/* Location and Time Commitment */}
+                    <div className="grid-2">
+                      {profile.location && (
+                        <div className="feature-card">
+                          <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
+                          <p className="text-gray-700 text-lg">{profile.location}</p>
+                        </div>
+                      )}
+                                             {/* TODO: Add back after schema deployment
+                       {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
+                         <div className="feature-card">
+                           <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
+                           <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
+                         </div>
+                       )}
+                       */}
+                    </div>
+
+                    {/* Social Links */}
+                    {(profile.linkedinUrl || profile.githubUrl || profile.portfolioUrl || profile.websiteUrl || profile.twitterUrl || profile.instagramUrl) && (
                       <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
-                        <p className="text-gray-700 text-lg">{profile.location}</p>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Links</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          {profile.linkedinUrl && (
+                            <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">
+                              LinkedIn
+                            </a>
+                          )}
+                          {profile.githubUrl && (
+                            <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors">
+                              GitHub
+                            </a>
+                          )}
+                          {profile.portfolioUrl && (
+                            <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors">
+                              Portfolio
+                            </a>
+                          )}
+                          {profile.websiteUrl && (
+                            <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors">
+                              Website
+                            </a>
+                          )}
+                          {profile.twitterUrl && (
+                            <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors">
+                              Twitter
+                            </a>
+                          )}
+                          {profile.instagramUrl && (
+                            <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors">
+                              Instagram
+                            </a>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
                 ) : (
                   <div className="text-center py-12">
                     <div className="max-w-md mx-auto">
-                      <div className="text-6xl mb-6">🚀</div>
                       <h3 className="text-2xl font-bold text-gray-800 mb-4">Welcome to Sandhill!</h3>
                       <p className="text-gray-600 mb-6">Create your profile to get started and connect with amazing people.</p>
                       <p className="text-sm text-gray-500 mb-8">
@@ -605,6 +695,20 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
+                  {/* Values */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Values
+                    </label>
+                    <textarea
+                      value={formData.values}
+                      onChange={(e) => handleInputChange('values', e.target.value)}
+                      placeholder="What values are important to you? (e.g., integrity, innovation, collaboration, sustainability...)"
+                      rows={4}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                    />
+                  </div>
+
                   {/* Experience */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
@@ -633,18 +737,121 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                  {/* Location */}
+                  {/* Location and Time Commitment */}
+                  <div className="grid-2">
+                    <div>
+                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.location}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
+                        placeholder="San Francisco, CA or Remote"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+
+                                         {/* TODO: Add back after schema deployment
+                     {(formData.userType === 'expert' || formData.userType === 'both') && (
+                       <div>
+                         <label className="block text-lg font-semibold text-gray-800 mb-3">
+                           Time Commitment
+                         </label>
+                         <select
+                           value={formData.timeCommitment}
+                           onChange={(e) => handleInputChange('timeCommitment', e.target.value)}
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                         >
+                           <option value="">Select time commitment</option>
+                           <option value="1-5 hours per week">1-5 hours per week</option>
+                           <option value="5-10 hours per week">5-10 hours per week</option>
+                           <option value="10-20 hours per week">10-20 hours per week</option>
+                           <option value="20+ hours per week">20+ hours per week</option>
+                           <option value="Flexible">Flexible</option>
+                         </select>
+                       </div>
+                     )}
+                     */}
+                  </div>
+
+                  {/* Social Links */}
                   <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Location
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.location}
-                      onChange={(e) => handleInputChange('location', e.target.value)}
-                      placeholder="San Francisco, CA or Remote"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                    />
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Links</h3>
+                    <div className="grid-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          LinkedIn
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.linkedinUrl}
+                          onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
+                          placeholder="https://linkedin.com/in/yourprofile"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          GitHub
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.githubUrl}
+                          onChange={(e) => handleInputChange('githubUrl', e.target.value)}
+                          placeholder="https://github.com/yourusername"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Portfolio
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.portfolioUrl}
+                          onChange={(e) => handleInputChange('portfolioUrl', e.target.value)}
+                          placeholder="https://yourportfolio.com"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Website
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.websiteUrl}
+                          onChange={(e) => handleInputChange('websiteUrl', e.target.value)}
+                          placeholder="https://yourwebsite.com"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Twitter
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.twitterUrl}
+                          onChange={(e) => handleInputChange('twitterUrl', e.target.value)}
+                          placeholder="https://twitter.com/yourusername"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Instagram
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.instagramUrl}
+                          onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
+                          placeholder="https://instagram.com/yourusername"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Submit Buttons */}
@@ -671,7 +878,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           {/* Privacy Statement */}
           <section className="section">
             <div className="cta-section">
-              <div className="text-4xl mb-4">🔒</div>
               <h3 className="section-title">Your Privacy Matters</h3>
               <p className="cta-text">
                 We won't sell your information because like you, we want to see greatness being built. 
