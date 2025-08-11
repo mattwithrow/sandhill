@@ -76,8 +76,8 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             skills: dbProfile.skills || '',
             location: dbProfile.location || '',
             values: dbProfile.values || '',
-            timeCommitment: dbProfile.timeCommitment || '',
-            expertSupportNeeded: dbProfile.expertSupportNeeded || '',
+            timeCommitment: '', // TODO: Add back after schema deployment
+            expertSupportNeeded: '', // TODO: Add back after schema deployment
             linkedinUrl: dbProfile.linkedinUrl || '',
             githubUrl: dbProfile.githubUrl || '',
             portfolioUrl: dbProfile.portfolioUrl || '',
@@ -255,6 +255,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
+                {/* TODO: Add back after schema deployment
                 {/* Expert Support Needed (for Ventures and Both) */}
                 {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
                   <div className="feature-card">
@@ -262,6 +263,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
                   </div>
                 )}
+                */}
 
                 {/* Location and Time Commitment */}
                 <div className="grid-2">
@@ -271,12 +273,14 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                       <p className="text-gray-700 text-lg">{profile.location}</p>
                     </div>
                   )}
+                  {/* TODO: Add back after schema deployment
                   {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
                       <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
                     </div>
                   )}
+                  */}
                 </div>
 
                 {/* Social Links */}
