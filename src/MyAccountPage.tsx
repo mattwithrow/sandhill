@@ -12,6 +12,7 @@ import {
 } from '../API';
 import { listUserProfiles } from '../queries';
 import { createUserProfile, updateUserProfile } from '../mutations';
+import SkillsMultiSelect from './components/SkillsMultiSelect';
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
@@ -778,14 +779,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Skills */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Skills (comma-separated)
+                      Skills
                     </label>
-                    <input
-                      type="text"
-                      value={formData.skills}
-                      onChange={(e) => handleInputChange('skills', e.target.value)}
-                      placeholder="JavaScript, React, Python, etc."
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                    <SkillsMultiSelect
+                      selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
+                      onChange={(skills) => handleInputChange('skills', skills.join(', '))}
+                      placeholder="Select your skills..."
+                      className="w-full"
                     />
                   </div>
 

@@ -192,20 +192,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
               {getUserTypeDescription(profile.userType)}
             </p>
             
-            <div className="cta-buttons">
-              <button
-                onClick={() => navigate('/experts')}
-                className="btn btn-primary btn-large"
-              >
-                Find More Experts
-              </button>
-              <button
-                onClick={() => navigate('/ventures')}
-                className="btn btn-outline btn-large"
-              >
-                Discover Ventures
-              </button>
-            </div>
+
           </div>
         </section>
 
