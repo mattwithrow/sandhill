@@ -255,8 +255,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
-                {/* TODO: Add back after schema deployment
-                {/* Expert Support Needed (for Ventures and Both) */}
+                {/* TODO: Add back after schema deployment - Expert Support Needed (for Ventures and Both)
                 {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
                   <div className="feature-card">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">Expert Support Needed</h3>
