@@ -941,6 +941,12 @@ p {
   background: var(--light-gradient);
 }
 
+/* Public Profile Page Specific */
+.public-profile-page {
+  min-height: 100vh;
+  background: var(--light-gradient);
+}
+
 .start-page .hero {
   margin-bottom: var(--space-3xl);
   padding: 8rem 2rem;

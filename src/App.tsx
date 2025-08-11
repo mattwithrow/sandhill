@@ -12,6 +12,7 @@ import AuthHomePage from "./AuthHomePage";
 import VenturesPage from "./VenturesPage";
 import ExpertsPage from "./ExpertsPage";
 import MyAccountPage from "./MyAccountPage";
+import PublicProfilePage from "./PublicProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 //const client = generateClient<Schema>();
@@ -26,6 +27,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/start" element={<StartPage />} />
         <Route path="/auth_home" element={<AuthHomePage />} />
+        <Route path="/profile/:username" element={<PublicProfilePage />} />
         <Route path="/my-account" element={
           <ProtectedRoute>
             <MyAccountPage />

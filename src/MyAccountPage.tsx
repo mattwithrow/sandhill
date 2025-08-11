@@ -57,6 +57,32 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     instagramUrl: string;
   }>(null);
 
+  const getUserTypeDisplay = (userType: UserProfileUserType) => {
+    switch (userType) {
+      case UserProfileUserType.expert:
+        return 'Expert';
+      case UserProfileUserType.ventures:
+        return 'Venture';
+      case UserProfileUserType.both:
+        return 'Expert & Venture';
+      default:
+        return 'User';
+    }
+  };
+
+  const getUserTypeDescription = (userType: UserProfileUserType) => {
+    switch (userType) {
+      case UserProfileUserType.expert:
+        return 'Skilled professional ready to help bring ideas to life';
+      case UserProfileUserType.ventures:
+        return 'Building something meaningful and looking for the right people';
+      case UserProfileUserType.both:
+        return 'Both an expert and a venture builder - versatile collaborator';
+      default:
+        return 'Member of the Sandhill community';
+    }
+  };
+
   // Load profile from AWS database on component mount
   useEffect(() => {
     const runDiagnostics = async () => {
@@ -433,16 +459,31 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         {/* Hero Section */}
         <section className="hero">
           <div className="hero-content">
+            {profile && (
+              <div className="mb-4">
+                <span className="inline-block bg-white bg-opacity-20 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+                  {getUserTypeDisplay(profile.userType)}
+                </span>
+              </div>
+            )}
             <h1 className="hero-title">
               Hello, <span className="gradient-text">
                 {profile?.username || user?.username || 'User'}
               </span>!
             </h1>
             <p className="hero-subtitle">
-              Welcome to your Sandhill profile. This is where your journey begins.
+              {profile ? getUserTypeDescription(profile.userType) : 'Welcome to your Sandhill profile. This is where your journey begins.'}
             </p>
             
             <div className="cta-buttons">
+              {profile && (
+                <button
+                  onClick={() => navigate(`/profile/${profile.username}`)}
+                  className="btn btn-outline"
+                >
+                  View Public Profile
+                </button>
+              )}
               <button
                 onClick={() => navigate('/experts')}
                 className="btn btn-primary btn-large"
