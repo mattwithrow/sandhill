@@ -1,9 +1,256 @@
 // VenturesPage.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { generateClient } from "aws-amplify/api";
+import { 
+  ListUserProfilesQuery, 
+  UserProfileUserType
+} from '../API';
+import { listUserProfiles } from '../queries';
+
+interface VentureProfile {
+  id: string;
+  username: string;
+  userType: UserProfileUserType;
+  bio: string;
+  experience: string;
+  skills: string;
+  location: string;
+  timezone: string;
+  values: string;
+  missionValuesAlignment: string;
+  ventureInterests: string;
+  preferredEngagement: string;
+  timeCommitment: string;
+  expertSupportNeeded: string;
+  linkedinUrl: string;
+  githubUrl: string;
+  portfolioUrl: string;
+  websiteUrl: string;
+  twitterUrl: string;
+  instagramUrl: string;
+}
 
 const VenturesPage: React.FC = () => {
   const navigate = useNavigate();
+  const [ventures, setVentures] = useState<VentureProfile[]>([]);
+  const [filteredVentures, setFilteredVentures] = useState<VentureProfile[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [expandedCategories, setExpandedCategories] = useState(false);
+  const [expandedValues, setExpandedValues] = useState(false);
+  const [locationFilter, setLocationFilter] = useState('');
+  const [distanceRadius, setDistanceRadius] = useState(50);
+  const [usOnly, setUsOnly] = useState(false);
+  const [includeRemote, setIncludeRemote] = useState(true);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12);
+
+  // Load ventures on component mount
+  useEffect(() => {
+    loadVentures();
+  }, []);
+
+  // Filter ventures when search term or filters change
+  useEffect(() => {
+    filterVentures();
+  }, [searchTerm, selectedCategories, selectedValues, locationFilter, distanceRadius, usOnly, includeRemote, ventures]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategories, selectedValues, locationFilter, distanceRadius, usOnly, includeRemote]);
+
+  const loadVentures = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const client = generateClient();
+      
+      // Query for ventures and both user types
+      const result = await client.graphql({
+        query: listUserProfiles,
+        variables: {
+          filter: {
+            or: [
+              { userType: { eq: UserProfileUserType.ventures } },
+              { userType: { eq: UserProfileUserType.both } }
+            ]
+          }
+        }
+      });
+
+      const profiles = result.data?.listUserProfiles?.items || [];
+      
+      // Convert to VentureProfile format
+      const ventureProfiles: VentureProfile[] = profiles.map((profile: any) => ({
+        id: profile.id,
+        username: profile.username || '',
+        userType: profile.userType || UserProfileUserType.ventures,
+        bio: profile.bio || '',
+        experience: profile.experience || '',
+        skills: profile.skills || '',
+        location: profile.location || '',
+        timezone: profile.timezone || '',
+        values: profile.values || '',
+        missionValuesAlignment: profile.missionValuesAlignment || '',
+        ventureInterests: profile.ventureInterests || '',
+        preferredEngagement: profile.preferredEngagement || '',
+        timeCommitment: profile.timeCommitment || '',
+        expertSupportNeeded: profile.expertSupportNeeded || '',
+        linkedinUrl: profile.linkedinUrl || '',
+        githubUrl: profile.githubUrl || '',
+        portfolioUrl: profile.portfolioUrl || '',
+        websiteUrl: profile.websiteUrl || '',
+        twitterUrl: profile.twitterUrl || '',
+        instagramUrl: profile.instagramUrl || ''
+      }));
+
+      setVentures(ventureProfiles);
+      setFilteredVentures(ventureProfiles);
+    } catch (err) {
+      console.error('Error loading ventures:', err);
+      setError('Failed to load ventures. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filterVentures = () => {
+    let filtered = ventures;
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(venture => 
+        venture.username.toLowerCase().includes(searchLower) ||
+        venture.bio.toLowerCase().includes(searchLower) ||
+        venture.experience.toLowerCase().includes(searchLower) ||
+        venture.expertSupportNeeded.toLowerCase().includes(searchLower) ||
+        venture.missionValuesAlignment.toLowerCase().includes(searchLower) ||
+        venture.ventureInterests.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Filter by selected categories (venture interests)
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(venture => 
+        selectedCategories.some(category => 
+          venture.ventureInterests.toLowerCase().includes(category.toLowerCase())
+        )
+      );
+    }
+
+    // Filter by selected values
+    if (selectedValues.length > 0) {
+      filtered = filtered.filter(venture => 
+        selectedValues.some(value => 
+          venture.missionValuesAlignment.toLowerCase().includes(value.toLowerCase()) ||
+          venture.values.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+    }
+
+    // Filter by location
+    if (locationFilter.trim()) {
+      const locationLower = locationFilter.toLowerCase();
+      filtered = filtered.filter(venture => {
+        if (!venture.location) return false;
+        
+        const ventureLocation = venture.location.toLowerCase();
+        
+        // Always include remote workers if option is checked
+        if (includeRemote && venture.location.toLowerCase().includes('remote')) {
+          return true;
+        }
+        
+        // Check if location matches the search term
+        return ventureLocation.includes(locationLower);
+      });
+    }
+
+    // Filter by US only
+    if (usOnly) {
+      filtered = filtered.filter(venture => {
+        if (!venture.location) return false;
+        
+        // Include remote workers if option is checked
+        if (includeRemote && venture.location.toLowerCase().includes('remote')) {
+          return true;
+        }
+        
+        // Simple US location check
+        const usLocations = [
+          'united states', 'usa', 'us', 'california', 'new york', 'texas', 'florida',
+          'illinois', 'pennsylvania', 'ohio', 'georgia', 'north carolina', 'michigan',
+          'new jersey', 'virginia', 'washington', 'arizona', 'massachusetts', 'tennessee',
+          'indiana', 'missouri', 'maryland', 'colorado', 'wisconsin', 'minnesota',
+          'south carolina', 'alabama', 'louisiana', 'kentucky', 'oregon', 'oklahoma',
+          'connecticut', 'utah', 'iowa', 'nevada', 'arkansas', 'mississippi', 'kansas',
+          'new mexico', 'nebraska', 'idaho', 'west virginia', 'hawaii', 'new hampshire',
+          'maine', 'montana', 'rhode island', 'delaware', 'south dakota', 'north dakota',
+          'alaska', 'vermont', 'wyoming'
+        ];
+        
+        return usLocations.some(usLocation => 
+          venture.location.toLowerCase().includes(usLocation)
+        );
+      });
+    }
+
+    setFilteredVentures(filtered);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleCategoryFilter = (category: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const handleValueFilter = (value: string) => {
+    setSelectedValues(prev => 
+      prev.includes(value) 
+        ? prev.filter(v => v !== value)
+        : [...prev, value]
+    );
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategories([]);
+    setSelectedValues([]);
+    setLocationFilter('');
+    setDistanceRadius(50);
+    setUsOnly(false);
+    setIncludeRemote(true);
+  };
+
+  const handleViewProfile = (username: string) => {
+    navigate(`/profile/${username}`);
+  };
+
+  const getUserTypeDisplay = (userType: UserProfileUserType) => {
+    switch (userType) {
+      case UserProfileUserType.ventures:
+        return 'Venture';
+      case UserProfileUserType.both:
+        return 'Venture & Expert';
+      default:
+        return 'User';
+    }
+  };
 
   const handleNavigateToLogin = () => {
     navigate('/login');
@@ -12,6 +259,53 @@ const VenturesPage: React.FC = () => {
   const handleSignUp = () => {
     navigate('/login?signup=true');
   };
+
+  // Pagination functions
+  const totalPages = Math.ceil(filteredVentures.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentVentures = filteredVentures.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of results
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  // Popular venture categories for filtering
+  const popularCategories = [
+    'Early Stage', 'Social Impact', 'Sustainability', 'Fintech', 
+    'Healthcare', 'Education', 'AI/ML', 'Clean Energy', 'E-commerce',
+    'Mobile Apps', 'SaaS', 'Marketplace', 'B2B', 'Consumer'
+  ];
+
+  // Popular values for filtering
+  const popularValues = [
+    'Social Impact', 'Sustainability', 'Innovation', 'Community',
+    'Education', 'Healthcare', 'Fintech', 'AI/ML', 'Clean Energy'
+  ];
+
+  // Get visible categories (first 5 + selected ones)
+  const visibleCategories = expandedCategories 
+    ? popularCategories 
+    : [...new Set([...popularCategories.slice(0, 5), ...selectedCategories])];
+
+  // Get visible values (first 5 + selected ones)
+  const visibleValues = expandedValues 
+    ? popularValues 
+    : [...new Set([...popularValues.slice(0, 5), ...selectedValues])];
 
   return (
     <div className="ventures-page">
@@ -29,66 +323,386 @@ const VenturesPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Featured Ventures Section */}
+        {/* Main Content - Sidebar Layout */}
         <section className="section">
-          <div className="content-card">
-            <div className="section-header">
-              <div className="eyebrow">Featured Ventures</div>
-              <h2 className="section-title">
-                Projects that need your skills and passion
-              </h2>
-            </div>
-            <div className="grid-3">
-              <div className="feature-card">
-                <h3>Sustainable Food Platform</h3>
-                <p>Connecting local farmers with urban consumers to reduce food waste and support sustainable agriculture.</p>
-                <div className="venture-meta">
-                  <span className="venture-category">Social Impact</span>
-                  <span className="venture-location">Remote</span>
+          <div className="experts-layout">
+            {/* Left Sidebar - Search and Filters */}
+            <div className="experts-sidebar">
+              <div className="sidebar-card">
+                <h3 className="sidebar-title">Find Ventures</h3>
+                
+                {/* Search Bar */}
+                <div className="search-section">
+                  <label className="search-label">Search</label>
+                  <div className="search-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Search by name, description, needs..."
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      className="search-input"
+                    />
+                    <div className="search-icon">🔍</div>
+                  </div>
                 </div>
-              </div>
-              <div className="feature-card">
-                <h3>Education Access App</h3>
-                <p>Making quality education accessible to underserved communities through mobile learning technology.</p>
-                <div className="venture-meta">
-                  <span className="venture-category">Education</span>
-                  <span className="venture-location">Remote</span>
-                </div>
-              </div>
-              <div className="feature-card">
-                <h3>Mental Health Support</h3>
-                <p>Creating a peer-to-peer mental health support network for young professionals.</p>
-                <div className="venture-meta">
-                  <span className="venture-category">Healthcare</span>
-                  <span className="venture-location">Remote</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* How It Works Section */}
-        <section className="section">
-          <div className="content-card">
-            <div className="section-header">
-              <div className="eyebrow">How It Works</div>
-              <h2 className="section-title">
-                Find the perfect project to contribute to
-              </h2>
+                {/* Location Filter */}
+                <div className="filter-section">
+                  <h4 className="filter-title">Location</h4>
+                  <div className="location-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Enter zip code or city..."
+                      value={locationFilter}
+                      onChange={(e) => setLocationFilter(e.target.value)}
+                      className="location-input"
+                    />
+                    <div className="location-icon">📍</div>
+                  </div>
+                  
+                  <div className="distance-filter">
+                    <label className="distance-label">Within {distanceRadius} miles</label>
+                    <input
+                      type="range"
+                      min="10"
+                      max="500"
+                      step="10"
+                      value={distanceRadius}
+                      onChange={(e) => setDistanceRadius(parseInt(e.target.value))}
+                      className="distance-slider"
+                    />
+                    <div className="distance-values">
+                      <span>10</span>
+                      <span>250</span>
+                      <span>500</span>
+                    </div>
+                  </div>
+                  
+                  <div className="location-options">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={usOnly}
+                        onChange={(e) => setUsOnly(e.target.checked)}
+                        className="checkbox-input"
+                      />
+                      <span className="checkbox-text">US only</span>
+                    </label>
+                    
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={includeRemote}
+                        onChange={(e) => setIncludeRemote(e.target.checked)}
+                        className="checkbox-input"
+                      />
+                      <span className="checkbox-text">Include remote ventures</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Categories Filter */}
+                <div className="filter-section">
+                  <h4 className="filter-title">Venture Categories</h4>
+                  <div className="filter-tags">
+                    {visibleCategories.map(category => (
+                      <button
+                        key={category}
+                        onClick={() => handleCategoryFilter(category)}
+                        className={`filter-tag ${
+                          selectedCategories.includes(category) ? 'filter-tag-active' : ''
+                        }`}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
+                  {popularCategories.length > 5 && (
+                    <button
+                      onClick={() => setExpandedCategories(!expandedCategories)}
+                      className="expand-collapse-btn"
+                    >
+                      {expandedCategories ? 'Show Less' : `Show ${popularCategories.length - 5} More`}
+                    </button>
+                  )}
+                </div>
+
+                {/* Values Filter */}
+                <div className="filter-section">
+                  <h4 className="filter-title">Values & Mission</h4>
+                  <div className="filter-tags">
+                    {visibleValues.map(value => (
+                      <button
+                        key={value}
+                        onClick={() => handleValueFilter(value)}
+                        className={`filter-tag ${
+                          selectedValues.includes(value) ? 'filter-tag-active' : ''
+                        }`}
+                      >
+                        {value}
+                      </button>
+                    ))}
+                  </div>
+                  {popularValues.length > 5 && (
+                    <button
+                      onClick={() => setExpandedValues(!expandedValues)}
+                      className="expand-collapse-btn"
+                    >
+                      {expandedValues ? 'Show Less' : `Show ${popularValues.length - 5} More`}
+                    </button>
+                  )}
+                </div>
+
+                {/* Active Filters */}
+                {(selectedCategories.length > 0 || selectedValues.length > 0 || searchTerm || locationFilter || usOnly) && (
+                  <div className="active-filters">
+                    <h4 className="filter-title">Active Filters</h4>
+                    <div className="active-filter-tags">
+                      {selectedCategories.map(category => (
+                        <span key={category} className="active-filter-tag skill-filter">
+                          {category} ×
+                        </span>
+                      ))}
+                      {selectedValues.map(value => (
+                        <span key={value} className="active-filter-tag value-filter">
+                          {value} ×
+                        </span>
+                      ))}
+                      {searchTerm && (
+                        <span className="active-filter-tag search-filter">
+                          "{searchTerm}" ×
+                        </span>
+                      )}
+                      {locationFilter && (
+                        <span className="active-filter-tag location-filter">
+                          📍 {locationFilter} ({distanceRadius}mi) ×
+                        </span>
+                      )}
+                      {usOnly && (
+                        <span className="active-filter-tag location-filter">
+                          🇺🇸 US only ×
+                        </span>
+                      )}
+                      {!includeRemote && (
+                        <span className="active-filter-tag location-filter">
+                          🚫 No remote ×
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={clearFilters}
+                      className="clear-filters-btn"
+                    >
+                      Clear all filters
+                    </button>
+                  </div>
+                )}
+
+                {/* Results Count */}
+                <div className="results-count">
+                  <p className="results-text">
+                    {isLoading ? 'Loading ventures...' : 
+                     `${filteredVentures.length} venture${filteredVentures.length !== 1 ? 's' : ''} found`
+                    }
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="grid-3">
-              <div className="feature-card">
-                <h3>Browse Ventures</h3>
-                <p>Explore projects that match your skills, interests, and values. Filter by category, location, and commitment level.</p>
-              </div>
-              <div className="feature-card">
-                <h3>Connect & Discuss</h3>
-                <p>Reach out to venture owners, ask questions, and discuss how you can contribute to their vision.</p>
-              </div>
-              <div className="feature-card">
-                <h3>Start Building</h3>
-                <p>Join the team and start making a difference. Your skills can help turn ventures into reality.</p>
-              </div>
+
+            {/* Right Content - Venture Listings */}
+            <div className="experts-content">
+              {isLoading ? (
+                <div className="loading-state">
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                  <h3 className="loading-title">Loading Ventures</h3>
+                  <p className="loading-text">Finding amazing projects...</p>
+                </div>
+              ) : error ? (
+                <div className="error-state">
+                  <div className="error-icon">⚠️</div>
+                  <h3 className="error-title">Error Loading Ventures</h3>
+                  <p className="error-text">{error}</p>
+                  <button
+                    onClick={loadVentures}
+                    className="btn btn-primary"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : filteredVentures.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">🔍</div>
+                  <h3 className="empty-title">No Ventures Found</h3>
+                  <p className="empty-text">
+                    Try adjusting your search terms or filters to find more ventures.
+                  </p>
+                  <button
+                    onClick={clearFilters}
+                    className="btn btn-outline"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="experts-list">
+                    {currentVentures.map((venture) => (
+                      <div key={venture.id} className="expert-list-item">
+                        <div className="expert-list-content">
+                          <div className="expert-list-header">
+                            <h3 className="expert-list-name">{venture.username}</h3>
+                            <span className="expert-list-type">{getUserTypeDisplay(venture.userType)}</span>
+                          </div>
+                          
+                          <div className="expert-list-bio">
+                            {venture.bio ? (
+                              <p className="expert-bio-text line-clamp-1">{venture.bio}</p>
+                            ) : (
+                              <p className="expert-bio-placeholder">No description provided yet.</p>
+                            )}
+                          </div>
+
+                          <div className="expert-list-experience">
+                            {venture.expertSupportNeeded ? (
+                              <p className="expert-experience-text line-clamp-1">Looking for: {venture.expertSupportNeeded}</p>
+                            ) : (
+                              <p className="expert-experience-placeholder">No specific needs listed yet.</p>
+                            )}
+                          </div>
+
+                          <div className="expert-list-details">
+                            {venture.ventureInterests && (
+                              <div className="expert-list-skills">
+                                <span className="expert-list-label">Categories:</span>
+                                <div className="expert-list-tags">
+                                  {venture.ventureInterests.split(',').slice(0, 3).map((interest, index) => (
+                                    <span key={index} className="expert-list-tag skill-tag">
+                                      {interest.trim()}
+                                    </span>
+                                  ))}
+                                  {venture.ventureInterests.split(',').length > 3 && (
+                                    <span className="expert-list-tag-more">
+                                      +{venture.ventureInterests.split(',').length - 3} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {venture.preferredEngagement && (
+                              <div className="expert-list-engagement">
+                                <span className="expert-list-label">Engagement:</span>
+                                <div className="expert-list-tags">
+                                  {venture.preferredEngagement.split(',').slice(0, 2).map((engagement, index) => (
+                                    <span key={index} className="expert-list-tag engagement-tag">
+                                      {engagement.trim()}
+                                    </span>
+                                  ))}
+                                  {venture.preferredEngagement.split(',').length > 2 && (
+                                    <span className="expert-list-tag-more">
+                                      +{venture.preferredEngagement.split(',').length - 2} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="expert-list-meta">
+                            <div className="expert-list-meta-row">
+                              {venture.location && (
+                                <div className="expert-list-location">
+                                  📍 {venture.location}
+                                  {venture.timezone && !venture.location.toLowerCase().includes('remote') && (
+                                    <span className="expert-list-timezone">
+                                      • {venture.timezone}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              {venture.timeCommitment && (
+                                <div className="expert-list-commitment">
+                                  <span className="commitment-pill">
+                                    ⏰ {venture.timeCommitment}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="expert-list-actions">
+                          <button
+                            onClick={() => handleViewProfile(venture.username)}
+                            className="btn btn-primary"
+                          >
+                            View Venture
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="pagination">
+                      <div className="pagination-info">
+                        <span className="pagination-text">
+                          Showing {startIndex + 1}-{Math.min(endIndex, filteredVentures.length)} of {filteredVentures.length} ventures
+                        </span>
+                      </div>
+                      
+                      <div className="pagination-controls">
+                        <button
+                          onClick={handlePreviousPage}
+                          disabled={currentPage === 1}
+                          className="pagination-btn pagination-prev"
+                        >
+                          ← Previous
+                        </button>
+                        
+                        <div className="pagination-pages">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                            // Show first page, last page, current page, and pages around current
+                            const shouldShow = 
+                              page === 1 || 
+                              page === totalPages || 
+                              (page >= currentPage - 1 && page <= currentPage + 1);
+                            
+                            if (!shouldShow) {
+                              // Show ellipsis for gaps
+                              if (page === currentPage - 2 || page === currentPage + 2) {
+                                return <span key={page} className="pagination-ellipsis">...</span>;
+                              }
+                              return null;
+                            }
+                            
+                            return (
+                              <button
+                                key={page}
+                                onClick={() => handlePageChange(page)}
+                                className={`pagination-btn pagination-page ${
+                                  page === currentPage ? 'pagination-active' : ''
+                                }`}
+                              >
+                                {page}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        
+                        <button
+                          onClick={handleNextPage}
+                          disabled={currentPage === totalPages}
+                          className="pagination-btn pagination-next"
+                        >
+                          Next →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </section>
@@ -106,21 +720,21 @@ const VenturesPage: React.FC = () => {
               Sign Up
             </button>
             <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
-              🔑 Log In
+              Log In
             </button>
           </div>
           <div className="trust-indicators">
             <div className="trust-item">
-              <span className="trust-number">500+</span>
-              <span className="trust-label">Ventures posted</span>
+              <span className="trust-number">{ventures.length}+</span>
+              <span className="trust-label">Ventures available</span>
             </div>
             <div className="trust-item">
-              <span className="trust-number">1,000+</span>
-                              <span className="trust-label">Experts joined</span>
+              <span className="trust-number">50+</span>
+              <span className="trust-label">Categories</span>
             </div>
             <div className="trust-item">
-              <span className="trust-number">200+</span>
-              <span className="trust-label">Projects launched</span>
+              <span className="trust-number">95%</span>
+              <span className="trust-label">Response rate</span>
             </div>
           </div>
         </section>

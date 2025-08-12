@@ -49,6 +49,10 @@ const ExpertsPage: React.FC = () => {
   const [distanceRadius, setDistanceRadius] = useState(50);
   const [usOnly, setUsOnly] = useState(false);
   const [includeRemote, setIncludeRemote] = useState(true);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12);
 
   // Load experts on component mount
   useEffect(() => {
@@ -59,6 +63,11 @@ const ExpertsPage: React.FC = () => {
   useEffect(() => {
     filterExperts();
   }, [searchTerm, selectedSkills, selectedValues, locationFilter, distanceRadius, usOnly, includeRemote, experts]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedSkills, selectedValues, locationFilter, distanceRadius, usOnly, includeRemote]);
 
   const loadExperts = async () => {
     try {
@@ -253,6 +262,30 @@ const ExpertsPage: React.FC = () => {
 
   const handleSignUp = () => {
     navigate('/login?signup=true');
+  };
+
+  // Pagination functions
+  const totalPages = Math.ceil(filteredExperts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentExperts = filteredExperts.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of results
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
   };
 
   // Popular skills for filtering
@@ -515,103 +548,164 @@ const ExpertsPage: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                                 <div className="experts-list">
-                   {filteredExperts.map((expert) => (
-                     <div key={expert.id} className="expert-list-item">
-                       <div className="expert-list-content">
-                         <div className="expert-list-header">
-                           <h3 className="expert-list-name">{expert.username}</h3>
-                           <span className="expert-list-type">{getUserTypeDisplay(expert.userType)}</span>
-                         </div>
-                         
-                         <div className="expert-list-bio">
-                           {expert.bio ? (
-                             <p className="expert-bio-text line-clamp-1">{expert.bio}</p>
-                           ) : (
-                             <p className="expert-bio-placeholder">No bio provided yet.</p>
-                           )}
-                         </div>
+                <>
+                  <div className="experts-list">
+                    {currentExperts.map((expert) => (
+                      <div key={expert.id} className="expert-list-item">
+                        <div className="expert-list-content">
+                          <div className="expert-list-header">
+                            <h3 className="expert-list-name">{expert.username}</h3>
+                            <span className="expert-list-type">{getUserTypeDisplay(expert.userType)}</span>
+                          </div>
+                          
+                          <div className="expert-list-bio">
+                            {expert.bio ? (
+                              <p className="expert-bio-text line-clamp-1">{expert.bio}</p>
+                            ) : (
+                              <p className="expert-bio-placeholder">No bio provided yet.</p>
+                            )}
+                          </div>
 
-                         <div className="expert-list-experience">
-                           {expert.experience ? (
-                             <p className="expert-experience-text line-clamp-1">{expert.experience}</p>
-                           ) : (
-                             <p className="expert-experience-placeholder">No experience details provided yet.</p>
-                           )}
-                         </div>
+                          <div className="expert-list-experience">
+                            {expert.experience ? (
+                              <p className="expert-experience-text line-clamp-1">{expert.experience}</p>
+                            ) : (
+                              <p className="expert-experience-placeholder">No experience details provided yet.</p>
+                            )}
+                          </div>
 
-                         <div className="expert-list-details">
-                           {expert.skills && (
-                             <div className="expert-list-skills">
-                               <span className="expert-list-label">Skills:</span>
-                               <div className="expert-list-tags">
-                                 {expert.skills.split(',').slice(0, 3).map((skill, index) => (
-                                   <span key={index} className="expert-list-tag skill-tag">
-                                     {skill.trim()}
-                                   </span>
-                                 ))}
-                                 {expert.skills.split(',').length > 3 && (
-                                   <span className="expert-list-tag-more">
-                                     +{expert.skills.split(',').length - 3} more
-                                   </span>
-                                 )}
-                               </div>
-                             </div>
-                           )}
+                          <div className="expert-list-details">
+                            {expert.skills && (
+                              <div className="expert-list-skills">
+                                <span className="expert-list-label">Skills:</span>
+                                <div className="expert-list-tags">
+                                  {expert.skills.split(',').slice(0, 3).map((skill, index) => (
+                                    <span key={index} className="expert-list-tag skill-tag">
+                                      {skill.trim()}
+                                    </span>
+                                  ))}
+                                  {expert.skills.split(',').length > 3 && (
+                                    <span className="expert-list-tag-more">
+                                      +{expert.skills.split(',').length - 3} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
 
-                           {expert.preferredEngagement && (
-                             <div className="expert-list-engagement">
-                               <span className="expert-list-label">Engagement:</span>
-                               <div className="expert-list-tags">
-                                 {expert.preferredEngagement.split(',').slice(0, 2).map((engagement, index) => (
-                                   <span key={index} className="expert-list-tag engagement-tag">
-                                     {engagement.trim()}
-                                   </span>
-                                 ))}
-                                 {expert.preferredEngagement.split(',').length > 2 && (
-                                   <span className="expert-list-tag-more">
-                                     +{expert.preferredEngagement.split(',').length - 2} more
-                                   </span>
-                                 )}
-                               </div>
-                             </div>
-                           )}
-                         </div>
+                            {expert.preferredEngagement && (
+                              <div className="expert-list-engagement">
+                                <span className="expert-list-label">Engagement:</span>
+                                <div className="expert-list-tags">
+                                  {expert.preferredEngagement.split(',').slice(0, 2).map((engagement, index) => (
+                                    <span key={index} className="expert-list-tag engagement-tag">
+                                      {engagement.trim()}
+                                    </span>
+                                  ))}
+                                  {expert.preferredEngagement.split(',').length > 2 && (
+                                    <span className="expert-list-tag-more">
+                                      +{expert.preferredEngagement.split(',').length - 2} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
 
-                         <div className="expert-list-meta">
-                           <div className="expert-list-meta-row">
-                             {expert.location && (
-                               <div className="expert-list-location">
-                                 📍 {expert.location}
-                                 {expert.timezone && !isRemoteLocation(expert.location) && (
-                                   <span className="expert-list-timezone">
-                                     • {formatTimezone(expert.timezone)}
-                                   </span>
-                                 )}
-                               </div>
-                             )}
-                             {expert.timeCommitment && (
-                               <div className="expert-list-commitment">
-                                 <span className="commitment-pill">
-                                   ⏰ {expert.timeCommitment}
-                                 </span>
-                               </div>
-                             )}
-                           </div>
-                         </div>
-                       </div>
+                          <div className="expert-list-meta">
+                            <div className="expert-list-meta-row">
+                              {expert.location && (
+                                <div className="expert-list-location">
+                                  📍 {expert.location}
+                                  {expert.timezone && !isRemoteLocation(expert.location) && (
+                                    <span className="expert-list-timezone">
+                                      • {formatTimezone(expert.timezone)}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              {expert.timeCommitment && (
+                                <div className="expert-list-commitment">
+                                  <span className="commitment-pill">
+                                    ⏰ {expert.timeCommitment}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
 
-                       <div className="expert-list-actions">
-                         <button
-                           onClick={() => handleViewProfile(expert.username)}
-                           className="btn btn-primary"
-                         >
-                           View Profile
-                         </button>
-                       </div>
-                     </div>
-                   ))}
-                 </div>
+                        <div className="expert-list-actions">
+                          <button
+                            onClick={() => handleViewProfile(expert.username)}
+                            className="btn btn-primary"
+                          >
+                            View Profile
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="pagination">
+                      <div className="pagination-info">
+                        <span className="pagination-text">
+                          Showing {startIndex + 1}-{Math.min(endIndex, filteredExperts.length)} of {filteredExperts.length} experts
+                        </span>
+                      </div>
+                      
+                      <div className="pagination-controls">
+                        <button
+                          onClick={handlePreviousPage}
+                          disabled={currentPage === 1}
+                          className="pagination-btn pagination-prev"
+                        >
+                          ← Previous
+                        </button>
+                        
+                        <div className="pagination-pages">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                            // Show first page, last page, current page, and pages around current
+                            const shouldShow = 
+                              page === 1 || 
+                              page === totalPages || 
+                              (page >= currentPage - 1 && page <= currentPage + 1);
+                            
+                            if (!shouldShow) {
+                              // Show ellipsis for gaps
+                              if (page === currentPage - 2 || page === currentPage + 2) {
+                                return <span key={page} className="pagination-ellipsis">...</span>;
+                              }
+                              return null;
+                            }
+                            
+                            return (
+                              <button
+                                key={page}
+                                onClick={() => handlePageChange(page)}
+                                className={`pagination-btn pagination-page ${
+                                  page === currentPage ? 'pagination-active' : ''
+                                }`}
+                              >
+                                {page}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        
+                        <button
+                          onClick={handleNextPage}
+                          disabled={currentPage === totalPages}
+                          className="pagination-btn pagination-next"
+                        >
+                          Next →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
