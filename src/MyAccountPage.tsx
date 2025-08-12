@@ -26,6 +26,7 @@ import {
 import { getMissionValueNames, getMissionValueIds } from './data/missionValues';
 import { getVentureInterestNames, getVentureInterestIds } from './data/ventureInterests';
 import { getEngagementTypeNames, getEngagementTypeIds } from './data/engagementTypes';
+import { validateUsername } from './utils/usernameUtils';
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
@@ -294,6 +295,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     e.preventDefault();
     setMessage('');
 
+    // Validate username before submitting
+    const usernameValidation = validateUsername(formData.username);
+    if (!usernameValidation.isValid) {
+      setMessage(`Error: ${usernameValidation.message}`);
+      return;
+    }
+
     try {
       console.log('💾 Saving profile to AWS database...');
       console.log('🔍 Full user object:', user);
@@ -457,6 +465,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       return updatedData;
     });
   };
+
+  // Get username validation state
+  const usernameValidation = validateUsername(formData.username);
 
   // When editing starts, populate form with existing profile data
   useEffect(() => {
@@ -838,11 +849,32 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <input
                         type="text"
                         value={formData.username}
-                        onChange={(e) => handleInputChange('username', e.target.value)}
-                        placeholder="Your username"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        onChange={(e) => {
+                          // Only allow valid characters
+                          const value = e.target.value;
+                          const validValue = value.replace(/[^a-zA-Z0-9_-]/g, '');
+                          handleInputChange('username', validValue);
+                        }}
+                        placeholder="your-username_123"
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
+                          formData.username 
+                            ? usernameValidation.isValid 
+                              ? 'border-green-300 focus:ring-green-500' 
+                              : 'border-red-300 focus:ring-red-500'
+                            : 'border-gray-300 focus:ring-orange-500'
+                        }`}
                         required
                       />
+                      {formData.username && (
+                        <div className={`mt-2 text-sm ${
+                          usernameValidation.isValid ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {usernameValidation.message}
+                        </div>
+                      )}
+                      <div className="mt-1 text-xs text-gray-500">
+                        Only letters, numbers, hyphens (-), and underscores (_). 3-30 characters.
+                      </div>
                     </div>
 
                     <div>
