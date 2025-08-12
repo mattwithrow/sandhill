@@ -554,7 +554,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               {profile && (
                 <button
                   onClick={() => navigate(`/profile/${profile.username}`)}
-                  className="btn btn-outline"
+                  className="btn btn-outline btn-large"
                 >
                   View Public Profile
                 </button>
@@ -606,7 +606,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           {!isEditing ? (
             <section className="section">
               <div className="content-card">
-                <div className="section-header">
+                <div className="section-header-left">
                   <div className="eyebrow">Your Profile</div>
                   <h2 className="section-title">Manage your personal information and preferences</h2>
                 </div>
@@ -767,38 +767,56 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     {(profile.linkedinUrl || profile.githubUrl || profile.portfolioUrl || profile.websiteUrl || profile.twitterUrl || profile.instagramUrl) && (
                       <div className="feature-card">
                         <h3 className="text-lg font-semibold text-gray-800 mb-3">Links</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <ul className="space-y-3">
                           {profile.linkedinUrl && (
-                            <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">
-                              LinkedIn
-                            </a>
+                            <li>
+                              <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center">
+                                <span className="w-4 h-4 mr-2">🔗</span>
+                                LinkedIn
+                              </a>
+                            </li>
                           )}
                           {profile.githubUrl && (
-                            <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors">
-                              GitHub
-                            </a>
+                            <li>
+                              <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors flex items-center">
+                                <span className="w-4 h-4 mr-2">🔗</span>
+                                GitHub
+                              </a>
+                            </li>
                           )}
                           {profile.portfolioUrl && (
-                            <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors">
-                              Portfolio
-                            </a>
+                            <li>
+                              <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors flex items-center">
+                                <span className="w-4 h-4 mr-2">🔗</span>
+                                Portfolio
+                              </a>
+                            </li>
                           )}
                           {profile.websiteUrl && (
-                            <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors">
-                              Website
-                            </a>
+                            <li>
+                              <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors flex items-center">
+                                <span className="w-4 h-4 mr-2">🔗</span>
+                                Website
+                              </a>
+                            </li>
                           )}
                           {profile.twitterUrl && (
-                            <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors">
-                              Twitter
-                            </a>
+                            <li>
+                              <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors flex items-center">
+                                <span className="w-4 h-4 mr-2">🔗</span>
+                                Twitter
+                              </a>
+                            </li>
                           )}
                           {profile.instagramUrl && (
-                            <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors">
-                              Instagram
-                            </a>
+                            <li>
+                              <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors flex items-center">
+                                <span className="w-4 h-4 mr-2">🔗</span>
+                                Instagram
+                              </a>
+                            </li>
                           )}
-                        </div>
+                        </ul>
                       </div>
                     )}
                   </div>
@@ -825,7 +843,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             /* Edit Form */
             <section className="section">
               <div className="content-card">
-                <div className="section-header">
+                <div className="section-header-left">
                   <div className="eyebrow">{profile ? 'Edit Your Profile' : 'Create Your Profile'}</div>
                   <h2 className="section-title">Update your information to help us connect you better</h2>
                 </div>

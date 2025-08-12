@@ -379,6 +379,16 @@ p {
   margin-bottom: var(--space-2xl);
 }
 
+.section-header-left {
+  text-align: left;
+  margin-bottom: var(--space-2xl);
+}
+
+.section-header-left .section-title::after {
+  left: 0;
+  transform: none;
+}
+
 .section-title {
   font-size: 2.2rem;
   font-weight: 600;
@@ -1176,4 +1186,209 @@ p {
 
 .modal-close-button:active {
   transform: scale(0.95);
+}
+
+/* ===============================================
+   EXPERT CARDS
+   =============================================== */
+
+.expert-card {
+  background: var(--bg-white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-light);
+  padding: var(--space-xl);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.expert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient);
+}
+
+.expert-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-orange);
+}
+
+.expert-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.expert-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-white);
+  font-size: 1.5rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.expert-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.expert-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.expert-type {
+  display: inline-block;
+  background: var(--bg-light);
+  color: var(--primary-orange);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.expert-bio {
+  margin-bottom: var(--space-lg);
+  flex: 1;
+}
+
+.expert-bio p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.expert-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.expert-skills {
+  margin-bottom: var(--space-md);
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background: linear-gradient(135deg, #fef3c7 0%, #d1fae5 100%);
+  color: var(--text-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #fbbf24;
+}
+
+.skill-tag-more {
+  background: var(--bg-light);
+  color: var(--text-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border-light);
+}
+
+.expert-values {
+  margin-bottom: var(--space-md);
+}
+
+.values-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.value-tag {
+  background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+  color: var(--text-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #38bdf8;
+}
+
+.value-tag-more {
+  background: var(--bg-light);
+  color: var(--text-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border-light);
+}
+
+.expert-meta {
+  margin-bottom: var(--space-lg);
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+.expert-location,
+.expert-commitment {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.expert-actions {
+  margin-top: auto;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ===============================================
+   SEARCH & FILTERS
+   =============================================== */
+
+.search-highlight {
+  background: linear-gradient(135deg, #fef3c7 0%, #d1fae5 100%);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.filter-active {
+  background: var(--primary-gradient) !important;
+  color: var(--text-white) !important;
+  border-color: var(--primary-orange) !important;
 }
