@@ -1517,6 +1517,24 @@ p {
   font-weight: 600;
 }
 
+.expand-collapse-btn {
+  background: none;
+  border: none;
+  color: var(--primary-orange);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-top: var(--space-sm);
+  padding: 0;
+  text-align: left;
+}
+
+.expand-collapse-btn:hover {
+  color: var(--accent-orange);
+}
+
 .active-filters {
   margin-bottom: var(--space-xl);
   padding: var(--space-lg);

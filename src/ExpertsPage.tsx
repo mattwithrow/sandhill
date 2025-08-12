@@ -43,6 +43,8 @@ const ExpertsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [expandedSkills, setExpandedSkills] = useState(false);
+  const [expandedValues, setExpandedValues] = useState(false);
 
   // Load experts on component mount
   useEffect(() => {
@@ -211,6 +213,16 @@ const ExpertsPage: React.FC = () => {
     'Education', 'Healthcare', 'Fintech', 'AI/ML', 'Clean Energy'
   ];
 
+  // Get visible skills (first 5 + selected ones)
+  const visibleSkills = expandedSkills 
+    ? popularSkills 
+    : [...new Set([...popularSkills.slice(0, 5), ...selectedSkills])];
+
+  // Get visible values (first 5 + selected ones)
+  const visibleValues = expandedValues 
+    ? popularValues 
+    : [...new Set([...popularValues.slice(0, 5), ...selectedValues])];
+
   return (
     <div className="experts-page">
       <div className="container">
@@ -263,7 +275,7 @@ const ExpertsPage: React.FC = () => {
                 <div className="filter-section">
                   <h4 className="filter-title">Skills</h4>
                   <div className="filter-tags">
-                    {popularSkills.map(skill => (
+                    {visibleSkills.map(skill => (
                       <button
                         key={skill}
                         onClick={() => handleSkillFilter(skill)}
@@ -275,13 +287,21 @@ const ExpertsPage: React.FC = () => {
                       </button>
                     ))}
                   </div>
+                  {popularSkills.length > 5 && (
+                    <button
+                      onClick={() => setExpandedSkills(!expandedSkills)}
+                      className="expand-collapse-btn"
+                    >
+                      {expandedSkills ? 'Show Less' : `Show ${popularSkills.length - 5} More`}
+                    </button>
+                  )}
                 </div>
 
                 {/* Values Filter */}
                 <div className="filter-section">
                   <h4 className="filter-title">Values & Mission</h4>
                   <div className="filter-tags">
-                    {popularValues.map(value => (
+                    {visibleValues.map(value => (
                       <button
                         key={value}
                         onClick={() => handleValueFilter(value)}
@@ -293,6 +313,14 @@ const ExpertsPage: React.FC = () => {
                       </button>
                     ))}
                   </div>
+                  {popularValues.length > 5 && (
+                    <button
+                      onClick={() => setExpandedValues(!expandedValues)}
+                      className="expand-collapse-btn"
+                    >
+                      {expandedValues ? 'Show Less' : `Show ${popularValues.length - 5} More`}
+                    </button>
+                  )}
                 </div>
 
                 {/* Active Filters */}
