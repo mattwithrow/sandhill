@@ -113,7 +113,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             skills: dbProfile.skills || '',
             location: dbProfile.location || '',
             values: dbProfile.values || '',
-            timeCommitment: '', // TODO: Add back after schema deployment
+            timeCommitment: '', // Will be loaded from localStorage
             expertSupportNeeded: '', // TODO: Add back after schema deployment
             linkedinUrl: dbProfile.linkedinUrl || '',
             githubUrl: dbProfile.githubUrl || '',
@@ -129,6 +129,12 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             latitude: undefined, // TODO: Add back after schema deployment
             longitude: undefined // TODO: Add back after schema deployment
           };
+          
+          // Load timeCommitment from localStorage if available
+          const savedTimeCommitment = localStorage.getItem(`timeCommitment_${dbProfile.email}`);
+          if (savedTimeCommitment) {
+            profileData.timeCommitment = savedTimeCommitment;
+          }
           
           console.log('📄 Converted profile data:', profileData);
           

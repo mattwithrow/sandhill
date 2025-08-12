@@ -245,9 +245,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           if (profileData) {
             setProfile(profileData);
             setFormData(profileData);
-          } else {
-            console.log('📝 No saved profile found');
-          }
+                     } else {
+             console.log('📝 No saved profile found');
+           }
+           
+           // Load timeCommitment from localStorage if available
+           const savedTimeCommitment = localStorage.getItem(`timeCommitment_${userEmail}`);
+           if (savedTimeCommitment && profileData) {
+             profileData.timeCommitment = savedTimeCommitment;
+             setFormData(prev => ({ ...prev, timeCommitment: savedTimeCommitment }));
+           }
           
         } catch (err) {
           console.error('❌ Error loading profile:', err);
@@ -418,9 +425,14 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         console.log('✅ Profile created successfully in AWS:', savedProfile);
       }
       
-      // Also save to localStorage as backup
+      // Save to localStorage as backup (including timeCommitment)
       const profileJson = JSON.stringify(formData);
       localStorage.setItem(`profile_email_${userEmail}`, profileJson);
+      
+      // Also save timeCommitment separately for immediate access
+      if (formData.timeCommitment) {
+        localStorage.setItem(`timeCommitment_${userEmail}`, formData.timeCommitment);
+      }
       console.log('✅ Also saved to localStorage as backup');
       
       console.log('✅ Profile saved successfully to AWS:', formData);
