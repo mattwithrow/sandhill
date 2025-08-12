@@ -32,6 +32,13 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     websiteUrl: string;
     twitterUrl: string;
     instagramUrl: string;
+    // New fields that will be available after schema deployment
+    missionValuesAlignment?: string;
+    ventureInterests?: string;
+    preferredEngagement?: string;
+    timezone?: string;
+    latitude?: number;
+    longitude?: number;
   }>(null);
 
   // Load profile from AWS database on component mount
@@ -87,7 +94,14 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             portfolioUrl: dbProfile.portfolioUrl || '',
             websiteUrl: dbProfile.websiteUrl || '',
             twitterUrl: dbProfile.twitterUrl || '',
-            instagramUrl: dbProfile.instagramUrl || ''
+            instagramUrl: dbProfile.instagramUrl || '',
+            // New fields that will be available after schema deployment
+            missionValuesAlignment: '', // TODO: Add back after schema deployment
+            ventureInterests: '', // TODO: Add back after schema deployment
+            preferredEngagement: '', // TODO: Add back after schema deployment
+            timezone: '', // TODO: Add back after schema deployment
+            latitude: undefined, // TODO: Add back after schema deployment
+            longitude: undefined // TODO: Add back after schema deployment
           };
           
           console.log('📄 Converted profile data:', profileData);
@@ -213,8 +227,8 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
-                {/* Values */}
-                {profile.values && (
+                {/* Values (if not already shown in Mission & Values Alignment) */}
+                {profile.values && !profile.missionValuesAlignment && (
                   <div className="feature-card">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">Values</h3>
                     <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
@@ -246,7 +260,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
-                {/* TODO: Add back after schema deployment - Mission & Values Alignment
+                {/* Mission & Values Alignment */}
                 {profile.missionValuesAlignment && (
                   <div className="feature-card">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">Mission & Values Alignment</h3>
@@ -265,9 +279,8 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     )}
                   </div>
                 )}
-                */}
 
-                {/* TODO: Add back after schema deployment - Venture Interests
+                {/* Venture Interests */}
                 {profile.ventureInterests && (
                   <div className="feature-card">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">Venture Interests</h3>
@@ -283,9 +296,8 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     </div>
                   </div>
                 )}
-                */}
 
-                {/* TODO: Add back after schema deployment - Preferred Engagement
+                {/* Preferred Engagement */}
                 {profile.preferredEngagement && (
                   <div className="feature-card">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferred Engagement</h3>
@@ -301,16 +313,14 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     </div>
                   </div>
                 )}
-                */}
 
-                {/* TODO: Add back after schema deployment - Expert Support Needed (for Ventures and Both)
+                {/* Expert Support Needed (for Ventures and Both) */}
                 {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
                   <div className="feature-card">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">Expert Support Needed</h3>
                     <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
                   </div>
                 )}
-                */}
 
                 {/* Location and Time Commitment */}
                 <div className="grid-2">
@@ -318,7 +328,6 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
                       <p className="text-gray-700 text-lg">{profile.location}</p>
-                      {/* TODO: Add back after schema deployment
                       {profile.timezone && (
                         <p className="text-sm text-gray-500 mt-1">
                           {formatTimezone(profile.timezone)}
@@ -329,17 +338,14 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                           )}
                         </p>
                       )}
-                      */}
                     </div>
                   )}
-                  {/* TODO: Add back after schema deployment
                   {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
                       <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
                     </div>
                   )}
-                  */}
                 </div>
 
                 {/* Social Links */}
