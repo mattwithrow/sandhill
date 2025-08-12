@@ -253,6 +253,10 @@ p {
   color: var(--text-white);
 }
 
+.hero-compact {
+  padding: var(--space-xl) var(--space-lg);
+}
+
 .hero::before {
   content: '';
   position: absolute;

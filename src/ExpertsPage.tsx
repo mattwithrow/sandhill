@@ -282,7 +282,7 @@ const ExpertsPage: React.FC = () => {
     <div className="experts-page">
       <div className="container">
         {/* Hero Section */}
-        <section className="hero">
+        <section className="hero hero-compact">
           <div className="hero-content">
             <h1 className="hero-title">
               Meet Amazing<br />
@@ -291,15 +291,6 @@ const ExpertsPage: React.FC = () => {
             <p className="hero-subtitle">
               Connect with skilled professionals who are passionate about making a difference and building meaningful projects.
             </p>
-            <div className="cta-buttons">
-              <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-                Post Your Idea
-              </button>
-            </div>
-            <div className="scroll-indicator float">
-              <span className="scroll-text">Scroll to explore</span>
-              <div className="scroll-arrow">↓</div>
-            </div>
           </div>
         </section>
 
