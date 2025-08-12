@@ -13,6 +13,13 @@ import {
 import { listUserProfiles } from '../queries';
 import { createUserProfile, updateUserProfile } from '../mutations';
 import SkillsMultiSelect from './components/SkillsMultiSelect';
+import { 
+  detectTimezoneFromLocation, 
+  getUserTimezone, 
+  formatTimezone, 
+  getTimeInTimezone,
+  isRemoteLocation 
+} from './utils/locationUtils';
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
@@ -22,13 +29,33 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    username: string;
+    userType: UserProfileUserType;
+    bio: string;
+    experience: string;
+    skills: string;
+    location: string;
+    timezone: string;
+    latitude?: number;
+    longitude?: number;
+    values: string;
+    timeCommitment: string;
+    expertSupportNeeded: string;
+    linkedinUrl: string;
+    githubUrl: string;
+    portfolioUrl: string;
+    websiteUrl: string;
+    twitterUrl: string;
+    instagramUrl: string;
+  }>({
     username: '',
     userType: UserProfileUserType.both,
     bio: '',
     experience: '',
     skills: '',
     location: '',
+    timezone: getUserTimezone(),
     values: '',
     timeCommitment: '',
     expertSupportNeeded: '',
@@ -47,6 +74,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     experience: string;
     skills: string;
     location: string;
+    timezone: string;
+    latitude?: number;
+    longitude?: number;
     values: string;
     timeCommitment: string;
     expertSupportNeeded: string;
@@ -389,10 +419,19 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: field === 'userType' ? value as UserProfileUserType : value
-    }));
+    setFormData(prev => {
+      const updatedData = {
+        ...prev,
+        [field]: field === 'userType' ? value as UserProfileUserType : value
+      };
+      
+      // Auto-detect timezone when location changes
+      if (field === 'location') {
+        updatedData.timezone = detectTimezoneFromLocation(value);
+      }
+      
+      return updatedData;
+    });
   };
 
   // When editing starts, populate form with existing profile data
@@ -607,6 +646,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                          <div className="feature-card">
                            <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
                            <p className="text-gray-700 text-lg">{profile.location}</p>
+                           {profile.timezone && (
+                             <p className="text-sm text-gray-500 mt-1">
+                               {formatTimezone(profile.timezone)}
+                               {!isRemoteLocation(profile.location) && (
+                                 <span className="ml-2">
+                                   • {getTimeInTimezone(profile.timezone)}
+                                 </span>
+                               )}
+                             </p>
+                           )}
                          </div>
                        )}
                        {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
@@ -791,18 +840,28 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
                                      {/* Location, Time Commitment, and Expert Support */}
                    <div className="grid-2">
-                     <div>
-                       <label className="block text-lg font-semibold text-gray-800 mb-3">
-                         Location
-                       </label>
-                       <input
-                         type="text"
-                         value={formData.location}
-                         onChange={(e) => handleInputChange('location', e.target.value)}
-                         placeholder="San Francisco, CA or Remote"
-                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                       />
-                     </div>
+                                         <div>
+                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.location}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
+                        placeholder="San Francisco, CA or Remote"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                      />
+                      {formData.location && (
+                        <div className="mt-2 text-sm text-gray-600">
+                          <span className="font-medium">Detected timezone:</span> {formatTimezone(formData.timezone)} 
+                          {!isRemoteLocation(formData.location) && (
+                            <span className="ml-2">
+                              (Current time: {getTimeInTimezone(formData.timezone)})
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
 
                      {(formData.userType === 'expert' || formData.userType === 'both') && (
                        <div>

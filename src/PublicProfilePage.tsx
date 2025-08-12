@@ -6,6 +6,7 @@ import {
   UserProfileUserType
 } from '../API';
 import { listUserProfiles } from '../queries';
+import { formatTimezone, getTimeInTimezone, isRemoteLocation } from './utils/locationUtils';
 
 const PublicProfilePage: React.FC = (): React.ReactNode => {
   const { username } = useParams<{ username: string }>();
@@ -257,6 +258,16 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
                       <p className="text-gray-700 text-lg">{profile.location}</p>
+                      {profile.timezone && (
+                        <p className="text-sm text-gray-500 mt-1">
+                          {formatTimezone(profile.timezone)}
+                          {!isRemoteLocation(profile.location) && (
+                            <span className="ml-2">
+                              • {getTimeInTimezone(profile.timezone)}
+                            </span>
+                          )}
+                        </p>
+                      )}
                     </div>
                   )}
                   {/* TODO: Add back after schema deployment
