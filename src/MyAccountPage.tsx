@@ -13,6 +13,9 @@ import {
 import { listUserProfiles } from '../queries';
 import { createUserProfile, updateUserProfile } from '../mutations';
 import SkillsMultiSelect from './components/SkillsMultiSelect';
+import MissionValuesMultiSelect from './components/MissionValuesMultiSelect';
+import VentureInterestsMultiSelect from './components/VentureInterestsMultiSelect';
+import PreferredEngagementMultiSelect from './components/PreferredEngagementMultiSelect';
 import { 
   detectTimezoneFromLocation, 
   getUserTimezone, 
@@ -20,6 +23,9 @@ import {
   getTimeInTimezone,
   isRemoteLocation 
 } from './utils/locationUtils';
+import { getMissionValueNames, getMissionValueIds } from './data/missionValues';
+import { getVentureInterestNames, getVentureInterestIds } from './data/ventureInterests';
+import { getEngagementTypeNames, getEngagementTypeIds } from './data/engagementTypes';
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
@@ -40,6 +46,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     latitude?: number;
     longitude?: number;
     values: string;
+    missionValuesAlignment: string;
+    ventureInterests: string;
+    preferredEngagement: string;
     timeCommitment: string;
     expertSupportNeeded: string;
     linkedinUrl: string;
@@ -57,6 +66,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     location: '',
     timezone: getUserTimezone(),
     values: '',
+    missionValuesAlignment: '',
+    ventureInterests: '',
+    preferredEngagement: '',
     timeCommitment: '',
     expertSupportNeeded: '',
     linkedinUrl: '',
@@ -78,6 +90,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     latitude?: number;
     longitude?: number;
     values: string;
+    missionValuesAlignment: string;
+    ventureInterests: string;
+    preferredEngagement: string;
     timeCommitment: string;
     expertSupportNeeded: string;
     linkedinUrl: string;
@@ -179,6 +194,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 skills: dbProfile.skills || '',
                 location: dbProfile.location || '',
                 values: dbProfile.values || '',
+                missionValuesAlignment: '', // TODO: Add back after schema deployment
+                ventureInterests: '', // TODO: Add back after schema deployment
+                preferredEngagement: '', // TODO: Add back after schema deployment
                 timeCommitment: '', // TODO: Add back after schema deployment
                 expertSupportNeeded: '', // TODO: Add back after schema deployment
                 linkedinUrl: dbProfile.linkedinUrl || '',
@@ -325,6 +343,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           skills: formData.skills,
           location: formData.location,
           values: formData.values,
+          // missionValuesAlignment: formData.missionValuesAlignment, // TODO: Add back after schema deployment
+          // ventureInterests: formData.ventureInterests, // TODO: Add back after schema deployment
+          // preferredEngagement: formData.preferredEngagement, // TODO: Add back after schema deployment
           // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
           // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
           linkedinUrl: formData.linkedinUrl,
@@ -361,6 +382,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           skills: formData.skills,
           location: formData.location,
           values: formData.values,
+          // missionValuesAlignment: formData.missionValuesAlignment, // TODO: Add back after schema deployment
+          // ventureInterests: formData.ventureInterests, // TODO: Add back after schema deployment
+          // preferredEngagement: formData.preferredEngagement, // TODO: Add back after schema deployment
           // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
           // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
           linkedinUrl: formData.linkedinUrl,
@@ -640,6 +664,60 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
+                    {/* Mission & Values Alignment */}
+                    {profile.missionValuesAlignment && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Mission & Values Alignment</h3>
+                        <div className="flex flex-wrap gap-3 mb-4">
+                          {profile.missionValuesAlignment.split(',').map((value, index) => (
+                            <span
+                              key={index}
+                              className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200"
+                            >
+                              {value.trim()}
+                            </span>
+                          ))}
+                        </div>
+                        {profile.values && (
+                          <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Venture Interests */}
+                    {profile.ventureInterests && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Venture Interests</h3>
+                        <div className="flex flex-wrap gap-3">
+                          {profile.ventureInterests.split(',').map((interest, index) => (
+                            <span
+                              key={index}
+                              className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200"
+                            >
+                              {interest.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Preferred Engagement */}
+                    {profile.preferredEngagement && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferred Engagement</h3>
+                        <div className="flex flex-wrap gap-3">
+                          {profile.preferredEngagement.split(',').map((engagement, index) => (
+                            <span
+                              key={index}
+                              className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200"
+                            >
+                              {engagement.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                                          {/* Location, Time Commitment, and Expert Support */}
                      <div className="grid-2">
                        {profile.location && (
@@ -797,19 +875,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                  {/* Values */}
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Values
-                    </label>
-                    <textarea
-                      value={formData.values}
-                      onChange={(e) => handleInputChange('values', e.target.value)}
-                      placeholder="What values are important to you? (e.g., integrity, innovation, collaboration, sustainability...)"
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                    />
-                  </div>
+
 
                   {/* Experience */}
                   <div>
@@ -835,6 +901,51 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       onChange={(skills) => handleInputChange('skills', skills.join(', '))}
                       placeholder="Select your skills..."
                       className="w-full"
+                    />
+                  </div>
+
+                  {/* Mission & Values Alignment */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Mission & Values Alignment
+                    </label>
+                    <MissionValuesMultiSelect
+                      selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
+                      onChange={(values) => handleInputChange('missionValuesAlignment', values.join(', '))}
+                      placeholder="Select mission and values that align with your goals..."
+                    />
+                    <div className="mt-2">
+                      <textarea
+                        value={formData.values}
+                        onChange={(e) => handleInputChange('values', e.target.value)}
+                        placeholder="Add any additional values or mission details that are important to you..."
+                        rows={3}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Venture Interests */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Types of Ventures You're Interested In
+                    </label>
+                    <VentureInterestsMultiSelect
+                      selectedInterests={formData.ventureInterests ? formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean) : []}
+                      onChange={(interests) => handleInputChange('ventureInterests', interests.join(', '))}
+                      placeholder="Select venture types and industries that interest you..."
+                    />
+                  </div>
+
+                  {/* Preferred Engagement */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      Preferred Engagement Types
+                    </label>
+                    <PreferredEngagementMultiSelect
+                      selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
+                      onChange={(engagements) => handleInputChange('preferredEngagement', engagements.join(', '))}
+                      placeholder="Select how you'd like to engage with ventures..."
                     />
                   </div>
 

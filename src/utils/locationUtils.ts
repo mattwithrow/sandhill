@@ -82,7 +82,7 @@ const TIMEZONE_MAPPINGS: Record<string, string> = {
   'quebec': 'America/Montreal',
   'hamilton': 'America/Toronto',
   'kitchener': 'America/Toronto',
-  'london': 'America/Toronto',
+  'london ontario': 'America/Toronto',
   'victoria': 'America/Vancouver',
   'halifax': 'America/Halifax',
   'st. johns': 'America/St_Johns',

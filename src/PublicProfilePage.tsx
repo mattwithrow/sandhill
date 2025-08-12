@@ -7,6 +7,9 @@ import {
 } from '../API';
 import { listUserProfiles } from '../queries';
 import { formatTimezone, getTimeInTimezone, isRemoteLocation } from './utils/locationUtils';
+import { getMissionValueNames } from './data/missionValues';
+import { getVentureInterestNames } from './data/ventureInterests';
+import { getEngagementTypeNames } from './data/engagementTypes';
 
 const PublicProfilePage: React.FC = (): React.ReactNode => {
   const { username } = useParams<{ username: string }>();
@@ -243,6 +246,63 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
+                {/* TODO: Add back after schema deployment - Mission & Values Alignment
+                {profile.missionValuesAlignment && (
+                  <div className="feature-card">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Mission & Values Alignment</h3>
+                    <div className="flex flex-wrap gap-3 mb-4">
+                      {profile.missionValuesAlignment.split(',').map((value, index) => (
+                        <span
+                          key={index}
+                          className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200"
+                        >
+                          {value.trim()}
+                        </span>
+                      ))}
+                    </div>
+                    {profile.values && (
+                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
+                    )}
+                  </div>
+                )}
+                */}
+
+                {/* TODO: Add back after schema deployment - Venture Interests
+                {profile.ventureInterests && (
+                  <div className="feature-card">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Venture Interests</h3>
+                    <div className="flex flex-wrap gap-3">
+                      {profile.ventureInterests.split(',').map((interest, index) => (
+                        <span
+                          key={index}
+                          className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200"
+                        >
+                          {interest.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                */}
+
+                {/* TODO: Add back after schema deployment - Preferred Engagement
+                {profile.preferredEngagement && (
+                  <div className="feature-card">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferred Engagement</h3>
+                    <div className="flex flex-wrap gap-3">
+                      {profile.preferredEngagement.split(',').map((engagement, index) => (
+                        <span
+                          key={index}
+                          className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200"
+                        >
+                          {engagement.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                */}
+
                 {/* TODO: Add back after schema deployment - Expert Support Needed (for Ventures and Both)
                 {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
                   <div className="feature-card">
@@ -258,6 +318,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
                       <p className="text-gray-700 text-lg">{profile.location}</p>
+                      {/* TODO: Add back after schema deployment
                       {profile.timezone && (
                         <p className="text-sm text-gray-500 mt-1">
                           {formatTimezone(profile.timezone)}
@@ -268,6 +329,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                           )}
                         </p>
                       )}
+                      */}
                     </div>
                   )}
                   {/* TODO: Add back after schema deployment
