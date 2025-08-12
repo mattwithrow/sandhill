@@ -261,29 +261,33 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 )}
 
                 {/* Mission & Values Alignment */}
-                {profile.missionValuesAlignment && (
-                  <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Mission & Values Alignment</h3>
-                    <div className="flex flex-wrap gap-3 mb-4">
-                      {profile.missionValuesAlignment.split(',').map((value, index) => (
-                        <span
-                          key={index}
-                          className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200"
-                        >
-                          {value.trim()}
-                        </span>
-                      ))}
-                    </div>
-                    {profile.values && (
-                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
-                    )}
-                  </div>
-                )}
+                <div className="feature-card">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Mission & Values Alignment</h3>
+                  {profile.missionValuesAlignment ? (
+                    <>
+                      <div className="flex flex-wrap gap-3 mb-4">
+                        {profile.missionValuesAlignment.split(',').map((value, index) => (
+                          <span
+                            key={index}
+                            className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200"
+                          >
+                            {value.trim()}
+                          </span>
+                        ))}
+                      </div>
+                      {profile.values && (
+                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-gray-500 italic">No mission and values alignment information provided yet.</p>
+                  )}
+                </div>
 
                 {/* Venture Interests */}
-                {profile.ventureInterests && (
-                  <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Venture Interests</h3>
+                <div className="feature-card">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Venture Interests</h3>
+                  {profile.ventureInterests ? (
                     <div className="flex flex-wrap gap-3">
                       {profile.ventureInterests.split(',').map((interest, index) => (
                         <span
@@ -294,13 +298,15 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                         </span>
                       ))}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <p className="text-gray-500 italic">No venture interests specified yet.</p>
+                  )}
+                </div>
 
                 {/* Preferred Engagement */}
-                {profile.preferredEngagement && (
-                  <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferred Engagement</h3>
+                <div className="feature-card">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferred Engagement</h3>
+                  {profile.preferredEngagement ? (
                     <div className="flex flex-wrap gap-3">
                       {profile.preferredEngagement.split(',').map((engagement, index) => (
                         <span
@@ -311,14 +317,20 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                         </span>
                       ))}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <p className="text-gray-500 italic">No preferred engagement types specified yet.</p>
+                  )}
+                </div>
 
                 {/* Expert Support Needed (for Ventures and Both) */}
-                {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
+                {(profile.userType === 'ventures' || profile.userType === 'both') && (
                   <div className="feature-card">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">Expert Support Needed</h3>
-                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
+                    {profile.expertSupportNeeded ? (
+                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
+                    ) : (
+                      <p className="text-gray-500 italic">No expert support requirements specified yet.</p>
+                    )}
                   </div>
                 )}
 
@@ -340,10 +352,14 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                       )}
                     </div>
                   )}
-                  {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
+                  {(profile.userType === 'expert' || profile.userType === 'both') && (
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
-                      <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
+                      {profile.timeCommitment ? (
+                        <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
+                      ) : (
+                        <p className="text-gray-500 italic">No time commitment specified yet.</p>
+                      )}
                     </div>
                   )}
                 </div>
