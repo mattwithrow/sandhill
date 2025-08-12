@@ -236,235 +236,232 @@ const ExpertsPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Search and Filters Section */}
+        {/* Main Content - Sidebar Layout */}
         <section className="section">
-          <div className="content-card">
-            <div className="section-header-left">
-              <div className="eyebrow">Find Experts</div>
-              <h2 className="section-title">
-                Search and discover experts with the skills and values you need
-              </h2>
+          <div className="experts-layout">
+            {/* Left Sidebar - Search and Filters */}
+            <div className="experts-sidebar">
+              <div className="sidebar-card">
+                <h3 className="sidebar-title">Find Experts</h3>
+                
+                {/* Search Bar */}
+                <div className="search-section">
+                  <label className="search-label">Search</label>
+                  <div className="search-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Search by name, skills, experience..."
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      className="search-input"
+                    />
+                    <div className="search-icon">🔍</div>
+                  </div>
+                </div>
+
+                {/* Skills Filter */}
+                <div className="filter-section">
+                  <h4 className="filter-title">Skills</h4>
+                  <div className="filter-tags">
+                    {popularSkills.map(skill => (
+                      <button
+                        key={skill}
+                        onClick={() => handleSkillFilter(skill)}
+                        className={`filter-tag ${
+                          selectedSkills.includes(skill) ? 'filter-tag-active' : ''
+                        }`}
+                      >
+                        {skill}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Values Filter */}
+                <div className="filter-section">
+                  <h4 className="filter-title">Values & Mission</h4>
+                  <div className="filter-tags">
+                    {popularValues.map(value => (
+                      <button
+                        key={value}
+                        onClick={() => handleValueFilter(value)}
+                        className={`filter-tag ${
+                          selectedValues.includes(value) ? 'filter-tag-active' : ''
+                        }`}
+                      >
+                        {value}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Active Filters */}
+                {(selectedSkills.length > 0 || selectedValues.length > 0 || searchTerm) && (
+                  <div className="active-filters">
+                    <h4 className="filter-title">Active Filters</h4>
+                    <div className="active-filter-tags">
+                      {selectedSkills.map(skill => (
+                        <span key={skill} className="active-filter-tag skill-filter">
+                          {skill} ×
+                        </span>
+                      ))}
+                      {selectedValues.map(value => (
+                        <span key={value} className="active-filter-tag value-filter">
+                          {value} ×
+                        </span>
+                      ))}
+                      {searchTerm && (
+                        <span className="active-filter-tag search-filter">
+                          "{searchTerm}" ×
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={clearFilters}
+                      className="clear-filters-btn"
+                    >
+                      Clear all filters
+                    </button>
+                  </div>
+                )}
+
+                {/* Results Count */}
+                <div className="results-count">
+                  <p className="results-text">
+                    {isLoading ? 'Loading experts...' : 
+                     `${filteredExperts.length} expert${filteredExperts.length !== 1 ? 's' : ''} found`
+                    }
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Search Bar */}
-            <div className="mb-8">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search by name, skills, experience, values, or keywords..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  className="w-full px-6 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-lg"
-                />
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                  🔍
+            {/* Right Content - Expert Listings */}
+            <div className="experts-content">
+              {isLoading ? (
+                <div className="loading-state">
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                  <h3 className="loading-title">Loading Experts</h3>
+                  <p className="loading-text">Finding amazing professionals...</p>
                 </div>
-              </div>
-            </div>
-
-            {/* Filter Tags */}
-            <div className="mb-8">
-              <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-700">Skills:</span>
-                  {popularSkills.slice(0, 8).map(skill => (
-                    <button
-                      key={skill}
-                      onClick={() => handleSkillFilter(skill)}
-                      className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-                        selectedSkills.includes(skill)
-                          ? 'bg-orange-100 text-orange-800 border border-orange-300'
-                          : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
-                      }`}
-                    >
-                      {skill}
-                    </button>
-                  ))}
+              ) : error ? (
+                <div className="error-state">
+                  <div className="error-icon">⚠️</div>
+                  <h3 className="error-title">Error Loading Experts</h3>
+                  <p className="error-text">{error}</p>
+                  <button
+                    onClick={loadExperts}
+                    className="btn btn-primary"
+                  >
+                    Try Again
+                  </button>
                 </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-700">Values:</span>
-                  {popularValues.slice(0, 6).map(value => (
-                    <button
-                      key={value}
-                      onClick={() => handleValueFilter(value)}
-                      className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-                        selectedValues.includes(value)
-                          ? 'bg-teal-100 text-teal-800 border border-teal-300'
-                          : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
-                      }`}
-                    >
-                      {value}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Active Filters */}
-              {(selectedSkills.length > 0 || selectedValues.length > 0 || searchTerm) && (
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-semibold text-gray-700">Active filters:</span>
-                  {selectedSkills.map(skill => (
-                    <span key={skill} className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-sm">
-                      {skill} ×
-                    </span>
-                  ))}
-                  {selectedValues.map(value => (
-                    <span key={value} className="px-2 py-1 bg-teal-100 text-teal-800 rounded text-sm">
-                      {value} ×
-                    </span>
-                  ))}
-                  {searchTerm && (
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
-                      "{searchTerm}" ×
-                    </span>
-                  )}
+              ) : filteredExperts.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">🔍</div>
+                  <h3 className="empty-title">No Experts Found</h3>
+                  <p className="empty-text">
+                    Try adjusting your search terms or filters to find more experts.
+                  </p>
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-gray-500 hover:text-gray-700 underline"
+                    className="btn btn-outline"
                   >
-                    Clear all
+                    Clear Filters
                   </button>
+                </div>
+              ) : (
+                <div className="experts-list">
+                  {filteredExperts.map((expert) => (
+                    <div key={expert.id} className="expert-list-item">
+                      <div className="expert-list-avatar">
+                        {expert.username.charAt(0).toUpperCase()}
+                      </div>
+                      
+                      <div className="expert-list-content">
+                        <div className="expert-list-header">
+                          <h3 className="expert-list-name">{expert.username}</h3>
+                          <span className="expert-list-type">{getUserTypeDisplay(expert.userType)}</span>
+                        </div>
+                        
+                        <div className="expert-list-bio">
+                          {expert.bio ? (
+                            <p className="expert-bio-text">{expert.bio}</p>
+                          ) : (
+                            <p className="expert-bio-placeholder">No bio provided yet.</p>
+                          )}
+                        </div>
+
+                        <div className="expert-list-details">
+                          {expert.skills && (
+                            <div className="expert-list-skills">
+                              <span className="expert-list-label">Skills:</span>
+                              <div className="expert-list-tags">
+                                {expert.skills.split(',').slice(0, 3).map((skill, index) => (
+                                  <span key={index} className="expert-list-tag skill-tag">
+                                    {skill.trim()}
+                                  </span>
+                                ))}
+                                {expert.skills.split(',').length > 3 && (
+                                  <span className="expert-list-tag-more">
+                                    +{expert.skills.split(',').length - 3} more
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {expert.missionValuesAlignment && (
+                            <div className="expert-list-values">
+                              <span className="expert-list-label">Values:</span>
+                              <div className="expert-list-tags">
+                                {expert.missionValuesAlignment.split(',').slice(0, 2).map((value, index) => (
+                                  <span key={index} className="expert-list-tag value-tag">
+                                    {value.trim()}
+                                  </span>
+                                ))}
+                                {expert.missionValuesAlignment.split(',').length > 2 && (
+                                  <span className="expert-list-tag-more">
+                                    +{expert.missionValuesAlignment.split(',').length - 2} more
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="expert-list-meta">
+                          {expert.location && (
+                            <div className="expert-list-location">
+                              📍 {expert.location}
+                              {expert.timezone && !isRemoteLocation(expert.location) && (
+                                <span className="expert-list-timezone">
+                                  • {formatTimezone(expert.timezone)}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          {expert.timeCommitment && (
+                            <div className="expert-list-commitment">
+                              ⏰ {expert.timeCommitment}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="expert-list-actions">
+                        <button
+                          onClick={() => handleViewProfile(expert.username)}
+                          className="btn btn-primary"
+                        >
+                          View Profile
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-
-            {/* Results Count */}
-            <div className="mb-6">
-              <p className="text-gray-600">
-                {isLoading ? 'Loading experts...' : 
-                 `Found ${filteredExperts.length} expert${filteredExperts.length !== 1 ? 's' : ''}`
-                }
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Experts Grid */}
-        <section className="section">
-          <div className="content-card">
-            {isLoading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">Loading Experts</h3>
-                <p className="text-gray-600">Finding amazing professionals...</p>
-              </div>
-            ) : error ? (
-              <div className="text-center py-12">
-                <div className="text-red-500 text-6xl mb-4">⚠️</div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">Error Loading Experts</h3>
-                <p className="text-gray-600 mb-4">{error}</p>
-                <button
-                  onClick={loadExperts}
-                  className="btn btn-primary"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : filteredExperts.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-400 text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">No Experts Found</h3>
-                <p className="text-gray-600 mb-4">
-                  Try adjusting your search terms or filters to find more experts.
-                </p>
-                <button
-                  onClick={clearFilters}
-                  className="btn btn-outline"
-                >
-                  Clear Filters
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredExperts.map((expert) => (
-                  <div key={expert.id} className="expert-card">
-                    <div className="expert-card-header">
-                      <div className="expert-avatar">
-                        {expert.username.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="expert-info">
-                        <h3 className="expert-name">{expert.username}</h3>
-                        <span className="expert-type">{getUserTypeDisplay(expert.userType)}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="expert-bio">
-                      {expert.bio ? (
-                        <p className="text-gray-700 line-clamp-3">{expert.bio}</p>
-                      ) : (
-                        <p className="text-gray-500 italic">No bio provided yet.</p>
-                      )}
-                    </div>
-
-                    {expert.skills && (
-                      <div className="expert-skills">
-                        <h4 className="expert-section-title">Skills</h4>
-                        <div className="skills-tags">
-                          {expert.skills.split(',').slice(0, 3).map((skill, index) => (
-                            <span key={index} className="skill-tag">
-                              {skill.trim()}
-                            </span>
-                          ))}
-                          {expert.skills.split(',').length > 3 && (
-                            <span className="skill-tag-more">
-                              +{expert.skills.split(',').length - 3} more
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {expert.missionValuesAlignment && (
-                      <div className="expert-values">
-                        <h4 className="expert-section-title">Values</h4>
-                        <div className="values-tags">
-                          {expert.missionValuesAlignment.split(',').slice(0, 2).map((value, index) => (
-                            <span key={index} className="value-tag">
-                              {value.trim()}
-                            </span>
-                          ))}
-                          {expert.missionValuesAlignment.split(',').length > 2 && (
-                            <span className="value-tag-more">
-                              +{expert.missionValuesAlignment.split(',').length - 2} more
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="expert-meta">
-                      {expert.location && (
-                        <div className="expert-location">
-                          📍 {expert.location}
-                          {expert.timezone && !isRemoteLocation(expert.location) && (
-                            <span className="text-sm text-gray-500 ml-2">
-                              • {formatTimezone(expert.timezone)}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      {expert.timeCommitment && (
-                        <div className="expert-commitment">
-                          ⏰ {expert.timeCommitment}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="expert-actions">
-                      <button
-                        onClick={() => handleViewProfile(expert.username)}
-                        className="btn btn-primary btn-full"
-                      >
-                        View Full Profile
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </section>
 
