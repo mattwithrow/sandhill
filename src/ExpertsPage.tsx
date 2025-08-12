@@ -45,6 +45,10 @@ const ExpertsPage: React.FC = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [expandedSkills, setExpandedSkills] = useState(false);
   const [expandedValues, setExpandedValues] = useState(false);
+  const [locationFilter, setLocationFilter] = useState('');
+  const [distanceRadius, setDistanceRadius] = useState(50);
+  const [usOnly, setUsOnly] = useState(false);
+  const [includeRemote, setIncludeRemote] = useState(true);
 
   // Load experts on component mount
   useEffect(() => {
@@ -54,7 +58,7 @@ const ExpertsPage: React.FC = () => {
   // Filter experts when search term or filters change
   useEffect(() => {
     filterExperts();
-  }, [searchTerm, selectedSkills, selectedValues, experts]);
+  }, [searchTerm, selectedSkills, selectedValues, locationFilter, distanceRadius, usOnly, includeRemote, experts]);
 
   const loadExperts = async () => {
     try {
@@ -148,6 +152,53 @@ const ExpertsPage: React.FC = () => {
       );
     }
 
+    // Filter by location
+    if (locationFilter.trim()) {
+      const locationLower = locationFilter.toLowerCase();
+      filtered = filtered.filter(expert => {
+        if (!expert.location) return false;
+        
+        const expertLocation = expert.location.toLowerCase();
+        
+        // Always include remote workers if option is checked
+        if (includeRemote && isRemoteLocation(expert.location)) {
+          return true;
+        }
+        
+        // Check if location matches the search term
+        return expertLocation.includes(locationLower);
+      });
+    }
+
+    // Filter by US only
+    if (usOnly) {
+      filtered = filtered.filter(expert => {
+        if (!expert.location) return false;
+        
+        // Include remote workers if option is checked
+        if (includeRemote && isRemoteLocation(expert.location)) {
+          return true;
+        }
+        
+        // Simple US location check (can be enhanced with proper geocoding)
+        const usLocations = [
+          'united states', 'usa', 'us', 'california', 'new york', 'texas', 'florida',
+          'illinois', 'pennsylvania', 'ohio', 'georgia', 'north carolina', 'michigan',
+          'new jersey', 'virginia', 'washington', 'arizona', 'massachusetts', 'tennessee',
+          'indiana', 'missouri', 'maryland', 'colorado', 'wisconsin', 'minnesota',
+          'south carolina', 'alabama', 'louisiana', 'kentucky', 'oregon', 'oklahoma',
+          'connecticut', 'utah', 'iowa', 'nevada', 'arkansas', 'mississippi', 'kansas',
+          'new mexico', 'nebraska', 'idaho', 'west virginia', 'hawaii', 'new hampshire',
+          'maine', 'montana', 'rhode island', 'delaware', 'south dakota', 'north dakota',
+          'alaska', 'vermont', 'wyoming'
+        ];
+        
+        return usLocations.some(usLocation => 
+          expert.location.toLowerCase().includes(usLocation)
+        );
+      });
+    }
+
     setFilteredExperts(filtered);
   };
 
@@ -175,6 +226,10 @@ const ExpertsPage: React.FC = () => {
     setSearchTerm('');
     setSelectedSkills([]);
     setSelectedValues([]);
+    setLocationFilter('');
+    setDistanceRadius(50);
+    setUsOnly(false);
+    setIncludeRemote(true);
   };
 
   const handleViewProfile = (username: string) => {
@@ -271,6 +326,61 @@ const ExpertsPage: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Location Filter */}
+                <div className="filter-section">
+                  <h4 className="filter-title">Location</h4>
+                  <div className="location-input-wrapper">
+                    <input
+                      type="text"
+                      placeholder="Enter zip code or city..."
+                      value={locationFilter}
+                      onChange={(e) => setLocationFilter(e.target.value)}
+                      className="location-input"
+                    />
+                    <div className="location-icon">📍</div>
+                  </div>
+                  
+                  <div className="distance-filter">
+                    <label className="distance-label">Within {distanceRadius} miles</label>
+                    <input
+                      type="range"
+                      min="10"
+                      max="500"
+                      step="10"
+                      value={distanceRadius}
+                      onChange={(e) => setDistanceRadius(parseInt(e.target.value))}
+                      className="distance-slider"
+                    />
+                    <div className="distance-values">
+                      <span>10</span>
+                      <span>250</span>
+                      <span>500</span>
+                    </div>
+                  </div>
+                  
+                  <div className="location-options">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={usOnly}
+                        onChange={(e) => setUsOnly(e.target.checked)}
+                        className="checkbox-input"
+                      />
+                      <span className="checkbox-text">US only</span>
+                    </label>
+                    
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={includeRemote}
+                        onChange={(e) => setIncludeRemote(e.target.checked)}
+                        className="checkbox-input"
+                      />
+                      <span className="checkbox-text">Include remote workers</span>
+                    </label>
+                  </div>
+                </div>
+
                 {/* Skills Filter */}
                 <div className="filter-section">
                   <h4 className="filter-title">Skills</h4>
@@ -324,7 +434,7 @@ const ExpertsPage: React.FC = () => {
                 </div>
 
                 {/* Active Filters */}
-                {(selectedSkills.length > 0 || selectedValues.length > 0 || searchTerm) && (
+                {(selectedSkills.length > 0 || selectedValues.length > 0 || searchTerm || locationFilter || usOnly) && (
                   <div className="active-filters">
                     <h4 className="filter-title">Active Filters</h4>
                     <div className="active-filter-tags">
@@ -341,6 +451,21 @@ const ExpertsPage: React.FC = () => {
                       {searchTerm && (
                         <span className="active-filter-tag search-filter">
                           "{searchTerm}" ×
+                        </span>
+                      )}
+                      {locationFilter && (
+                        <span className="active-filter-tag location-filter">
+                          📍 {locationFilter} ({distanceRadius}mi) ×
+                        </span>
+                      )}
+                      {usOnly && (
+                        <span className="active-filter-tag location-filter">
+                          🇺🇸 US only ×
+                        </span>
+                      )}
+                      {!includeRemote && (
+                        <span className="active-filter-tag location-filter">
+                          🚫 No remote ×
                         </span>
                       )}
                     </div>
@@ -399,95 +524,103 @@ const ExpertsPage: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="experts-list">
-                  {filteredExperts.map((expert) => (
-                    <div key={expert.id} className="expert-list-item">
-                      <div className="expert-list-avatar">
-                        {expert.username.charAt(0).toUpperCase()}
-                      </div>
-                      
-                      <div className="expert-list-content">
-                        <div className="expert-list-header">
-                          <h3 className="expert-list-name">{expert.username}</h3>
-                          <span className="expert-list-type">{getUserTypeDisplay(expert.userType)}</span>
-                        </div>
-                        
-                        <div className="expert-list-bio">
-                          {expert.bio ? (
-                            <p className="expert-bio-text">{expert.bio}</p>
-                          ) : (
-                            <p className="expert-bio-placeholder">No bio provided yet.</p>
-                          )}
-                        </div>
+                                 <div className="experts-list">
+                   {filteredExperts.map((expert) => (
+                     <div key={expert.id} className="expert-list-item">
+                       <div className="expert-list-content">
+                         <div className="expert-list-header">
+                           <h3 className="expert-list-name">{expert.username}</h3>
+                           <span className="expert-list-type">{getUserTypeDisplay(expert.userType)}</span>
+                         </div>
+                         
+                         <div className="expert-list-bio">
+                           {expert.bio ? (
+                             <p className="expert-bio-text line-clamp-1">{expert.bio}</p>
+                           ) : (
+                             <p className="expert-bio-placeholder">No bio provided yet.</p>
+                           )}
+                         </div>
 
-                        <div className="expert-list-details">
-                          {expert.skills && (
-                            <div className="expert-list-skills">
-                              <span className="expert-list-label">Skills:</span>
-                              <div className="expert-list-tags">
-                                {expert.skills.split(',').slice(0, 3).map((skill, index) => (
-                                  <span key={index} className="expert-list-tag skill-tag">
-                                    {skill.trim()}
-                                  </span>
-                                ))}
-                                {expert.skills.split(',').length > 3 && (
-                                  <span className="expert-list-tag-more">
-                                    +{expert.skills.split(',').length - 3} more
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          )}
+                         <div className="expert-list-experience">
+                           {expert.experience ? (
+                             <p className="expert-experience-text line-clamp-1">{expert.experience}</p>
+                           ) : (
+                             <p className="expert-experience-placeholder">No experience details provided yet.</p>
+                           )}
+                         </div>
 
-                          {expert.missionValuesAlignment && (
-                            <div className="expert-list-values">
-                              <span className="expert-list-label">Values:</span>
-                              <div className="expert-list-tags">
-                                {expert.missionValuesAlignment.split(',').slice(0, 2).map((value, index) => (
-                                  <span key={index} className="expert-list-tag value-tag">
-                                    {value.trim()}
-                                  </span>
-                                ))}
-                                {expert.missionValuesAlignment.split(',').length > 2 && (
-                                  <span className="expert-list-tag-more">
-                                    +{expert.missionValuesAlignment.split(',').length - 2} more
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                         <div className="expert-list-details">
+                           {expert.skills && (
+                             <div className="expert-list-skills">
+                               <span className="expert-list-label">Skills:</span>
+                               <div className="expert-list-tags">
+                                 {expert.skills.split(',').slice(0, 3).map((skill, index) => (
+                                   <span key={index} className="expert-list-tag skill-tag">
+                                     {skill.trim()}
+                                   </span>
+                                 ))}
+                                 {expert.skills.split(',').length > 3 && (
+                                   <span className="expert-list-tag-more">
+                                     +{expert.skills.split(',').length - 3} more
+                                   </span>
+                                 )}
+                               </div>
+                             </div>
+                           )}
 
-                        <div className="expert-list-meta">
-                          {expert.location && (
-                            <div className="expert-list-location">
-                              📍 {expert.location}
-                              {expert.timezone && !isRemoteLocation(expert.location) && (
-                                <span className="expert-list-timezone">
-                                  • {formatTimezone(expert.timezone)}
-                                </span>
-                              )}
-                            </div>
-                          )}
-                          {expert.timeCommitment && (
-                            <div className="expert-list-commitment">
-                              ⏰ {expert.timeCommitment}
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                           {expert.preferredEngagement && (
+                             <div className="expert-list-engagement">
+                               <span className="expert-list-label">Engagement:</span>
+                               <div className="expert-list-tags">
+                                 {expert.preferredEngagement.split(',').slice(0, 2).map((engagement, index) => (
+                                   <span key={index} className="expert-list-tag engagement-tag">
+                                     {engagement.trim()}
+                                   </span>
+                                 ))}
+                                 {expert.preferredEngagement.split(',').length > 2 && (
+                                   <span className="expert-list-tag-more">
+                                     +{expert.preferredEngagement.split(',').length - 2} more
+                                   </span>
+                                 )}
+                               </div>
+                             </div>
+                           )}
+                         </div>
 
-                      <div className="expert-list-actions">
-                        <button
-                          onClick={() => handleViewProfile(expert.username)}
-                          className="btn btn-primary"
-                        >
-                          View Profile
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                         <div className="expert-list-meta">
+                           <div className="expert-list-meta-row">
+                             {expert.location && (
+                               <div className="expert-list-location">
+                                 📍 {expert.location}
+                                 {expert.timezone && !isRemoteLocation(expert.location) && (
+                                   <span className="expert-list-timezone">
+                                     • {formatTimezone(expert.timezone)}
+                                   </span>
+                                 )}
+                               </div>
+                             )}
+                             {expert.timeCommitment && (
+                               <div className="expert-list-commitment">
+                                 <span className="commitment-pill">
+                                   ⏰ {expert.timeCommitment}
+                                 </span>
+                               </div>
+                             )}
+                           </div>
+                         </div>
+                       </div>
+
+                       <div className="expert-list-actions">
+                         <button
+                           onClick={() => handleViewProfile(expert.username)}
+                           className="btn btn-primary"
+                         >
+                           View Profile
+                         </button>
+                       </div>
+                     </div>
+                   ))}
+                 </div>
               )}
             </div>
           </div>
