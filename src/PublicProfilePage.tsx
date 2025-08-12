@@ -10,6 +10,7 @@ import { formatTimezone, getTimeInTimezone, isRemoteLocation } from './utils/loc
 import { getMissionValueNames } from './data/missionValues';
 import { getVentureInterestNames } from './data/ventureInterests';
 import { getEngagementTypeNames } from './data/engagementTypes';
+import { getCachedProfile, setCachedProfile, getCachedProfileFromStorage } from './utils/profileCache';
 
 const PublicProfilePage: React.FC = (): React.ReactNode => {
   const { username } = useParams<{ username: string }>();
@@ -56,6 +57,31 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
         setIsLoading(true);
         setError(null);
         
+        // Check cache first for instant loading
+        const cacheKey = `public_${username}`;
+        const cachedProfile = getCachedProfile(cacheKey) || getCachedProfileFromStorage(cacheKey);
+        
+        if (cachedProfile) {
+          console.log('⚡ Loading profile from cache');
+          setProfile(cachedProfile);
+          setIsLoading(false);
+          
+          // Refresh cache in background
+          setTimeout(() => loadProfileFromAPI(cacheKey), 100);
+          return;
+        }
+        
+        await loadProfileFromAPI(cacheKey);
+        
+      } catch (err) {
+        console.error('❌ Error loading profile:', err);
+        setError(`Error loading profile: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        setIsLoading(false);
+      }
+    };
+
+    const loadProfileFromAPI = async (cacheKey: string) => {
+      try {
         const client = generateClient();
         console.log('✅ AWS API client generated successfully');
         
@@ -105,6 +131,10 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
           };
           
           console.log('📄 Converted profile data:', profileData);
+          
+          // Cache the profile for future requests
+          setCachedProfile(cacheKey, profileData);
+          
           setProfile(profileData);
         } else {
           console.log('📝 No profile found in AWS database for username:', username);
@@ -112,8 +142,8 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
         }
         
       } catch (err) {
-        console.error('❌ Error loading profile:', err);
-        setError(`Error loading profile: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        console.error('❌ Error loading profile from API:', err);
+        throw err;
       } finally {
         setIsLoading(false);
       }
@@ -340,7 +370,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
                       <p className="text-gray-700 text-lg">{profile.location}</p>
-                      {profile.timezone && (
+                      {profile.timezone ? (
                         <p className="text-sm text-gray-500 mt-1">
                           {formatTimezone(profile.timezone)}
                           {!isRemoteLocation(profile.location) && (
@@ -348,6 +378,10 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                               • {getTimeInTimezone(profile.timezone)}
                             </span>
                           )}
+                        </p>
+                      ) : (
+                        <p className="text-sm text-gray-500 mt-1 italic">
+                          Timezone information will be available after profile update
                         </p>
                       )}
                     </div>
