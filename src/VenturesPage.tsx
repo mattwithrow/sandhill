@@ -555,18 +555,12 @@ const VenturesPage: React.FC = () => {
                           </div>
                           
                           <div className="expert-list-bio">
-                            {venture.bio ? (
+                            {venture.expertSupportNeeded ? (
+                              <p className="expert-bio-text line-clamp-1">{venture.expertSupportNeeded}</p>
+                            ) : venture.bio ? (
                               <p className="expert-bio-text line-clamp-1">{venture.bio}</p>
                             ) : (
                               <p className="expert-bio-placeholder">No description provided yet.</p>
-                            )}
-                          </div>
-
-                          <div className="expert-list-experience">
-                            {venture.expertSupportNeeded ? (
-                              <p className="expert-experience-text line-clamp-1">Looking for: {venture.expertSupportNeeded}</p>
-                            ) : (
-                              <p className="expert-experience-placeholder">No specific needs listed yet.</p>
                             )}
                           </div>
 

@@ -27,6 +27,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     values: string;
     timeCommitment: string;
     expertSupportNeeded: string;
+    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -115,6 +116,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             values: dbProfile.values || '',
             timeCommitment: '', // Will be loaded from localStorage
             expertSupportNeeded: '', // TODO: Add back after schema deployment
+            ventureInterestsDescription: '', // TODO: Add back after schema deployment
             linkedinUrl: dbProfile.linkedinUrl || '',
             githubUrl: dbProfile.githubUrl || '',
             portfolioUrl: dbProfile.portfolioUrl || '',
@@ -361,11 +363,23 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Expert Support Needed (for Ventures and Both) */}
                 {(profile.userType === 'ventures' || profile.userType === 'both') && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Expert Support Needed</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">What I'm Building</h3>
                     {profile.expertSupportNeeded ? (
                       <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
                     ) : (
-                      <p className="text-gray-500 italic">No expert support requirements specified yet.</p>
+                      <p className="text-gray-500 italic">No details about what they're building yet.</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Venture Interests Description (for Experts and Both) */}
+                {(profile.userType === 'expert' || profile.userType === 'both') && (
+                  <div className="feature-card">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Ventures I Want to Get Involved With</h3>
+                    {profile.ventureInterestsDescription ? (
+                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.ventureInterestsDescription}</p>
+                    ) : (
+                      <p className="text-gray-500 italic">No venture interests specified yet.</p>
                     )}
                   </div>
                 )}

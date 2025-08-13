@@ -52,6 +52,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     preferredEngagement: string;
     timeCommitment: string;
     expertSupportNeeded: string;
+    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -72,6 +73,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     preferredEngagement: '',
     timeCommitment: '',
     expertSupportNeeded: '',
+    ventureInterestsDescription: '',
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
@@ -96,6 +98,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     preferredEngagement: string;
     timeCommitment: string;
     expertSupportNeeded: string;
+    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -200,6 +203,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 preferredEngagement: '', // TODO: Add back after schema deployment
                 timeCommitment: '', // TODO: Add back after schema deployment
                 expertSupportNeeded: '', // TODO: Add back after schema deployment
+                ventureInterestsDescription: '', // TODO: Add back after schema deployment
                 linkedinUrl: dbProfile.linkedinUrl || '',
                 githubUrl: dbProfile.githubUrl || '',
                 portfolioUrl: dbProfile.portfolioUrl || '',
@@ -770,8 +774,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                      {/* Expert Support Needed (for Ventures and Both) */}
                      {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
                        <div className="feature-card">
-                         <h3 className="text-lg font-semibold text-gray-800 mb-3">Expert Support Needed</h3>
+                         <h3 className="text-lg font-semibold text-gray-800 mb-3">What I'm Building</h3>
                          <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
+                       </div>
+                     )}
+
+                     {/* Venture Interests Description (for Experts and Both) */}
+                     {profile.ventureInterestsDescription && (profile.userType === 'expert' || profile.userType === 'both') && (
+                       <div className="feature-card">
+                         <h3 className="text-lg font-semibold text-gray-800 mb-3">Ventures I Want to Get Involved With</h3>
+                         <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.ventureInterestsDescription}</p>
                        </div>
                      )}
 
@@ -1061,12 +1073,28 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                    {(formData.userType === 'ventures' || formData.userType === 'both') && (
                      <div>
                        <label className="block text-lg font-semibold text-gray-800 mb-3">
-                         Expert Support Needed
+                         Tell us as much as you want about what you're trying to do
                        </label>
                        <textarea
                          value={formData.expertSupportNeeded}
                          onChange={(e) => handleInputChange('expertSupportNeeded', e.target.value)}
                          placeholder="What type of expert support are you looking for? (e.g., technical development, design, marketing, business strategy, etc.)"
+                         rows={4}
+                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                       />
+                     </div>
+                   )}
+
+                   {/* Venture Interests Description (for Experts and Both) */}
+                   {(formData.userType === 'expert' || formData.userType === 'both') && (
+                     <div>
+                       <label className="block text-lg font-semibold text-gray-800 mb-3">
+                         What type of ventures do you want to get involved with?
+                       </label>
+                       <textarea
+                         value={formData.ventureInterestsDescription}
+                         onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
+                         placeholder="Describe the types of ventures, projects, or ideas you're interested in working on..."
                          rows={4}
                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                        />

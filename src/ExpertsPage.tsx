@@ -26,6 +26,7 @@ interface ExpertProfile {
   ventureInterests: string;
   preferredEngagement: string;
   timeCommitment: string;
+  ventureInterestsDescription: string;
   linkedinUrl: string;
   githubUrl: string;
   portfolioUrl: string;
@@ -109,6 +110,7 @@ const ExpertsPage: React.FC = () => {
         ventureInterests: profile.ventureInterests || '',
         preferredEngagement: profile.preferredEngagement || '',
         timeCommitment: profile.timeCommitment || '',
+        ventureInterestsDescription: profile.ventureInterestsDescription || '',
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
@@ -141,6 +143,7 @@ const ExpertsPage: React.FC = () => {
         expert.values.toLowerCase().includes(searchLower) ||
         expert.missionValuesAlignment.toLowerCase().includes(searchLower) ||
         expert.ventureInterests.toLowerCase().includes(searchLower) ||
+        expert.ventureInterestsDescription.toLowerCase().includes(searchLower) ||
         expert.preferredEngagement.toLowerCase().includes(searchLower)
       );
     }
@@ -650,6 +653,14 @@ const ExpertsPage: React.FC = () => {
                               <p className="expert-experience-placeholder">No experience details provided yet.</p>
                             )}
                           </div>
+
+                          {expert.ventureInterestsDescription && (
+                            <div className="expert-list-venture-interests">
+                              <p className="expert-venture-interests-text line-clamp-1">
+                                💡 {expert.ventureInterestsDescription}
+                              </p>
+                            </div>
+                          )}
 
                           <div className="expert-list-details">
                             {expert.skills && (
