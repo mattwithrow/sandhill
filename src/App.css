@@ -2117,6 +2117,8 @@ p {
     transform: translateY(-100%);
     transition: transform 0.3s ease;
     order: 1;
+    padding: var(--space-lg);
+    box-sizing: border-box;
   }
   
   .experts-sidebar.mobile-expanded {
@@ -2125,6 +2127,22 @@ p {
   
   .mobile-filter-close {
     display: flex;
+  }
+  
+  .sidebar-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+  
+  .sidebar-header {
+    position: sticky;
+    top: 0;
+    background: var(--bg-white);
+    z-index: 10;
+    padding: var(--space-md) 0;
+    margin-bottom: var(--space-lg);
   }
   
   .experts-content {
@@ -2298,14 +2316,16 @@ p {
 
 .steps-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--space-xl);
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
   margin-top: var(--space-lg);
 }
 
 .step-item {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: var(--space-md);
   padding: var(--space-lg);
   background: var(--bg-white);
@@ -2335,10 +2355,12 @@ p {
   font-weight: 700;
   flex-shrink: 0;
   box-shadow: var(--shadow-sm);
+  order: -1;
 }
 
 .step-content {
   flex: 1;
+  width: 100%;
 }
 
 .step-title {
@@ -2360,6 +2382,13 @@ p {
    RESPONSIVE STEPS
    =============================================== */
 
+@media (max-width: 1024px) {
+  .steps-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
 @media (max-width: 768px) {
   .steps-container {
     grid-template-columns: 1fr;
@@ -2367,6 +2396,9 @@ p {
   }
   
   .step-item {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
     padding: var(--space-md);
   }
   
@@ -2374,6 +2406,7 @@ p {
     width: 40px;
     height: 40px;
     font-size: 1.1rem;
+    order: 0;
   }
   
   .step-title {
