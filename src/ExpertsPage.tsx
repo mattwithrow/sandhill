@@ -50,6 +50,9 @@ const ExpertsPage: React.FC = () => {
   const [usOnly, setUsOnly] = useState(false);
   const [includeRemote, setIncludeRemote] = useState(true);
   
+  // Mobile filter state
+  const [isMobileFilterExpanded, setIsMobileFilterExpanded] = useState(false);
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
@@ -379,11 +382,35 @@ const ExpertsPage: React.FC = () => {
 
         {/* Main Content - Sidebar Layout */}
         <section className="section">
+          {/* Mobile Filter Toggle */}
+          <div className="mobile-filter-toggle">
+            <button
+              onClick={() => setIsMobileFilterExpanded(!isMobileFilterExpanded)}
+              className="mobile-filter-btn"
+            >
+              <span className="mobile-filter-icon">🔍</span>
+              <span className="mobile-filter-text">
+                {isMobileFilterExpanded ? 'Hide Filters' : 'Show Filters'}
+              </span>
+              <span className={`mobile-filter-arrow ${isMobileFilterExpanded ? 'expanded' : ''}`}>
+                ▼
+              </span>
+            </button>
+          </div>
+
           <div className="experts-layout">
             {/* Left Sidebar - Search and Filters */}
-            <div className="experts-sidebar">
+            <div className={`experts-sidebar ${isMobileFilterExpanded ? 'mobile-expanded' : ''}`}>
               <div className="sidebar-card">
-                <h3 className="sidebar-title">Find Experts</h3>
+                <div className="sidebar-header">
+                  <h3 className="sidebar-title">Find Experts</h3>
+                  <button
+                    onClick={() => setIsMobileFilterExpanded(false)}
+                    className="mobile-filter-close"
+                  >
+                    ✕
+                  </button>
+                </div>
                 
                 {/* Search Bar */}
                 <div className="search-section">
@@ -655,6 +682,24 @@ const ExpertsPage: React.FC = () => {
                                   {expert.preferredEngagement.split(',').length > 2 && (
                                     <span className="expert-list-tag-more">
                                       +{expert.preferredEngagement.split(',').length - 2} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {expert.values && (
+                              <div className="expert-list-values">
+                                <span className="expert-list-label">Values:</span>
+                                <div className="expert-list-tags">
+                                  {expert.values.split(',').slice(0, 2).map((value, index) => (
+                                    <span key={index} className="expert-list-tag value-tag">
+                                      {value.trim()}
+                                    </span>
+                                  ))}
+                                  {expert.values.split(',').length > 2 && (
+                                    <span className="expert-list-tag-more">
+                                      +{expert.values.split(',').length - 2} more
                                     </span>
                                   )}
                                 </div>
