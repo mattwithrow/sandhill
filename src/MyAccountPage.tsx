@@ -367,12 +367,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           // preferredEngagement: formData.preferredEngagement, // TODO: Add back after schema deployment
           // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
           // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
-          linkedinUrl: formData.linkedinUrl,
-          githubUrl: formData.githubUrl,
-          portfolioUrl: formData.portfolioUrl,
-          websiteUrl: formData.websiteUrl,
-          twitterUrl: formData.twitterUrl,
-          instagramUrl: formData.instagramUrl,
+          linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
+          githubUrl: formatSocialUrl('github', formData.githubUrl),
+          portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),
+          websiteUrl: formatSocialUrl('website', formData.websiteUrl),
+          twitterUrl: formatSocialUrl('twitter', formData.twitterUrl),
+          instagramUrl: formatSocialUrl('instagram', formData.instagramUrl),
           // Set empty strings for optional fields
           passions: '',
           contributionGoals: '',
@@ -406,12 +406,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           // preferredEngagement: formData.preferredEngagement, // TODO: Add back after schema deployment
           // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
           // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
-          linkedinUrl: formData.linkedinUrl,
-          githubUrl: formData.githubUrl,
-          portfolioUrl: formData.portfolioUrl,
-          websiteUrl: formData.websiteUrl,
-          twitterUrl: formData.twitterUrl,
-          instagramUrl: formData.instagramUrl,
+          linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
+          githubUrl: formatSocialUrl('github', formData.githubUrl),
+          portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),
+          websiteUrl: formatSocialUrl('website', formData.websiteUrl),
+          twitterUrl: formatSocialUrl('twitter', formData.twitterUrl),
+          instagramUrl: formatSocialUrl('instagram', formData.instagramUrl),
           // Set empty strings for optional fields
           passions: '',
           contributionGoals: '',
@@ -480,6 +480,63 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       
       return updatedData;
     });
+  };
+
+  const formatSocialUrl = (platform: string, value: string) => {
+    if (!value) return '';
+    
+    // If it already has a protocol, return as is
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return value;
+    }
+    
+    // Handle usernames with @ symbol
+    if (value.startsWith('@')) {
+      const username = value.substring(1);
+      switch (platform) {
+        case 'linkedin':
+          return `https://linkedin.com/in/${username}`;
+        case 'github':
+          return `https://github.com/${username}`;
+        case 'twitter':
+          return `https://twitter.com/${username}`;
+        case 'instagram':
+          return `https://instagram.com/${username}`;
+        default:
+          return value;
+      }
+    }
+    
+    // Handle URLs without protocol
+    if (value.includes('.com') || value.includes('.io') || value.includes('.org') || value.includes('.net')) {
+      return `https://${value}`;
+    }
+    
+    // Handle platform-specific URLs
+    switch (platform) {
+      case 'linkedin':
+        if (value.includes('linkedin.com')) {
+          return `https://${value}`;
+        }
+        return `https://linkedin.com/in/${value}`;
+      case 'github':
+        if (value.includes('github.com')) {
+          return `https://github.com/${value}`;
+        }
+        return `https://github.com/${value}`;
+      case 'twitter':
+        if (value.includes('twitter.com')) {
+          return `https://${value}`;
+        }
+        return `https://twitter.com/${value}`;
+      case 'instagram':
+        if (value.includes('instagram.com')) {
+          return `https://${value}`;
+        }
+        return `https://instagram.com/${value}`;
+      default:
+        return value;
+    }
   };
 
   // Get username validation state
@@ -882,8 +939,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
-                  {/* Basic Information */}
-                  <div className="grid-2">
+                  {/* Basic Information - 2 Columns */}
+                  <div className="grid-2 gap-6">
                     <div>
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
                         Username *
@@ -892,7 +949,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         type="text"
                         value={formData.username}
                         onChange={(e) => {
-                          // Only allow valid characters
                           const value = e.target.value;
                           const validValue = value.replace(/[^a-zA-Z0-9_-]/g, '');
                           handleInputChange('username', validValue);
@@ -935,6 +991,52 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     </div>
                   </div>
 
+                  {/* Location and Time Commitment - 2 Columns */}
+                  <div className="grid-2 gap-6">
+                    <div>
+                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.location}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
+                        placeholder="San Francisco, CA or Remote"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                      />
+                      {formData.location && (
+                        <div className="mt-2 text-sm text-gray-600">
+                          <span className="font-medium">Detected timezone:</span> {formatTimezone(formData.timezone)} 
+                          {!isRemoteLocation(formData.location) && (
+                            <span className="ml-2">
+                              (Current time: {getTimeInTimezone(formData.timezone)})
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {(formData.userType === 'expert' || formData.userType === 'both') && (
+                      <div>
+                        <label className="block text-lg font-semibold text-gray-800 mb-3">
+                          Time Commitment
+                        </label>
+                        <select
+                          value={formData.timeCommitment}
+                          onChange={(e) => handleInputChange('timeCommitment', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        >
+                          <option value="">Select time commitment</option>
+                          <option value="1-5 hours per week">1-5 hours per week</option>
+                          <option value="5-10 hours per week">5-10 hours per week</option>
+                          <option value="10-20 hours per week">10-20 hours per week</option>
+                          <option value="20+ hours per week">20+ hours per week</option>
+                          <option value="Flexible">Flexible</option>
+                        </select>
+                      </div>
+                    )}
+                  </div>
+
                   {/* Bio */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
@@ -948,8 +1050,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                     />
                   </div>
-
-
 
                   {/* Experience */}
                   <div>
@@ -965,17 +1065,19 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                  {/* Skills */}
+                  {/* Skills - Multi-column Layout */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
                       Skills
                     </label>
-                    <SkillsMultiSelect
-                      selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
-                      onChange={(skills) => handleInputChange('skills', skills.join(', '))}
-                      placeholder="Select your skills..."
-                      className="w-full"
-                    />
+                    <div className="skills-multi-select-container">
+                      <SkillsMultiSelect
+                        selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
+                        onChange={(skills) => handleInputChange('skills', skills.join(', '))}
+                        placeholder="Select your skills..."
+                        className="w-full"
+                      />
+                    </div>
                   </div>
 
                   {/* Mission & Values Alignment */}
@@ -1023,97 +1125,50 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                                     {/* Location, Time Commitment, and Expert Support */}
-                   <div className="grid-2">
-                                         <div>
+                  {/* User Type Specific Fields */}
+                  {(formData.userType === 'ventures' || formData.userType === 'both') && (
+                    <div>
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
-                        Location
+                        Tell us as much as you want about what you're trying to do
                       </label>
-                      <input
-                        type="text"
-                        value={formData.location}
-                        onChange={(e) => handleInputChange('location', e.target.value)}
-                        placeholder="San Francisco, CA or Remote"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                      <textarea
+                        value={formData.expertSupportNeeded}
+                        onChange={(e) => handleInputChange('expertSupportNeeded', e.target.value)}
+                        placeholder="What type of expert support are you looking for? (e.g., technical development, design, marketing, business strategy, etc.)"
+                        rows={4}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
-                      {formData.location && (
-                        <div className="mt-2 text-sm text-gray-600">
-                          <span className="font-medium">Detected timezone:</span> {formatTimezone(formData.timezone)} 
-                          {!isRemoteLocation(formData.location) && (
-                            <span className="ml-2">
-                              (Current time: {getTimeInTimezone(formData.timezone)})
-                            </span>
-                          )}
-                        </div>
-                      )}
                     </div>
+                  )}
 
-                     {(formData.userType === 'expert' || formData.userType === 'both') && (
-                       <div>
-                         <label className="block text-lg font-semibold text-gray-800 mb-3">
-                           Time Commitment
-                         </label>
-                         <select
-                           value={formData.timeCommitment}
-                           onChange={(e) => handleInputChange('timeCommitment', e.target.value)}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                         >
-                           <option value="">Select time commitment</option>
-                           <option value="1-5 hours per week">1-5 hours per week</option>
-                           <option value="5-10 hours per week">5-10 hours per week</option>
-                           <option value="10-20 hours per week">10-20 hours per week</option>
-                           <option value="20+ hours per week">20+ hours per week</option>
-                           <option value="Flexible">Flexible</option>
-                         </select>
-                       </div>
-                     )}
-                   </div>
+                  {(formData.userType === 'expert' || formData.userType === 'both') && (
+                    <div>
+                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        What type of ventures do you want to get involved with?
+                      </label>
+                      <textarea
+                        value={formData.ventureInterestsDescription}
+                        onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
+                        placeholder="Describe the types of ventures, projects, or ideas you're interested in working on..."
+                        rows={4}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                      />
+                    </div>
+                  )}
 
-                   {/* Expert Support Needed (for Ventures and Both) */}
-                   {(formData.userType === 'ventures' || formData.userType === 'both') && (
-                     <div>
-                       <label className="block text-lg font-semibold text-gray-800 mb-3">
-                         Tell us as much as you want about what you're trying to do
-                       </label>
-                       <textarea
-                         value={formData.expertSupportNeeded}
-                         onChange={(e) => handleInputChange('expertSupportNeeded', e.target.value)}
-                         placeholder="What type of expert support are you looking for? (e.g., technical development, design, marketing, business strategy, etc.)"
-                         rows={4}
-                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                       />
-                     </div>
-                   )}
-
-                   {/* Venture Interests Description (for Experts and Both) */}
-                   {(formData.userType === 'expert' || formData.userType === 'both') && (
-                     <div>
-                       <label className="block text-lg font-semibold text-gray-800 mb-3">
-                         What type of ventures do you want to get involved with?
-                       </label>
-                       <textarea
-                         value={formData.ventureInterestsDescription}
-                         onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
-                         placeholder="Describe the types of ventures, projects, or ideas you're interested in working on..."
-                         rows={4}
-                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                       />
-                     </div>
-                   )}
-
-                  {/* Social Links */}
+                  {/* Links - Compact Layout */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Links</h3>
-                    <div className="grid-2 gap-6">
+                    <div className="grid-3 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           LinkedIn
                         </label>
                         <input
-                          type="url"
+                          type="text"
                           value={formData.linkedinUrl}
                           onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
-                          placeholder="https://linkedin.com/in/yourprofile"
+                          placeholder="linkedin.com/in/yourprofile or @yourprofile"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
@@ -1122,34 +1177,25 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                           GitHub
                         </label>
                         <input
-                          type="url"
+                          type="text"
                           value={formData.githubUrl}
                           onChange={(e) => handleInputChange('githubUrl', e.target.value)}
-                          placeholder="https://github.com/yourusername"
+                          placeholder="github.com/yourusername or @yourusername"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Portfolio
+                          Website/Portfolio
                         </label>
                         <input
-                          type="url"
-                          value={formData.portfolioUrl}
-                          onChange={(e) => handleInputChange('portfolioUrl', e.target.value)}
-                          placeholder="https://yourportfolio.com"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Website
-                        </label>
-                        <input
-                          type="url"
-                          value={formData.websiteUrl}
-                          onChange={(e) => handleInputChange('websiteUrl', e.target.value)}
-                          placeholder="https://yourwebsite.com"
+                          type="text"
+                          value={formData.websiteUrl || formData.portfolioUrl}
+                          onChange={(e) => {
+                            handleInputChange('websiteUrl', e.target.value);
+                            handleInputChange('portfolioUrl', e.target.value);
+                          }}
+                          placeholder="yourwebsite.com or yourportfolio.com"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
@@ -1158,10 +1204,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                           Twitter
                         </label>
                         <input
-                          type="url"
+                          type="text"
                           value={formData.twitterUrl}
                           onChange={(e) => handleInputChange('twitterUrl', e.target.value)}
-                          placeholder="https://twitter.com/yourusername"
+                          placeholder="@yourusername or twitter.com/yourusername"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
@@ -1170,10 +1216,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                           Instagram
                         </label>
                         <input
-                          type="url"
+                          type="text"
                           value={formData.instagramUrl}
                           onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
-                          placeholder="https://instagram.com/yourusername"
+                          placeholder="@yourusername or instagram.com/yourusername"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
