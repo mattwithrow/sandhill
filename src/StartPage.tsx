@@ -58,8 +58,8 @@ const StartPage: React.FC = () => {
               </div>
               ) : (
                               <div className="cta-buttons">
-                <button className="btn btn-primary btn-large" onClick={() => navigate('/ideas')}>
-                  Browse Ideas
+                <button className="btn btn-primary btn-large" onClick={() => navigate('/ventures')}>
+                  Browse Ventures
                 </button>
                               <button className="btn btn-outline btn-large" onClick={() => navigate('/experts')}>
                 Find Experts
@@ -158,8 +158,8 @@ const StartPage: React.FC = () => {
               <button className="btn btn-primary btn-large" onClick={() => navigate('/my-account')}>
                 My Account
               </button>
-              <button className="btn btn-outline btn-large" onClick={() => navigate('/ideas')}>
-                Browse Ideas
+              <button className="btn btn-outline btn-large" onClick={() => navigate('/ventures')}>
+                Browse Ventures
               </button>
             </div>
             )}

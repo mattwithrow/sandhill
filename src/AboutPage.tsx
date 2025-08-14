@@ -1,9 +1,12 @@
 // AboutPage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 const AboutPage: React.FC = () => {
   const navigate = useNavigate();
+  const { authStatus } = useAuthenticator();
+  const isAuthenticated = authStatus === 'authenticated';
 
   const handleNavigateToLogin = () => {
     navigate('/login');
@@ -110,19 +113,38 @@ const AboutPage: React.FC = () => {
           {/* Call to Action Section */}
           <section className="cta-section">
             <div className="section-header">
-              <h2 className="section-title">Ready to Build with Purpose?</h2>
+              <h2 className="section-title">
+                {isAuthenticated ? 'Ready to explore?' : 'Ready to Build with Purpose?'}
+              </h2>
             </div>
             <p className="cta-text">
-              Create an account, see what we're about, and find your next collaborator, project, or mission.
+              {isAuthenticated 
+                ? 'Browse ventures, connect with experts, and start building something meaningful.'
+                : 'Create an account, see what we\'re about, and find your next collaborator, project, or mission.'
+              }
             </p>
-            <div className="cta-buttons">
-              <button className="btn btn-primary btn-large" onClick={handleNavigateToStart}>
-                Sign Up
-              </button>
-              <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
-                Sign In
-              </button>
-            </div>
+            {!isAuthenticated ? (
+              <div className="cta-buttons">
+                <button className="btn btn-primary btn-large" onClick={handleNavigateToStart}>
+                  Sign Up
+                </button>
+                <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
+                  Sign In
+                </button>
+              </div>
+            ) : (
+              <div className="cta-buttons">
+                <button className="btn btn-primary btn-large" onClick={() => navigate('/my-account')}>
+                  My Account
+                </button>
+                <button className="btn btn-outline btn-large" onClick={() => navigate('/ventures')}>
+                  Browse Ventures
+                </button>
+                <button className="btn btn-outline btn-large" onClick={() => navigate('/experts')}>
+                  Find Experts
+                </button>
+              </div>
+            )}
           </section>
 
           {/* Contact Section */}

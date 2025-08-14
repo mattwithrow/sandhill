@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { generateClient } from "aws-amplify/api";
+import { useAuthenticator } from '@aws-amplify/ui-react';
 import { 
   ListUserProfilesQuery, 
   UserProfileUserType
@@ -37,6 +38,8 @@ interface ExpertProfile {
 
 const ExpertsPage: React.FC = () => {
   const navigate = useNavigate();
+  const { authStatus } = useAuthenticator();
+  const isAuthenticated = authStatus === 'authenticated';
   const [experts, setExperts] = useState<ExpertProfile[]>([]);
   const [filteredExperts, setFilteredExperts] = useState<ExpertProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -820,19 +823,32 @@ const ExpertsPage: React.FC = () => {
         {/* Call to Action Section */}
         <section className="cta-section fade-in">
           <div className="section-header">
-            <h2 className="section-title">Ready to find your team?</h2>
+            <h2 className="section-title">
+              {isAuthenticated ? 'Ready to connect?' : 'Ready to find your team?'}
+            </h2>
           </div>
           <p className="cta-text">
-            Post your idea and connect with experts who share your vision and values.
+            {isAuthenticated 
+              ? 'Browse experts and start building meaningful connections.'
+              : 'Post your idea and connect with experts who share your vision and values.'
+            }
           </p>
-          <div className="cta-buttons">
-            <button className="btn btn-primary btn-large" onClick={handleSignUp}>
-              Sign Up
-            </button>
-            <button className="btn btn-outline btn-large" onClick={handleNavigateToLogin}>
-              Log In
-            </button>
-          </div>
+          {!isAuthenticated ? (
+            <div className="cta-buttons">
+              <button className="btn btn-primary btn-large" onClick={handleSignUp}>
+                Sign Up
+              </button>
+              <button className="btn btn-outline btn-large" onClick={() => navigate('/login')}>
+                Log In
+              </button>
+            </div>
+          ) : (
+            <div className="cta-buttons">
+              <button className="btn btn-primary btn-large" onClick={() => navigate('/my-account')}>
+                My Account
+              </button>
+            </div>
+          )}
           <div className="trust-indicators">
             <div className="trust-item">
               <span className="trust-number">{experts.length}+</span>
