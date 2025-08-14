@@ -4,7 +4,7 @@ This Lambda function automatically deletes unverified user accounts that have no
 
 ## How it works
 
-1. **Manual Execution**: The function can be triggered manually or via API calls
+1. **Manual Execution**: The function can be triggered manually via the admin interface
 2. **User Discovery**: Queries all users in the Cognito User Pool
 3. **Verification Check**: Identifies users who are not confirmed and were created more than 24 hours ago
 4. **Cleanup Process**: 
@@ -32,7 +32,13 @@ The function expects the following environment variables:
 
 ## Usage
 
-To trigger the cleanup manually, you can invoke the Lambda function directly or create a scheduled event using AWS EventBridge.
+### Manual Trigger via Web Interface
+1. Navigate to `/admin/cleanup` in your application
+2. Click "Trigger Cleanup" button
+3. View the results in real-time
+
+### Programmatic Invocation
+You can also invoke the function programmatically using the AWS SDK or Amplify's `invokeFunction` API.
 
 ## Monitoring
 
@@ -42,3 +48,21 @@ The function logs the following information:
 - Any errors encountered during the process
 
 You can monitor the function execution in CloudWatch Logs.
+
+## Setting Up Automatic Scheduling
+
+To set up automatic cleanup, you can:
+
+1. **Use AWS EventBridge** to create a scheduled rule that triggers the function
+2. **Set up a cron job** to call the function periodically
+3. **Use AWS Lambda with EventBridge** to schedule the function directly
+
+Example EventBridge rule (runs every hour):
+```json
+{
+  "schedule": "rate(1 hour)",
+  "target": {
+    "arn": "arn:aws:lambda:us-east-1:123456789012:function:cleanupUnverifiedUsers"
+  }
+}
+```

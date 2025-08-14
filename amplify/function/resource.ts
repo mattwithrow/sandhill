@@ -4,7 +4,7 @@ export const cleanupUnverifiedUsers = defineFunction({
   name: 'cleanupUnverifiedUsers',
   entry: './handler.ts',
   timeoutSeconds: 300,
-  memory: '256 MB',
+  memoryMB: 256,
   permissions: [
     {
       actions: [

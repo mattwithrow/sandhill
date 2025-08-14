@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { generateClient } from 'aws-amplify/api';
+import { invokeFunction } from 'aws-amplify/api';
 
 const AdminCleanup: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,11 +10,10 @@ const AdminCleanup: React.FC = () => {
     setResult('');
     
     try {
-      const client = generateClient();
-      
-      // Call the cleanup API endpoint
-      const response = await client.post('/cleanup', {
-        body: {} // Empty body since the function doesn't need any input
+      // Invoke the Lambda function directly
+      const response = await invokeFunction({
+        name: 'cleanupUnverifiedUsers',
+        payload: {} // Empty payload since the function doesn't need any input
       });
       
       setResult(`Cleanup completed successfully! Response: ${JSON.stringify(response, null, 2)}`);
