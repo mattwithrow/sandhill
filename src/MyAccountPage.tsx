@@ -307,9 +307,14 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     setMessage('');
 
     // Validate username before submitting
-    const usernameValidation = validateUsername(formData.username);
     if (!usernameValidation.isValid) {
       setMessage(`Error: ${usernameValidation.message}`);
+      return;
+    }
+
+    // Check username uniqueness before submitting
+    if (!usernameUniqueness.isUnique) {
+      setMessage('Error: Username is already taken. Please choose a different username.');
       return;
     }
 
@@ -539,8 +544,65 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     }
   };
 
+  // Check if username is unique in the database
+  const checkUsernameUniqueness = async (username: string): Promise<boolean> => {
+    if (!username || username.length < 3) return true; // Skip check for invalid usernames
+    
+    try {
+      const client = generateClient();
+      const result = await client.graphql({
+        query: listUserProfiles,
+        variables: {
+          filter: {
+            username: { eq: username }
+          }
+        }
+      });
+      
+      const existingProfiles = result.data?.listUserProfiles?.items || [];
+      
+      // If we're editing an existing profile, exclude the current user's profile from the check
+      if (profile && profile.username === username) {
+        return existingProfiles.length <= 1; // Should only find the current user's profile
+      }
+      
+      return existingProfiles.length === 0; // Username is unique if no profiles found
+    } catch (error) {
+      console.error('Error checking username uniqueness:', error);
+      // If there's an error checking, we'll let it pass and handle it during submission
+      return true;
+    }
+  };
+
   // Get username validation state
   const usernameValidation = validateUsername(formData.username);
+
+  // Debounced username uniqueness check
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameUniqueness, setUsernameUniqueness] = useState<{
+    isUnique: boolean;
+    message: string;
+  }>({ isUnique: true, message: '' });
+
+  useEffect(() => {
+    const checkUsername = async () => {
+      if (formData.username && usernameValidation.isValid) {
+        setIsCheckingUsername(true);
+        const isUnique = await checkUsernameUniqueness(formData.username);
+        setUsernameUniqueness({
+          isUnique,
+          message: isUnique ? 'Username is available' : 'Username is already taken'
+        });
+        setIsCheckingUsername(false);
+      } else {
+        setUsernameUniqueness({ isUnique: true, message: '' });
+      }
+    };
+
+    // Debounce the check to avoid too many API calls
+    const timeoutId = setTimeout(checkUsername, 500);
+    return () => clearTimeout(timeoutId);
+  }, [formData.username, usernameValidation.isValid, profile]);
 
   // When editing starts, populate form with existing profile data
   useEffect(() => {
@@ -956,7 +1018,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         placeholder="your-username_123"
                         className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
                           formData.username 
-                            ? usernameValidation.isValid 
+                            ? usernameValidation.isValid && usernameUniqueness.isUnique
                               ? 'border-green-300 focus:ring-green-500' 
                               : 'border-red-300 focus:ring-red-500'
                             : 'border-gray-300 focus:ring-orange-500'
@@ -964,10 +1026,35 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         required
                       />
                       {formData.username && (
-                        <div className={`mt-2 text-sm ${
-                          usernameValidation.isValid ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {usernameValidation.message}
+                        <div className="mt-2 space-y-1">
+                          {/* Format validation message */}
+                          <div className={`text-sm ${
+                            usernameValidation.isValid ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {usernameValidation.message}
+                          </div>
+                          
+                          {/* Uniqueness check message */}
+                          {usernameValidation.isValid && (
+                            <div className={`text-sm flex items-center gap-2 ${
+                              isCheckingUsername 
+                                ? 'text-blue-600' 
+                                : usernameUniqueness.isUnique 
+                                  ? 'text-green-600' 
+                                  : 'text-red-600'
+                            }`}>
+                              {isCheckingUsername ? (
+                                <>
+                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
+                                  Checking availability...
+                                </>
+                              ) : (
+                                <>
+                                  {usernameUniqueness.isUnique ? '✓' : '✗'} {usernameUniqueness.message}
+                                </>
+                              )}
+                            </div>
+                          )}
                         </div>
                       )}
                       <div className="mt-1 text-xs text-gray-500">
