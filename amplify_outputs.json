@@ -162,6 +162,27 @@
               "isRequired": false,
               "attributes": []
             },
+            "missionValuesAlignment": {
+              "name": "missionValuesAlignment",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "ventureInterests": {
+              "name": "ventureInterests",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "preferredEngagement": {
+              "name": "preferredEngagement",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "contributionGoals": {
               "name": "contributionGoals",
               "isArray": false,
@@ -178,6 +199,41 @@
             },
             "location": {
               "name": "location",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "timezone": {
+              "name": "timezone",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "latitude": {
+              "name": "latitude",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "longitude": {
+              "name": "longitude",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": false,
+              "attributes": []
+            },
+            "timeCommitment": {
+              "name": "timeCommitment",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "expertSupportNeeded": {
+              "name": "expertSupportNeeded",
               "isArray": false,
               "type": "String",
               "isRequired": false,

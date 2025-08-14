@@ -13,6 +13,7 @@ import VenturesPage from "./VenturesPage";
 import ExpertsPage from "./ExpertsPage";
 import MyAccountPage from "./MyAccountPage";
 import PublicProfilePage from "./PublicProfilePage";
+import AdminCleanup from "./components/AdminCleanup";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 //const client = generateClient<Schema>();
@@ -41,6 +42,11 @@ function App() {
         <Route path="/experts" element={
           <ProtectedRoute>
             <ExpertsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/cleanup" element={
+          <ProtectedRoute>
+            <AdminCleanup />
           </ProtectedRoute>
         } />
       </Routes>

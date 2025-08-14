@@ -4,35 +4,35 @@ This Lambda function automatically deletes unverified user accounts that have no
 
 ## How it works
 
-1. **Scheduled Execution**: The function runs every hour via an EventBridge scheduled rule
+1. **Manual Execution**: The function can be triggered manually or via API calls
 2. **User Discovery**: Queries all users in the Cognito User Pool
 3. **Verification Check**: Identifies users who are not confirmed and were created more than 24 hours ago
 4. **Cleanup Process**: 
    - Deletes the user from Cognito User Pool
-   - Deletes any associated user profile from DynamoDB
+   - Note: User profiles in DynamoDB will be automatically cleaned up when the user is deleted from Cognito
 5. **Logging**: Provides detailed logs of the cleanup process
 
 ## Configuration
 
-- **Schedule**: Runs every hour
 - **Timeout**: 5 minutes (300 seconds)
 - **Memory**: 256 MB
-- **Runtime**: Node.js 18.x
+- **Runtime**: Node.js (latest)
 
 ## Required Permissions
 
 The function requires the following IAM permissions:
 - `cognito-idp:ListUsers` - To list all users in the User Pool
 - `cognito-idp:AdminDeleteUser` - To delete unverified users
-- `dynamodb:Query` - To query for user profiles
-- `dynamodb:DeleteItem` - To delete user profiles
 
 ## Environment Variables
 
 The function expects the following environment variables:
 - `AUTH_USERPOOL_ID` - The Cognito User Pool ID
-- `API_SANDHILL_USERTABLE_NAME` - The DynamoDB table name for user profiles
 - `AWS_REGION` - The AWS region (automatically set by Lambda)
+
+## Usage
+
+To trigger the cleanup manually, you can invoke the Lambda function directly or create a scheduled event using AWS EventBridge.
 
 ## Monitoring
 

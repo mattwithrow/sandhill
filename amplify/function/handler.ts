@@ -1,8 +1,6 @@
 import { CognitoIdentityProviderClient, ListUsersCommand, AdminDeleteUserCommand } from '@aws-sdk/client-cognito-identity-provider';
-import { DynamoDBClient, QueryCommand, DeleteCommand } from '@aws-sdk/client-dynamodb';
 
 const cognitoClient = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
-const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 export const handler = async (event: any) => {
   try {
@@ -45,11 +43,6 @@ export const handler = async (event: any) => {
           
           await cognitoClient.send(deleteUserCommand);
           
-          // Also delete from DynamoDB if they have a profile
-          if (user.Username) {
-            await deleteUserProfile(user.Username);
-          }
-          
           deletedCount++;
         }
       } catch (error) {
@@ -78,43 +71,3 @@ export const handler = async (event: any) => {
     throw error;
   }
 };
-
-async function deleteUserProfile(username: string) {
-  try {
-    const tableName = process.env.API_SANDHILL_USERTABLE_NAME;
-    if (!tableName) {
-      console.warn('API_SANDHILL_USERTABLE_NAME environment variable is not set, skipping profile deletion');
-      return;
-    }
-
-    // Query for user profile by username
-    const queryCommand = new QueryCommand({
-      TableName: tableName,
-      IndexName: 'byUsername',
-      KeyConditionExpression: 'username = :username',
-      ExpressionAttributeValues: {
-        ':username': { S: username },
-      },
-    });
-
-    const queryResponse = await dynamoClient.send(queryCommand);
-    const items = queryResponse.Items || [];
-
-    // Delete all matching profiles
-    for (const item of items) {
-      if (item.id?.S) {
-        const deleteCommand = new DeleteCommand({
-          TableName: tableName,
-          Key: {
-            id: { S: item.id.S },
-          },
-        });
-        
-        await dynamoClient.send(deleteCommand);
-        console.log(`Deleted profile with ID: ${item.id.S}`);
-      }
-    }
-  } catch (error) {
-    console.error(`Error deleting profile for user ${username}:`, error);
-  }
-}
