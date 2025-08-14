@@ -44,7 +44,8 @@ const schema = a.schema({
     .authorization((allow) => [
       allow.owner(), // Users can only access their own profile
       allow.publicApiKey(), // Allow API key access for all operations (temporary for testing)
-    ]),
+    ])
+    .index('byUsername', ['username']),
 });
 
 export type Schema = ClientSchema<typeof schema>;
