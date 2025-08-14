@@ -20,9 +20,11 @@ This Lambda function automatically deletes unverified user accounts that have no
 
 ## Required Permissions
 
-The function requires the following IAM permissions:
+The function requires the following IAM permissions to be configured manually in the AWS Console:
 - `cognito-idp:ListUsers` - To list all users in the User Pool
 - `cognito-idp:AdminDeleteUser` - To delete unverified users
+
+**Note**: You may need to manually configure these permissions in the AWS Lambda console or via IAM policies.
 
 ## Environment Variables
 

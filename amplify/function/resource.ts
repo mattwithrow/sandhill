@@ -4,14 +4,5 @@ export const cleanupUnverifiedUsers = defineFunction({
   name: 'cleanupUnverifiedUsers',
   entry: './handler.ts',
   timeoutSeconds: 300,
-  memoryMB: 256,
-  permissions: [
-    {
-      actions: [
-        'cognito-idp:ListUsers',
-        'cognito-idp:AdminDeleteUser'
-      ],
-      resources: ['*']
-    }
-  ]
+  memoryMB: 256
 });
