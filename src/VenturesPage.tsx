@@ -326,6 +326,56 @@ const VenturesPage: React.FC = () => {
           </div>
         </section>
 
+        {/* How It Works Section */}
+        <section className="section">
+          <div className="content-card">
+            <div className="section-header">
+              <div className="eyebrow">How It Works</div>
+              <h2 className="section-title">
+                Find the perfect venture for your skills
+              </h2>
+            </div>
+            <div className="steps-container">
+              <div className="step-item">
+                <div className="step-number">1</div>
+                <div className="step-content">
+                  <h3 className="step-title">Send a Quick Intro</h3>
+                  <p className="step-description">
+                    Share a little about your experience, your values, and the type of work you're looking to contribute to.
+                  </p>
+                </div>
+              </div>
+              <div className="step-item">
+                <div className="step-number">2</div>
+                <div className="step-content">
+                  <h3 className="step-title">Explore Mutual Fit</h3>
+                  <p className="step-description">
+                    Ask questions and see if your goals and values align.
+                  </p>
+                </div>
+              </div>
+              <div className="step-item">
+                <div className="step-number">3</div>
+                <div className="step-content">
+                  <h3 className="step-title">Schedule a Chat</h3>
+                  <p className="step-description">
+                    A short call, coffee, or virtual meeting can help you both understand how to work together.
+                  </p>
+                </div>
+              </div>
+              <div className="step-item">
+                <div className="step-number">4</div>
+                <div className="step-content">
+                  <h3 className="step-title">Collaborate and Build</h3>
+                  <p className="step-description">
+                    Begin collaborating and working to help turn the idea into reality.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Main Content - Sidebar Layout */}
         <section className="section">
           <div className="experts-layout">
