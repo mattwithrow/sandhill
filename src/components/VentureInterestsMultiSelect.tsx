@@ -1,157 +1,116 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { VENTURE_INTERESTS, VENTURE_INTEREST_CATEGORIES, getVentureInterestsByCategory } from '../data/ventureInterests';
+import React from 'react';
+import { VENTURE_INTERESTS, VENTURE_INTEREST_CATEGORIES, getVentureInterestsByCategory, getVentureInterestNames, getVentureInterestIds } from '../data/ventureInterests';
 
 interface VentureInterestsMultiSelectProps {
   selectedInterests: string[];
   onChange: (interests: string[]) => void;
   placeholder?: string;
+  className?: string;
 }
 
 const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = ({
   selectedInterests,
   onChange,
-  placeholder = "Select venture interests..."
+  placeholder = "Select venture interests...",
+  className = ""
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
   const interestsByCategory = getVentureInterestsByCategory();
+  const selectedInterestIds = getVentureInterestIds(selectedInterests);
+  const selectedInterestNames = getVentureInterestNames(selectedInterestIds);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+  const toggleInterest = (interestId: string) => {
+    const interest = VENTURE_INTERESTS.find(i => i.id === interestId);
+    if (!interest) return;
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    const newSelectedInterests = selectedInterestIds.includes(interestId)
+      ? selectedInterestIds.filter(id => id !== interestId)
+      : [...selectedInterestIds, interestId];
 
-  const handleToggleInterest = (interestId: string) => {
-    const newSelectedInterests = selectedInterests.includes(interestId)
-      ? selectedInterests.filter(id => id !== interestId)
-      : [...selectedInterests, interestId];
-    onChange(newSelectedInterests);
+    const newSelectedInterestNames = getVentureInterestNames(newSelectedInterests);
+    onChange(newSelectedInterestNames);
   };
 
-  const handleRemoveInterest = (interestId: string) => {
-    onChange(selectedInterests.filter(id => id !== interestId));
+  const removeInterest = (interestId: string) => {
+    const newSelectedInterests = selectedInterestIds.filter(id => id !== interestId);
+    const newSelectedInterestNames = getVentureInterestNames(newSelectedInterests);
+    onChange(newSelectedInterestNames);
   };
 
   const clearAll = () => {
     onChange([]);
   };
 
-  const filteredInterests = VENTURE_INTERESTS.filter(interest => {
-    const matchesSearch = interest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         interest.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || interest.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const selectedInterestNames = selectedInterests.map(id => 
-    VENTURE_INTERESTS.find(interest => interest.id === id)?.name
-  ).filter(Boolean);
-
   return (
-    <div className="relative" ref={dropdownRef}>
-      {/* Selected interests display */}
-      <div className="min-h-[48px] p-3 border border-gray-300 rounded-lg bg-white">
-        {selectedInterestNames.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
-            {selectedInterestNames.map((name, index) => (
-              <span
-                key={index}
-                className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium border border-blue-200 flex items-center gap-2"
-              >
-                {name}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveInterest(selectedInterests[index])}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
+    <div className={`${className}`}>
+      {/* Selected Interests Display */}
+      {selectedInterestNames.length > 0 && (
+        <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700">
+              Selected Interests ({selectedInterestNames.length})
+            </span>
             <button
-              type="button"
               onClick={clearAll}
-              className="text-sm text-gray-500 hover:text-gray-700 underline"
+              className="text-xs text-red-600 hover:text-red-800 font-medium"
             >
               Clear all
             </button>
           </div>
-        ) : (
-          <span className="text-gray-500">{placeholder}</span>
-        )}
+          <div className="flex flex-wrap gap-2">
+            {selectedInterestNames.map((interestName, index) => {
+              const interest = VENTURE_INTERESTS.find(i => i.name === interestName);
+              return (
+                <span
+                  key={interest?.id || index}
+                  className="inline-flex items-center gap-1 bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-medium border border-blue-300 shadow-sm"
+                >
+                  {interestName}
+                  <button
+                    onClick={() => removeInterest(interest?.id || '')}
+                    className="text-gray-500 hover:text-red-600 ml-1 font-bold"
+                  >
+                    ×
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Interests Grid by Category */}
+      <div className="skills-grid">
+        {VENTURE_INTEREST_CATEGORIES.map(category => {
+          const categoryInterests = interestsByCategory[category] || [];
+          if (categoryInterests.length === 0) return null;
+
+          return (
+            <div key={category} className="skills-category">
+              <h4>{category}</h4>
+              <div className="skill-tags">
+                {categoryInterests.map(interest => (
+                  <button
+                    key={interest.id}
+                    onClick={() => toggleInterest(interest.id)}
+                    className={`skill-tag ${
+                      selectedInterestIds.includes(interest.id) ? 'selected' : ''
+                    }`}
+                  >
+                    {interest.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Dropdown toggle button */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-      >
-        {isOpen ? '▲' : '▼'}
-      </button>
-
-      {/* Dropdown */}
-      {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-96 overflow-hidden">
-          {/* Search and category filter */}
-          <div className="p-3 border-b border-gray-200">
-            <input
-              type="text"
-              placeholder="Search interests..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="All">All Categories</option>
-              {VENTURE_INTEREST_CATEGORIES.map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Interests list */}
-          <div className="max-h-64 overflow-y-auto">
-            {filteredInterests.length > 0 ? (
-              filteredInterests.map(interest => (
-                <div
-                  key={interest.id}
-                  className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100"
-                  onClick={() => handleToggleInterest(interest.id)}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedInterests.includes(interest.id)}
-                    onChange={() => {}}
-                    className="mr-3"
-                  />
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-900">{interest.name}</div>
-                    <div className="text-sm text-gray-500">{interest.description}</div>
-                    <div className="text-xs text-gray-400 mt-1">{interest.category}</div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-3 text-gray-500 text-center">
-                No interests found matching your search.
-              </div>
-            )}
-          </div>
+      {/* Empty State */}
+      {selectedInterestNames.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          <div className="text-4xl mb-2">🚀</div>
+          <p className="text-sm">{placeholder}</p>
+          <p className="text-xs mt-1">Click on interests below to select them</p>
         </div>
       )}
     </div>
