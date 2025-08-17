@@ -102,6 +102,19 @@ export const ENGAGEMENT_TYPES: EngagementType[] = [
   { id: 'crisis-response', name: 'Crisis Response', category: 'Volunteering', description: 'Crisis response and emergency support' },
 ];
 
+// Create simplified engagement types with only category titles
+export const SIMPLIFIED_ENGAGEMENT_TYPES: EngagementType[] = [
+  { id: 'advisory', name: 'Advisory', category: 'Strategic Support', description: 'Strategic guidance, mentorship, and consulting' },
+  { id: 'hands-on-work', name: 'Hands-on Work', category: 'Direct Involvement', description: 'Direct involvement in operations and development' },
+  { id: 'investment', name: 'Investment', category: 'Financial Support', description: 'Financial investment and funding support' },
+  { id: 'partnership', name: 'Partnership', category: 'Collaboration', description: 'Strategic partnerships and alliances' },
+  { id: 'networking', name: 'Networking', category: 'Connections', description: 'Professional networking and connections' },
+  { id: 'education', name: 'Education', category: 'Knowledge Sharing', description: 'Educational programs and training' },
+  { id: 'advocacy', name: 'Advocacy', category: 'Policy & Influence', description: 'Policy advocacy and lobbying' },
+  { id: 'research', name: 'Research', category: 'Analysis & Insights', description: 'Research and development activities' },
+  { id: 'volunteering', name: 'Volunteering', category: 'Pro Bono Support', description: 'Volunteer work and pro bono services' },
+];
+
 export const ENGAGEMENT_CATEGORIES = Array.from(new Set(ENGAGEMENT_TYPES.map(type => type.category))).sort();
 
 export const getEngagementTypesByCategory = () => {
@@ -124,5 +137,18 @@ export const getEngagementTypeNames = (typeIds: string[]): string[] => {
 export const getEngagementTypeIds = (typeNames: string[]): string[] => {
   return typeNames
     .map(name => ENGAGEMENT_TYPES.find(type => type.name.toLowerCase() === name.toLowerCase())?.id)
+    .filter(Boolean) as string[];
+};
+
+// Functions for simplified engagement types
+export const getSimplifiedEngagementTypeNames = (typeIds: string[]): string[] => {
+  return typeIds
+    .map(id => SIMPLIFIED_ENGAGEMENT_TYPES.find(type => type.id === id)?.name)
+    .filter(Boolean) as string[];
+};
+
+export const getSimplifiedEngagementTypeIds = (typeNames: string[]): string[] => {
+  return typeNames
+    .map(name => SIMPLIFIED_ENGAGEMENT_TYPES.find(type => type.name.toLowerCase() === name.toLowerCase())?.id)
     .filter(Boolean) as string[];
 };

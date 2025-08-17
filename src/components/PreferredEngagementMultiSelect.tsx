@@ -1,5 +1,5 @@
 import React from 'react';
-import { ENGAGEMENT_TYPES, ENGAGEMENT_CATEGORIES, getEngagementTypesByCategory, getEngagementTypeNames, getEngagementTypeIds } from '../data/engagementTypes';
+import { SIMPLIFIED_ENGAGEMENT_TYPES, getSimplifiedEngagementTypeNames, getSimplifiedEngagementTypeIds, EngagementType } from '../data/engagementTypes';
 
 interface PreferredEngagementMultiSelectProps {
   selectedEngagements: string[];
@@ -14,31 +14,41 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
   placeholder = "Select preferred engagement types...",
   className = ""
 }) => {
-  const engagementsByCategory = getEngagementTypesByCategory();
-  const selectedEngagementIds = getEngagementTypeIds(selectedEngagements);
-  const selectedEngagementNames = getEngagementTypeNames(selectedEngagementIds);
+  const selectedEngagementIds = getSimplifiedEngagementTypeIds(selectedEngagements);
+  const selectedEngagementNames = getSimplifiedEngagementTypeNames(selectedEngagementIds);
 
   const toggleEngagement = (engagementId: string) => {
-    const engagement = ENGAGEMENT_TYPES.find(e => e.id === engagementId);
+    const engagement = SIMPLIFIED_ENGAGEMENT_TYPES.find(e => e.id === engagementId);
     if (!engagement) return;
 
     const newSelectedEngagements = selectedEngagementIds.includes(engagementId)
       ? selectedEngagementIds.filter(id => id !== engagementId)
       : [...selectedEngagementIds, engagementId];
 
-    const newSelectedEngagementNames = getEngagementTypeNames(newSelectedEngagements);
+    const newSelectedEngagementNames = getSimplifiedEngagementTypeNames(newSelectedEngagements);
     onChange(newSelectedEngagementNames);
   };
 
   const removeEngagement = (engagementId: string) => {
     const newSelectedEngagements = selectedEngagementIds.filter(id => id !== engagementId);
-    const newSelectedEngagementNames = getEngagementTypeNames(newSelectedEngagements);
+    const newSelectedEngagementNames = getSimplifiedEngagementTypeNames(newSelectedEngagements);
     onChange(newSelectedEngagementNames);
   };
 
   const clearAll = () => {
     onChange([]);
   };
+
+  // Group engagements by category
+  const engagementsByCategory = SIMPLIFIED_ENGAGEMENT_TYPES.reduce((acc, engagement) => {
+    if (!acc[engagement.category]) {
+      acc[engagement.category] = [];
+    }
+    acc[engagement.category].push(engagement);
+    return acc;
+  }, {} as Record<string, EngagementType[]>);
+
+  const categories = Object.keys(engagementsByCategory).sort();
 
   return (
     <div className={`${className}`}>
@@ -58,7 +68,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
           </div>
           <div className="flex flex-wrap gap-2">
             {selectedEngagementNames.map((engagementName, index) => {
-              const engagement = ENGAGEMENT_TYPES.find(e => e.name === engagementName);
+              const engagement = SIMPLIFIED_ENGAGEMENT_TYPES.find(e => e.name === engagementName);
               return (
                 <span
                   key={engagement?.id || index}
@@ -80,13 +90,13 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
 
       {/* Engagements Grid by Category */}
       <div className="skills-grid">
-        {ENGAGEMENT_CATEGORIES.map(category => {
+        {categories.map(category => {
           const categoryEngagements = engagementsByCategory[category] || [];
           if (categoryEngagements.length === 0) return null;
 
           return (
             <div key={category} className="skills-category">
-              <h4>{category}</h4>
+              <h4 className="text-lg font-semibold text-gray-800 mb-3">{category}</h4>
               <div className="skill-tags">
                 {categoryEngagements.map(engagement => (
                   <button
@@ -95,6 +105,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
                     className={`skill-tag ${
                       selectedEngagementIds.includes(engagement.id) ? 'selected' : ''
                     }`}
+                    title={engagement.description}
                   >
                     {engagement.name}
                   </button>
