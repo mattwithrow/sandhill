@@ -108,7 +108,11 @@ export const needsMigration = (profile: any): boolean => {
 // Safe profile field access with fallbacks
 export const getProfileField = (profile: CompleteUserProfile | null, field: keyof CompleteUserProfile, fallback: string = ''): string => {
   if (!profile) return fallback;
-  return profile[field] || fallback;
+  const value = profile[field];
+  if (typeof value === 'boolean') {
+    return value.toString();
+  }
+  return value || fallback;
 };
 
 // Validate profile data before saving

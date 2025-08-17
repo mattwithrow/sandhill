@@ -5,17 +5,17 @@ import type { Schema } from "../../amplify/data/resource";
 
 interface Message {
   id: string;
-  content: string;
-  subject: string;
-  senderId: string;
-  recipientId: string;
-  isRead: boolean;
+  content: string | null;
+  subject: string | null;
+  senderId: string | null;
+  recipientId: string | null;
+  isRead: boolean | null;
   createdAt: string;
   sender?: {
-    username: string;
+    username: string | null;
   };
   recipient?: {
-    username: string;
+    username: string | null;
   };
 }
 
@@ -65,30 +65,59 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => 
         }
       });
 
-      // Get sender information for each message
-      const messagesWithSenders = await Promise.all(
-        messagesResult.data.map(async (message) => {
-          try {
-            const senderResult = await client.models.UserProfile.get({
-              id: message.senderId
-            });
-            return {
-              ...message,
-              sender: senderResult.data
-            };
-          } catch (error) {
-            console.error('Error fetching sender:', error);
-            return {
-              ...message,
-              sender: { username: 'Unknown User' }
-            };
-          }
-        })
-      );
+                      // Get sender information for each message
+        const messagesWithSenders = await Promise.all(
+          messagesResult.data.map(async (message) => {
+            try {
+              if (!message.senderId) {
+                return {
+                  id: message.id,
+                  content: message.content,
+                  subject: message.subject,
+                  senderId: message.senderId,
+                  recipientId: message.recipientId,
+                  isRead: message.isRead,
+                  createdAt: message.createdAt,
+                  sender: { username: 'Unknown User' },
+                  recipient: { username: null }
+                };
+              }
+              const senderResult = await client.models.UserProfile.get({
+                id: message.senderId
+              });
+              return {
+                id: message.id,
+                content: message.content,
+                subject: message.subject,
+                senderId: message.senderId,
+                recipientId: message.recipientId,
+                isRead: message.isRead,
+                createdAt: message.createdAt,
+                sender: {
+                  username: senderResult.data?.username || 'Unknown User'
+                },
+                recipient: { username: null }
+              };
+            } catch (error) {
+              console.error('Error fetching sender:', error);
+              return {
+                id: message.id,
+                content: message.content,
+                subject: message.subject,
+                senderId: message.senderId,
+                recipientId: message.recipientId,
+                isRead: message.isRead,
+                createdAt: message.createdAt,
+                sender: { username: 'Unknown User' },
+                recipient: { username: null }
+              };
+            }
+          })
+        );
 
-      setMessages(messagesWithSenders.sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      ));
+        setMessages(messagesWithSenders.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ));
     } catch (error) {
       console.error('Error loading messages:', error);
       setError('Failed to load messages');
@@ -115,7 +144,7 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => 
 
   const handleMessageClick = (message: Message) => {
     setSelectedMessage(message);
-    if (!message.isRead) {
+    if (message.isRead === false) {
       markAsRead(message.id);
     }
   };
@@ -189,11 +218,11 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => 
             </div>
           ) : (
             messages.map((message) => (
-              <div
-                key={message.id}
-                className={`message-item ${!message.isRead ? 'unread' : ''} ${selectedMessage?.id === message.id ? 'selected' : ''}`}
-                onClick={() => handleMessageClick(message)}
-              >
+                              <div
+                  key={message.id}
+                  className={`message-item ${message.isRead === false ? 'unread' : ''} ${selectedMessage?.id === message.id ? 'selected' : ''}`}
+                  onClick={() => handleMessageClick(message)}
+                >
                 <div className="message-header">
                   <span className="sender-name">
                     {message.sender?.username || 'Unknown User'}
@@ -203,15 +232,15 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => 
                   </span>
                 </div>
                 <div className="message-subject">
-                  {message.subject}
+                  {message.subject || 'No Subject'}
                 </div>
                 <div className="message-preview">
-                  {message.content.length > 100 
+                  {message.content && message.content.length > 100 
                     ? `${message.content.substring(0, 100)}...` 
-                    : message.content
+                    : message.content || 'No content'
                   }
                 </div>
-                {!message.isRead && <div className="unread-indicator" />}
+                {message.isRead === false && <div className="unread-indicator" />}
               </div>
             ))
           )}
@@ -220,18 +249,18 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => 
         {selectedMessage && (
           <div className="message-detail">
             <div className="message-detail-header">
-              <h3>{selectedMessage.subject}</h3>
+              <h3>{selectedMessage.subject || 'No Subject'}</h3>
               <div className="message-meta">
                 <span>From: {selectedMessage.sender?.username || 'Unknown User'}</span>
                 <span>{formatDate(selectedMessage.createdAt)}</span>
               </div>
             </div>
             <div className="message-content">
-              {selectedMessage.content}
+              {selectedMessage.content || 'No content'}
             </div>
             <div className="message-actions">
               <button 
-                onClick={() => onComposeMessage(selectedMessage.senderId, `Re: ${selectedMessage.subject}`)}
+                onClick={() => onComposeMessage(selectedMessage.senderId || undefined, `Re: ${selectedMessage.subject || 'No Subject'}`)}
                 className="btn btn-secondary"
               >
                 Reply

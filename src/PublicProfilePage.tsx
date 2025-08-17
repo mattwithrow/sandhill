@@ -34,6 +34,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     websiteUrl: string;
     twitterUrl: string;
     instagramUrl: string;
+    messagingEnabled?: boolean;
     // New fields that will be available after schema deployment
     missionValuesAlignment?: string;
     ventureInterests?: string;

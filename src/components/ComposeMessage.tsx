@@ -5,9 +5,9 @@ import type { Schema } from "../../amplify/data/resource";
 
 interface UserProfile {
   id: string;
-  username: string;
-  userType: 'expert' | 'ventures' | 'both';
-  messagingEnabled: boolean;
+  username: string | null;
+  userType: 'expert' | 'ventures' | 'both' | null;
+  messagingEnabled: boolean | null;
 }
 
 interface ComposeMessageProps {
@@ -47,7 +47,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       const recipient = recipients.find(r => r.username === recipientUsername);
       if (recipient) {
         setSelectedRecipient(recipient.id);
-        setSearchTerm(recipient.username);
+        setSearchTerm(recipient.username || '');
       }
     }
   }, [recipientUsername, recipients]);
@@ -71,9 +71,15 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
         profile => profile.email === user?.signInDetails?.loginId
       );
 
-      const availableRecipients = profilesResult.data.filter(
-        profile => profile.id !== currentUserProfile?.id
-      );
+      const availableRecipients = profilesResult.data
+        .filter(profile => profile.id !== currentUserProfile?.id)
+        .filter(profile => profile.messagingEnabled === true)
+        .map(profile => ({
+          id: profile.id,
+          username: profile.username || 'Unknown User',
+          userType: profile.userType || 'both',
+          messagingEnabled: profile.messagingEnabled || false
+        }));
 
       setRecipients(availableRecipients);
     } catch (error) {
@@ -129,8 +135,8 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
   };
 
   const filteredRecipients = recipients.filter(recipient =>
-    recipient.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    recipient.userType.toLowerCase().includes(searchTerm.toLowerCase())
+    (recipient.username || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (recipient.userType || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -164,10 +170,10 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
                     <div
                       key={recipient.id}
                       className={`recipient-option ${selectedRecipient === recipient.id ? 'selected' : ''}`}
-                      onClick={() => {
-                        setSelectedRecipient(recipient.id);
-                        setSearchTerm(recipient.username);
-                      }}
+                                              onClick={() => {
+                          setSelectedRecipient(recipient.id);
+                          setSearchTerm(recipient.username || '');
+                        }}
                     >
                       <span className="recipient-name">{recipient.username}</span>
                       <span className="recipient-type">{recipient.userType}</span>
