@@ -248,6 +248,17 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
               {getUserTypeDescription(profile.userType)}
             </p>
             
+            {/* Message Button - Only show if user is authenticated and messaging is enabled */}
+            {profile.messagingEnabled !== false && (
+              <div className="mt-6">
+                <button
+                  onClick={() => navigate(`/messages?compose=true&recipient=${profile.username}`)}
+                  className="btn btn-primary btn-large"
+                >
+                  💬 Send Message
+                </button>
+              </div>
+            )}
 
           </div>
         </section>

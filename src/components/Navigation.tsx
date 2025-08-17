@@ -30,6 +30,7 @@ const Navigation: React.FC = () => {
     { name: 'About', path: '/about' },
     { name: 'Experts', path: '/experts', requiresAuth: true },
     { name: 'Ventures', path: '/ventures', requiresAuth: true },
+    { name: 'Messages', path: '/messages', requiresAuth: true },
   ];
 
   const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems;

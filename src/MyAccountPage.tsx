@@ -59,6 +59,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     websiteUrl: string;
     twitterUrl: string;
     instagramUrl: string;
+    messagingEnabled: boolean;
   }>({
     username: '',
     userType: UserProfileUserType.both,
@@ -79,7 +80,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     portfolioUrl: '',
     websiteUrl: '',
     twitterUrl: '',
-    instagramUrl: ''
+    instagramUrl: '',
+    messagingEnabled: true
   });
   
   const [profile, setProfile] = useState<null | {
@@ -105,6 +107,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     websiteUrl: string;
     twitterUrl: string;
     instagramUrl: string;
+    messagingEnabled: boolean;
   }>(null);
 
   const getUserTypeDisplay = (userType: UserProfileUserType) => {
@@ -247,8 +250,14 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           }
           
           if (profileData) {
-            setProfile(profileData);
-            setFormData(profileData);
+            setProfile({
+              ...profileData,
+              messagingEnabled: profileData.messagingEnabled !== undefined ? profileData.messagingEnabled : true
+            });
+            setFormData({
+              ...profileData,
+              messagingEnabled: profileData.messagingEnabled !== undefined ? profileData.messagingEnabled : true
+            });
                      } else {
              console.log('📝 No saved profile found');
            }
@@ -471,7 +480,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => {
       const updatedData = {
         ...prev,
@@ -479,7 +488,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       };
       
       // Auto-detect timezone when location changes
-      if (field === 'location') {
+      if (field === 'location' && typeof value === 'string') {
         updatedData.timezone = detectTimezoneFromLocation(value);
       }
       
@@ -607,7 +616,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   // When editing starts, populate form with existing profile data
   useEffect(() => {
     if (isEditing && profile) {
-      setFormData(profile);
+      setFormData({
+        ...profile,
+        messagingEnabled: profile.messagingEnabled !== undefined ? profile.messagingEnabled : true
+      });
     }
   }, [isEditing, profile]);
 
@@ -1309,6 +1321,34 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                           placeholder="@yourusername or instagram.com/yourusername"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Messaging Preferences */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <div className="flex items-start space-x-3">
+                      <input
+                        type="checkbox"
+                        id="messagingEnabled"
+                        checked={formData.messagingEnabled}
+                        onChange={(e) => handleInputChange('messagingEnabled', e.target.checked)}
+                        className="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="messagingEnabled" className="block text-lg font-semibold text-gray-800 mb-2">
+                          Enable Messaging
+                        </label>
+                        <p className="text-gray-600 text-sm">
+                          Allow other users to send you messages and start conversations. 
+                          You can disable this if you prefer not to receive messages from other users.
+                        </p>
+                        {!formData.messagingEnabled && (
+                          <p className="text-orange-600 text-sm mt-2">
+                            <strong>Note:</strong> When disabled, other users won't be able to message you, 
+                            and you won't be able to send messages to others.
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

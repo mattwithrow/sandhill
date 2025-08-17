@@ -19,6 +19,7 @@ export interface CompleteUserProfile {
   instagramUrl: string;
   websiteUrl: string;
   projectDetails: string;
+  messagingEnabled: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -43,6 +44,7 @@ export const getDefaultProfile = (): CompleteUserProfile => ({
   instagramUrl: '',
   websiteUrl: '',
   projectDetails: '',
+  messagingEnabled: true,
 });
 
 // Validate and migrate profile data
@@ -77,6 +79,7 @@ export const validateAndMigrateProfile = (profile: any): CompleteUserProfile => 
     instagramUrl: profile.instagramUrl || '',
     websiteUrl: profile.websiteUrl || '',
     projectDetails: profile.projectDetails || '',
+    messagingEnabled: profile.messagingEnabled !== undefined ? profile.messagingEnabled : true,
     createdAt: profile.createdAt,
     updatedAt: profile.updatedAt,
   };
