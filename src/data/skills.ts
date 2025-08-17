@@ -125,22 +125,20 @@ export const SKILLS: Skill[] = [
   { id: 'operations', name: 'Operations', category: 'Finance & Operations' },
   { id: 'hr', name: 'Human Resources', category: 'Finance & Operations' },
   { id: 'legal', name: 'Legal', category: 'Finance & Operations' },
+];
 
-  // Specialized Skills
-  { id: 'blockchain', name: 'Blockchain', category: 'Specialized Skills' },
-  { id: 'cryptocurrency', name: 'Cryptocurrency', category: 'Specialized Skills' },
-  { id: 'web3', name: 'Web3', category: 'Specialized Skills' },
-  { id: 'cybersecurity', name: 'Cybersecurity', category: 'Specialized Skills' },
-  { id: 'iot', name: 'IoT', category: 'Specialized Skills' },
-  { id: 'ar-vr', name: 'AR/VR', category: 'Specialized Skills' },
-  { id: 'game-development', name: 'Game Development', category: 'Specialized Skills' },
-  { id: 'embedded-systems', name: 'Embedded Systems', category: 'Specialized Skills' },
-  { id: 'robotics', name: 'Robotics', category: 'Specialized Skills' },
-  { id: 'biotech', name: 'Biotechnology', category: 'Specialized Skills' },
-  { id: 'fintech', name: 'Fintech', category: 'Specialized Skills' },
-  { id: 'healthtech', name: 'Healthtech', category: 'Specialized Skills' },
-  { id: 'edtech', name: 'Edtech', category: 'Specialized Skills' },
-  { id: 'cleantech', name: 'Cleantech', category: 'Specialized Skills' },
+// Create simplified skills list with only category headings
+export const SIMPLIFIED_SKILLS: Skill[] = [
+  { id: 'frontend-development', name: 'Frontend Development', category: 'Technical Skills' },
+  { id: 'backend-development', name: 'Backend Development', category: 'Technical Skills' },
+  { id: 'database-data', name: 'Database & Data', category: 'Technical Skills' },
+  { id: 'cloud-devops', name: 'Cloud & DevOps', category: 'Technical Skills' },
+  { id: 'mobile-development', name: 'Mobile Development', category: 'Technical Skills' },
+  { id: 'design-ux', name: 'Design & UX', category: 'Creative Skills' },
+  { id: 'product-business', name: 'Product & Business', category: 'Business Skills' },
+  { id: 'marketing-content', name: 'Marketing & Content', category: 'Business Skills' },
+  { id: 'sales-customer-success', name: 'Sales & Customer Success', category: 'Business Skills' },
+  { id: 'finance-operations', name: 'Finance & Operations', category: 'Business Skills' },
 ];
 
 export const SKILL_CATEGORIES = Array.from(new Set(SKILLS.map(skill => skill.category))).sort();
@@ -165,5 +163,18 @@ export const getSkillNames = (skillIds: string[]): string[] => {
 export const getSkillIds = (skillNames: string[]): string[] => {
   return skillNames
     .map(name => SKILLS.find(skill => skill.name.toLowerCase() === name.toLowerCase())?.id)
+    .filter(Boolean) as string[];
+};
+
+// Functions for simplified skills
+export const getSimplifiedSkillNames = (skillIds: string[]): string[] => {
+  return skillIds
+    .map(id => SIMPLIFIED_SKILLS.find(skill => skill.id === id)?.name)
+    .filter(Boolean) as string[];
+};
+
+export const getSimplifiedSkillIds = (skillNames: string[]): string[] => {
+  return skillNames
+    .map(name => SIMPLIFIED_SKILLS.find(skill => skill.name.toLowerCase() === name.toLowerCase())?.id)
     .filter(Boolean) as string[];
 };

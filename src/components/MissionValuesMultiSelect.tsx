@@ -1,5 +1,5 @@
 import React from 'react';
-import { MISSION_VALUES, MISSION_VALUE_CATEGORIES, getMissionValuesByCategory, getMissionValueNames, getMissionValueIds } from '../data/missionValues';
+import { SIMPLIFIED_MISSION_VALUES, getSimplifiedMissionValueNames, getSimplifiedMissionValueIds } from '../data/missionValues';
 
 interface MissionValuesMultiSelectProps {
   selectedValues: string[];
@@ -14,31 +14,41 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
   placeholder = "Select mission and values...",
   className = ""
 }) => {
-  const valuesByCategory = getMissionValuesByCategory();
-  const selectedValueIds = getMissionValueIds(selectedValues);
-  const selectedValueNames = getMissionValueNames(selectedValueIds);
+  const selectedValueIds = getSimplifiedMissionValueIds(selectedValues);
+  const selectedValueNames = getSimplifiedMissionValueNames(selectedValueIds);
 
   const toggleValue = (valueId: string) => {
-    const value = MISSION_VALUES.find(v => v.id === valueId);
+    const value = SIMPLIFIED_MISSION_VALUES.find(v => v.id === valueId);
     if (!value) return;
 
     const newSelectedValues = selectedValueIds.includes(valueId)
       ? selectedValueIds.filter(id => id !== valueId)
       : [...selectedValueIds, valueId];
 
-    const newSelectedValueNames = getMissionValueNames(newSelectedValues);
+    const newSelectedValueNames = getSimplifiedMissionValueNames(newSelectedValues);
     onChange(newSelectedValueNames);
   };
 
   const removeValue = (valueId: string) => {
     const newSelectedValues = selectedValueIds.filter(id => id !== valueId);
-    const newSelectedValueNames = getMissionValueNames(newSelectedValues);
+    const newSelectedValueNames = getSimplifiedMissionValueNames(newSelectedValues);
     onChange(newSelectedValueNames);
   };
 
   const clearAll = () => {
     onChange([]);
   };
+
+  // Group values by category
+  const valuesByCategory = SIMPLIFIED_MISSION_VALUES.reduce((acc, value) => {
+    if (!acc[value.category]) {
+      acc[value.category] = [];
+    }
+    acc[value.category].push(value);
+    return acc;
+  }, {} as Record<string, typeof SIMPLIFIED_MISSION_VALUES>);
+
+  const categories = Object.keys(valuesByCategory).sort();
 
   return (
     <div className={`${className}`}>
@@ -58,7 +68,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
           </div>
           <div className="flex flex-wrap gap-2">
             {selectedValueNames.map((valueName, index) => {
-              const value = MISSION_VALUES.find(v => v.name === valueName);
+              const value = SIMPLIFIED_MISSION_VALUES.find(v => v.name === valueName);
               return (
                 <span
                   key={value?.id || index}
@@ -80,13 +90,13 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
 
       {/* Values Grid by Category */}
       <div className="skills-grid">
-        {MISSION_VALUE_CATEGORIES.map(category => {
+        {categories.map(category => {
           const categoryValues = valuesByCategory[category] || [];
           if (categoryValues.length === 0) return null;
 
           return (
             <div key={category} className="skills-category">
-              <h4>{category}</h4>
+              <h4 className="text-lg font-semibold text-gray-800 mb-3">{category}</h4>
               <div className="skill-tags">
                 {categoryValues.map(value => (
                   <button
@@ -95,6 +105,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
                     className={`skill-tag ${
                       selectedValueIds.includes(value.id) ? 'selected' : ''
                     }`}
+                    title={value.description}
                   >
                     {value.name}
                   </button>

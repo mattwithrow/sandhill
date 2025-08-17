@@ -79,6 +79,46 @@ export const MISSION_VALUES: MissionValue[] = [
   { id: 'healthcare-innovation', name: 'Healthcare Innovation', category: 'Health & Wellness', description: 'Innovative healthcare solutions' },
 ];
 
+// Create simplified mission values with focused categories
+export const SIMPLIFIED_MISSION_VALUES: MissionValue[] = [
+  // Core Values (most important)
+  { id: 'integrity', name: 'Integrity', category: 'Core Values', description: 'Honesty, transparency, and ethical behavior' },
+  { id: 'innovation', name: 'Innovation', category: 'Core Values', description: 'Creative problem-solving and forward-thinking' },
+  { id: 'collaboration', name: 'Collaboration', category: 'Core Values', description: 'Working together and building partnerships' },
+  { id: 'empathy', name: 'Empathy', category: 'Core Values', description: 'Understanding and caring for others' },
+  { id: 'authenticity', name: 'Authenticity', category: 'Core Values', description: 'Being genuine and true to oneself' },
+
+  // Social Impact (key areas)
+  { id: 'social-justice', name: 'Social Justice', category: 'Social Impact', description: 'Fighting inequality and promoting fairness' },
+  { id: 'education-access', name: 'Education Access', category: 'Social Impact', description: 'Making quality education available to all' },
+  { id: 'healthcare-equity', name: 'Healthcare Equity', category: 'Social Impact', description: 'Improving access to healthcare' },
+  { id: 'diversity-inclusion', name: 'Diversity & Inclusion', category: 'Social Impact', description: 'Promoting representation and belonging' },
+  { id: 'community-development', name: 'Community Development', category: 'Social Impact', description: 'Building stronger communities' },
+
+  // Environmental (critical issues)
+  { id: 'sustainability', name: 'Sustainability', category: 'Environmental', description: 'Environmental stewardship and conservation' },
+  { id: 'climate-action', name: 'Climate Action', category: 'Environmental', description: 'Addressing climate change' },
+  { id: 'renewable-energy', name: 'Renewable Energy', category: 'Environmental', description: 'Clean energy solutions' },
+  { id: 'biodiversity', name: 'Biodiversity', category: 'Environmental', description: 'Protecting ecosystems and species' },
+
+  // Economic (empowerment)
+  { id: 'economic-empowerment', name: 'Economic Empowerment', category: 'Economic', description: 'Financial independence and opportunity' },
+  { id: 'entrepreneurship', name: 'Entrepreneurship', category: 'Economic', description: 'Supporting business creation' },
+  { id: 'job-creation', name: 'Job Creation', category: 'Economic', description: 'Creating meaningful employment' },
+  { id: 'financial-inclusion', name: 'Financial Inclusion', category: 'Economic', description: 'Access to financial services' },
+
+  // Technology (for good)
+  { id: 'tech-for-good', name: 'Tech for Good', category: 'Technology', description: 'Technology that benefits society' },
+  { id: 'digital-inclusion', name: 'Digital Inclusion', category: 'Technology', description: 'Bridging the digital divide' },
+  { id: 'ai-ethics', name: 'AI Ethics', category: 'Technology', description: 'Responsible artificial intelligence' },
+  { id: 'privacy-rights', name: 'Privacy Rights', category: 'Technology', description: 'Protecting personal data' },
+
+  // Health & Wellness (well-being)
+  { id: 'mental-wellness', name: 'Mental Wellness', category: 'Health & Wellness', description: 'Mental health and emotional well-being' },
+  { id: 'preventive-health', name: 'Preventive Health', category: 'Health & Wellness', description: 'Preventing illness and promoting wellness' },
+  { id: 'healthcare-innovation', name: 'Healthcare Innovation', category: 'Health & Wellness', description: 'Innovative healthcare solutions' },
+];
+
 export const MISSION_VALUE_CATEGORIES = Array.from(new Set(MISSION_VALUES.map(value => value.category))).sort();
 
 export const getMissionValuesByCategory = () => {
@@ -101,5 +141,18 @@ export const getMissionValueNames = (valueIds: string[]): string[] => {
 export const getMissionValueIds = (valueNames: string[]): string[] => {
   return valueNames
     .map(name => MISSION_VALUES.find(value => value.name.toLowerCase() === name.toLowerCase())?.id)
+    .filter(Boolean) as string[];
+};
+
+// Functions for simplified mission values
+export const getSimplifiedMissionValueNames = (valueIds: string[]): string[] => {
+  return valueIds
+    .map(id => SIMPLIFIED_MISSION_VALUES.find(value => value.id === id)?.name)
+    .filter(Boolean) as string[];
+};
+
+export const getSimplifiedMissionValueIds = (valueNames: string[]): string[] => {
+  return valueNames
+    .map(name => SIMPLIFIED_MISSION_VALUES.find(value => value.name.toLowerCase() === name.toLowerCase())?.id)
     .filter(Boolean) as string[];
 };

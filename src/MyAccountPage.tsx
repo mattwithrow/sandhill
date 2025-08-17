@@ -805,12 +805,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                    {/* Skills */}
-                    {profile.skills && (
-                      <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Skills</h3>
-                        <div className="flex flex-wrap gap-3">
-                          {profile.skills.split(',').map((skill, index) => (
+                                      {/* Skills */}
+                  {profile.skills && (
+                    <div className="feature-card">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-3">Skill Areas</h3>
+                      <div className="flex flex-wrap gap-3">
+                        {profile.skills.split(',').map((skill, index) => (
                             <span
                               key={index}
                               className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300"
@@ -1167,13 +1167,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Skills - Multi-column Layout */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Skills
+                      Skill Areas
                     </label>
                     <div className="skills-multi-select-container">
                       <SkillsMultiSelect
                         selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
                         onChange={(skills) => handleInputChange('skills', skills.join(', '))}
-                        placeholder="Select your skills..."
+                        placeholder="Select your skill areas..."
                         className="w-full"
                       />
                     </div>
@@ -1182,12 +1182,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Mission & Values Alignment */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Mission & Values Alignment
+                      Mission & Values
                     </label>
                     <MissionValuesMultiSelect
                       selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
                       onChange={(values) => handleInputChange('missionValuesAlignment', values.join(', '))}
-                      placeholder="Select mission and values that align with your goals..."
+                      placeholder="Select values that align with your mission..."
                     />
                     <div className="mt-2">
                       <textarea
