@@ -136,6 +136,7 @@ const VenturesPage: React.FC = () => {
         venture.bio.toLowerCase().includes(searchLower) ||
         venture.experience.toLowerCase().includes(searchLower) ||
         venture.expertSupportNeeded.toLowerCase().includes(searchLower) ||
+        venture.skills.toLowerCase().includes(searchLower) ||
         venture.missionValuesAlignment.toLowerCase().includes(searchLower) ||
         venture.ventureInterests.toLowerCase().includes(searchLower)
       );
@@ -390,7 +391,7 @@ const VenturesPage: React.FC = () => {
                   <div className="search-input-wrapper">
                     <input
                       type="text"
-                      placeholder="Search by name, description, needs..."
+                      placeholder="Search by name, description, skills needed..."
                       value={searchTerm}
                       onChange={handleSearchChange}
                       className="search-input"
@@ -609,7 +610,28 @@ const VenturesPage: React.FC = () => {
                           
                           <div className="expert-list-bio">
                             {venture.expertSupportNeeded ? (
-                              <p className="expert-bio-text line-clamp-1">{venture.expertSupportNeeded}</p>
+                              <div>
+                                <p className="expert-bio-text line-clamp-2 font-medium mb-2">
+                                  {venture.expertSupportNeeded}
+                                </p>
+                                {venture.skills && (
+                                  <div className="expert-list-skills">
+                                    <span className="expert-list-label text-sm text-gray-600">Skills needed:</span>
+                                    <div className="expert-list-tags mt-1">
+                                      {venture.skills.split(',').slice(0, 4).map((skill, index) => (
+                                        <span key={index} className="expert-list-tag skill-tag">
+                                          {skill.trim()}
+                                        </span>
+                                      ))}
+                                      {venture.skills.split(',').length > 4 && (
+                                        <span className="expert-list-tag-more">
+                                          +{venture.skills.split(',').length - 4} more
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             ) : venture.bio ? (
                               <p className="expert-bio-text line-clamp-1">{venture.bio}</p>
                             ) : (

@@ -19,11 +19,9 @@ interface Message {
   };
 }
 
-interface MessagingInboxProps {
-  onComposeMessage: (recipientId?: string, subject?: string) => void;
-}
+interface MessagingInboxProps {}
 
-const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => {
+const MessagingInbox: React.FC<MessagingInboxProps> = () => {
   const { user } = useAuthenticator();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
@@ -195,26 +193,19 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => 
   return (
     <div className="messaging-inbox">
       <div className="inbox-header">
-        <h2>Messages</h2>
-        <button 
-          onClick={() => onComposeMessage()} 
-          className="btn btn-primary"
-        >
-          New Message
-        </button>
+        <h2>Incoming Messages</h2>
       </div>
 
       <div className="inbox-content">
         <div className="message-list">
           {messages.length === 0 ? (
             <div className="empty-state">
-              <p>No messages yet</p>
-              <button 
-                onClick={() => onComposeMessage()} 
-                className="btn btn-primary"
-              >
-                Send your first message
-              </button>
+              <div className="text-4xl mb-4">📥</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">No Messages Yet</h3>
+              <p className="text-gray-600 mb-4">You haven't received any messages yet.</p>
+              <p className="text-sm text-gray-500">
+                When other users send you messages, they'll appear here.
+              </p>
             </div>
           ) : (
             messages.map((message) => (
@@ -258,14 +249,7 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onComposeMessage }) => 
             <div className="message-content">
               {selectedMessage.content || 'No content'}
             </div>
-            <div className="message-actions">
-              <button 
-                onClick={() => onComposeMessage(selectedMessage.senderId || undefined, `Re: ${selectedMessage.subject || 'No Subject'}`)}
-                className="btn btn-secondary"
-              >
-                Reply
-              </button>
-            </div>
+
           </div>
         )}
       </div>

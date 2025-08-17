@@ -62,7 +62,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     messagingEnabled: boolean;
   }>({
     username: '',
-    userType: UserProfileUserType.both,
+    userType: UserProfileUserType.expert,
     bio: '',
     experience: '',
     skills: '',
@@ -116,7 +116,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         return 'Expert';
       case UserProfileUserType.ventures:
         return 'Venture';
-      case UserProfileUserType.both:
+  
         return 'Expert & Venture';
       default:
         return 'User';
@@ -129,8 +129,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         return 'Skilled professional ready to help bring ideas to life';
       case UserProfileUserType.ventures:
         return 'Building something meaningful and looking for the right people';
-      case UserProfileUserType.both:
-        return 'Both an expert and a venture builder - versatile collaborator';
+      
       default:
         return 'Member of the Sandhill community';
     }
@@ -195,7 +194,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               // Convert database profile to form data format
               profileData = {
                 username: dbProfile.username || '',
-                userType: dbProfile.userType || UserProfileUserType.both,
+                userType: dbProfile.userType || UserProfileUserType.expert,
                 bio: dbProfile.bio || '',
                 experience: dbProfile.experience || '',
                 skills: dbProfile.skills || '',
@@ -592,6 +591,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     isUnique: boolean;
     message: string;
   }>({ isUnique: true, message: '' });
+  const [isSkillsExpanded, setIsSkillsExpanded] = useState(false);
+  const [isSkillsDisplayExpanded, setIsSkillsDisplayExpanded] = useState(false);
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -811,24 +812,50 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                                      {/* Skills */}
+                                      {/* Skills - Collapsible Display */}
                   {profile.skills && (
-                    <div className="feature-card">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                        {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
-                      </h3>
-                      <div className="flex flex-wrap gap-3">
-                        {profile.skills.split(',').map((skill, index) => (
-                            <span
-                              key={index}
-                              className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300"
-                            >
-                              {skill.trim()}
-                            </span>
-                          ))}
+                    <div className="feature-card border border-gray-200 rounded-lg overflow-hidden">
+                      <button
+                        type="button"
+                        onClick={() => setIsSkillsDisplayExpanded(!isSkillsDisplayExpanded)}
+                        className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
+                      >
+                        <div>
+                          <span className="text-lg font-semibold text-gray-800">
+                            {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                          </span>
+                          <span className="ml-2 text-sm text-gray-500">
+                            ({profile.skills.split(',').map(s => s.trim()).filter(Boolean).length} skills)
+                          </span>
                         </div>
-                      </div>
-                    )}
+                        <svg
+                          className={`w-5 h-5 text-gray-500 transition-transform ${
+                            isSkillsDisplayExpanded ? 'rotate-180' : ''
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      
+                      {isSkillsDisplayExpanded && (
+                        <div className="p-4 bg-white">
+                          <div className="flex flex-wrap gap-3">
+                            {profile.skills.split(',').map((skill, index) => (
+                              <span
+                                key={index}
+                                className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300"
+                              >
+                                {skill.trim()}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                     {/* Mission & Values Alignment */}
                     {profile.missionValuesAlignment && (
@@ -902,7 +929,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                            )}
                          </div>
                        )}
-                       {profile.timeCommitment && (profile.userType === 'expert' || profile.userType === 'both') && (
+                       {profile.timeCommitment && profile.userType === 'expert' && (
                          <div className="feature-card">
                            <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
                            <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
@@ -910,16 +937,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                        )}
                      </div>
 
-                     {/* Expert Support Needed (for Ventures and Both) */}
-                     {profile.expertSupportNeeded && (profile.userType === 'ventures' || profile.userType === 'both') && (
+                                            {/* Expert Support Needed (for Ventures) */}
+                     {profile.expertSupportNeeded && profile.userType === 'ventures' && (
                        <div className="feature-card">
                          <h3 className="text-lg font-semibold text-gray-800 mb-3">What I'm Building</h3>
                          <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
                        </div>
                      )}
 
-                     {/* Venture Interests Description (for Experts and Both) */}
-                     {profile.ventureInterestsDescription && (profile.userType === 'expert' || profile.userType === 'both') && (
+                                            {/* Venture Interests Description (for Experts) */}
+                     {profile.ventureInterestsDescription && profile.userType === 'expert' && (
                        <div className="feature-card">
                          <h3 className="text-lg font-semibold text-gray-800 mb-3">Ventures I Want to Get Involved With</h3>
                          <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.ventureInterestsDescription}</p>
@@ -1105,9 +1132,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         onChange={(e) => handleInputChange('userType', e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                       >
+                        <option value="">Select user type</option>
                         <option value={UserProfileUserType.expert}>Expert</option>
                         <option value={UserProfileUserType.ventures}>Ventures</option>
-                        <option value={UserProfileUserType.both}>Both</option>
                       </select>
                     </div>
                   </div>
@@ -1137,7 +1164,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       )}
                     </div>
 
-                    {(formData.userType === 'expert' || formData.userType === 'both') && (
+                    {formData.userType === 'expert' && (
                       <div>
                         <label className="block text-lg font-semibold text-gray-800 mb-3">
                           Time Commitment
@@ -1186,30 +1213,58 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                  {/* Skills - Multi-column Layout */}
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      {formData.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
-                    </label>
-                    <div className="skills-multi-select-container">
-                      <SkillsMultiSelect
-                        selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
-                        onChange={(skills) => handleInputChange('skills', skills.join(', '))}
-                        placeholder={
-                          formData.userType === 'ventures' 
-                            ? "Select skills you're looking for..." 
-                            : "Select skills you have..."
-                        }
-                        className="w-full"
-                        userType={formData.userType}
-                      />
-                    </div>
-                    <div className="mt-2 text-sm text-gray-600">
-                      {formData.userType === 'ventures' 
-                        ? "What skills do you need help with for your venture?"
-                        : "What skills can you offer to help ventures?"
-                      }
-                    </div>
+                  {/* Skills - Collapsible Section */}
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setIsSkillsExpanded(!isSkillsExpanded)}
+                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
+                    >
+                      <div>
+                        <span className="text-lg font-semibold text-gray-800">
+                          {formData.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                        </span>
+                        {formData.skills && (
+                          <span className="ml-2 text-sm text-gray-500">
+                            ({formData.skills.split(',').map(s => s.trim()).filter(Boolean).length} selected)
+                          </span>
+                        )}
+                      </div>
+                      <svg
+                        className={`w-5 h-5 text-gray-500 transition-transform ${
+                          isSkillsExpanded ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {isSkillsExpanded && (
+                      <div className="p-4 bg-white">
+                        <div className="skills-multi-select-container">
+                          <SkillsMultiSelect
+                            selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
+                            onChange={(skills) => handleInputChange('skills', skills.join(', '))}
+                            placeholder={
+                              formData.userType === 'ventures' 
+                                ? "Select skills you're looking for..." 
+                                : "Select skills you have..."
+                            }
+                            className="w-full"
+                            userType={formData.userType}
+                          />
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600">
+                          {formData.userType === 'ventures' 
+                            ? "What skills do you need help with for your venture?"
+                            : "What skills can you offer to help ventures?"
+                          }
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Mission & Values Alignment */}
@@ -1258,7 +1313,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   </div>
 
                   {/* User Type Specific Fields */}
-                  {(formData.userType === 'ventures' || formData.userType === 'both') && (
+                  {formData.userType === 'ventures' && (
                     <div>
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
                         Tell us as much as you want about what you're trying to do
@@ -1273,7 +1328,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     </div>
                   )}
 
-                  {(formData.userType === 'expert' || formData.userType === 'both') && (
+                  {formData.userType === 'expert' && (
                     <div>
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
                         What type of ventures do you want to get involved with?

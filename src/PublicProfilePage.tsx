@@ -420,7 +420,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                       )}
                     </div>
                   )}
-                  {(profile.userType === 'expert' || profile.userType === 'both') && (
+                  {profile.userType === 'expert' && (
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
                       {profile.timeCommitment ? (
@@ -495,16 +495,21 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
           {/* Call to Action */}
           <section className="section">
             <div className="cta-section">
-              <h3 className="section-title">Ready to Connect?</h3>
+              <h3 className="section-title">
+                {profile.userType === 'ventures' ? 'Browse Experts' : 'Browse Ventures'}
+              </h3>
               <p className="cta-text">
-                Join Sandhill to discover amazing people and build something great together.
+                {profile.userType === 'ventures' 
+                  ? 'Find the perfect expert to help bring your venture to life.'
+                  : 'Discover exciting ventures and opportunities to get involved with.'
+                }
               </p>
               <div className="cta-buttons">
                 <button
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate(profile.userType === 'ventures' ? '/experts' : '/ventures')}
                   className="btn btn-primary btn-large"
                 >
-                  Join Sandhill
+                  {profile.userType === 'ventures' ? 'Browse Experts' : 'Browse Ventures'}
                 </button>
               </div>
             </div>
