@@ -321,8 +321,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       return;
     }
 
-    // Check username uniqueness before submitting
-    if (!usernameUniqueness.isUnique) {
+    // Check username uniqueness before submitting (only for new profiles)
+    if (!profile && !usernameUniqueness.isUnique) {
       setMessage('Error: Username is already taken. Please choose a different username.');
       return;
     }
@@ -572,7 +572,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       
       // If we're editing an existing profile, exclude the current user's profile from the check
       if (profile && profile.username === username) {
-        return existingProfiles.length <= 1; // Should only find the current user's profile
+        return true; // Username is valid for existing profile
       }
       
       return existingProfiles.length === 0; // Username is unique if no profiles found
@@ -595,6 +595,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
   useEffect(() => {
     const checkUsername = async () => {
+      // Don't check uniqueness if user already has a profile with this username
+      if (profile && profile.username === formData.username) {
+        setUsernameUniqueness({ isUnique: true, message: 'Username is set' });
+        return;
+      }
+      
       if (formData.username && usernameValidation.isValid) {
         setIsCheckingUsername(true);
         const isUnique = await checkUsernameUniqueness(formData.username);
@@ -808,7 +814,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                                       {/* Skills */}
                   {profile.skills && (
                     <div className="feature-card">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-3">Skill Areas</h3>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                        {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                      </h3>
                       <div className="flex flex-wrap gap-3">
                         {profile.skills.split(',').map((skill, index) => (
                             <span
@@ -1018,22 +1026,33 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     <div>
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
                         Username *
+                        {profile && profile.username && (
+                          <span className="ml-2 text-sm font-normal text-orange-600">
+                            (Cannot be changed)
+                          </span>
+                        )}
                       </label>
                       <input
                         type="text"
                         value={formData.username}
                         onChange={(e) => {
+                          // Don't allow changes if user already has a profile
+                          if (profile && profile.username) return;
+                          
                           const value = e.target.value;
                           const validValue = value.replace(/[^a-zA-Z0-9_-]/g, '');
                           handleInputChange('username', validValue);
                         }}
-                        placeholder="your-username_123"
+                        placeholder={profile && profile.username ? profile.username : "your-username_123"}
+                        disabled={profile && profile.username ? true : false}
                         className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
-                          formData.username 
-                            ? usernameValidation.isValid && usernameUniqueness.isUnique
-                              ? 'border-green-300 focus:ring-green-500' 
-                              : 'border-red-300 focus:ring-red-500'
-                            : 'border-gray-300 focus:ring-orange-500'
+                          profile && profile.username
+                            ? 'border-gray-300 bg-gray-50 cursor-not-allowed'
+                            : formData.username 
+                              ? usernameValidation.isValid && usernameUniqueness.isUnique
+                                ? 'border-green-300 focus:ring-green-500' 
+                                : 'border-red-300 focus:ring-red-500'
+                              : 'border-gray-300 focus:ring-orange-500'
                         }`}
                         required
                       />
@@ -1070,7 +1089,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         </div>
                       )}
                       <div className="mt-1 text-xs text-gray-500">
-                        Only letters, numbers, hyphens (-), and underscores (_). 3-30 characters.
+                        {profile && profile.username 
+                          ? "Username is permanent and cannot be changed after profile creation."
+                          : "Only letters, numbers, hyphens (-), and underscores (_). 3-30 characters."
+                        }
                       </div>
                     </div>
 
@@ -1167,15 +1189,26 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Skills - Multi-column Layout */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Skill Areas
+                      {formData.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
                     </label>
                     <div className="skills-multi-select-container">
                       <SkillsMultiSelect
                         selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
                         onChange={(skills) => handleInputChange('skills', skills.join(', '))}
-                        placeholder="Select your skill areas..."
+                        placeholder={
+                          formData.userType === 'ventures' 
+                            ? "Select skills you're looking for..." 
+                            : "Select skills you have..."
+                        }
                         className="w-full"
+                        userType={formData.userType}
                       />
+                    </div>
+                    <div className="mt-2 text-sm text-gray-600">
+                      {formData.userType === 'ventures' 
+                        ? "What skills do you need help with for your venture?"
+                        : "What skills can you offer to help ventures?"
+                      }
                     </div>
                   </div>
 

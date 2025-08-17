@@ -296,7 +296,9 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Skills */}
                 {profile.skills && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Skills</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                      {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                    </h3>
                     <div className="flex flex-wrap gap-3">
                       {profile.skills.split(',').map((skill, index) => (
                         <span

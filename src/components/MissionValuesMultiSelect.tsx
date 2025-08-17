@@ -39,16 +39,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
     onChange([]);
   };
 
-  // Group values by category
-  const valuesByCategory = SIMPLIFIED_MISSION_VALUES.reduce((acc, value) => {
-    if (!acc[value.category]) {
-      acc[value.category] = [];
-    }
-    acc[value.category].push(value);
-    return acc;
-  }, {} as Record<string, typeof SIMPLIFIED_MISSION_VALUES>);
 
-  const categories = Object.keys(valuesByCategory).sort();
 
   return (
     <div className={`${className}`}>
@@ -88,32 +79,24 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
         </div>
       )}
 
-      {/* Values Grid by Category */}
+      {/* Values Grid */}
       <div className="skills-grid">
-        {categories.map(category => {
-          const categoryValues = valuesByCategory[category] || [];
-          if (categoryValues.length === 0) return null;
-
-          return (
-            <div key={category} className="skills-category">
-              <h4 className="text-lg font-semibold text-gray-800 mb-3">{category}</h4>
-              <div className="skill-tags">
-                {categoryValues.map(value => (
-                  <button
-                    key={value.id}
-                    onClick={() => toggleValue(value.id)}
-                    className={`skill-tag ${
-                      selectedValueIds.includes(value.id) ? 'selected' : ''
-                    }`}
-                    title={value.description}
-                  >
-                    {value.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+        <div className="skills-category">
+          <div className="skill-tags">
+            {SIMPLIFIED_MISSION_VALUES.map(value => (
+              <button
+                key={value.id}
+                onClick={() => toggleValue(value.id)}
+                className={`skill-tag ${
+                  selectedValueIds.includes(value.id) ? 'selected' : ''
+                }`}
+                title={value.description}
+              >
+                {value.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Empty State */}

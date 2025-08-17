@@ -39,16 +39,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
     onChange([]);
   };
 
-  // Group engagements by category
-  const engagementsByCategory = SIMPLIFIED_ENGAGEMENT_TYPES.reduce((acc, engagement) => {
-    if (!acc[engagement.category]) {
-      acc[engagement.category] = [];
-    }
-    acc[engagement.category].push(engagement);
-    return acc;
-  }, {} as Record<string, EngagementType[]>);
 
-  const categories = Object.keys(engagementsByCategory).sort();
 
   return (
     <div className={`${className}`}>
@@ -88,32 +79,24 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
         </div>
       )}
 
-      {/* Engagements Grid by Category */}
+      {/* Engagements Grid */}
       <div className="skills-grid">
-        {categories.map(category => {
-          const categoryEngagements = engagementsByCategory[category] || [];
-          if (categoryEngagements.length === 0) return null;
-
-          return (
-            <div key={category} className="skills-category">
-              <h4 className="text-lg font-semibold text-gray-800 mb-3">{category}</h4>
-              <div className="skill-tags">
-                {categoryEngagements.map(engagement => (
-                  <button
-                    key={engagement.id}
-                    onClick={() => toggleEngagement(engagement.id)}
-                    className={`skill-tag ${
-                      selectedEngagementIds.includes(engagement.id) ? 'selected' : ''
-                    }`}
-                    title={engagement.description}
-                  >
-                    {engagement.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+        <div className="skills-category">
+          <div className="skill-tags">
+            {SIMPLIFIED_ENGAGEMENT_TYPES.map(engagement => (
+              <button
+                key={engagement.id}
+                onClick={() => toggleEngagement(engagement.id)}
+                className={`skill-tag ${
+                  selectedEngagementIds.includes(engagement.id) ? 'selected' : ''
+                }`}
+                title={engagement.description}
+              >
+                {engagement.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Empty State */}

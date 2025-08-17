@@ -25,17 +25,7 @@ export const VENTURE_INTERESTS: VentureInterest[] = [
   { id: 'poverty', name: 'Poverty Alleviation', category: 'Social Impact', description: 'Addressing economic inequality' },
   { id: 'justice', name: 'Criminal Justice', category: 'Social Impact', description: 'Criminal justice reform' },
 
-  // Environmental
-  { id: 'sustainability', name: 'Sustainability', category: 'Environmental', description: 'Environmental sustainability' },
-  { id: 'climate', name: 'Climate Tech', category: 'Environmental', description: 'Climate change solutions' },
-  { id: 'clean-energy', name: 'Clean Energy', category: 'Environmental', description: 'Renewable energy' },
-  { id: 'circular', name: 'Circular Economy', category: 'Environmental', description: 'Waste reduction and recycling' },
-  { id: 'conservation', name: 'Conservation', category: 'Environmental', description: 'Environmental conservation' },
-  { id: 'agtech', name: 'AgTech', category: 'Environmental', description: 'Agricultural technology' },
-  { id: 'water', name: 'Water Tech', category: 'Environmental', description: 'Water treatment and conservation' },
-  { id: 'air-quality', name: 'Air Quality', category: 'Environmental', description: 'Air pollution solutions' },
-  { id: 'ocean', name: 'Ocean Tech', category: 'Environmental', description: 'Ocean conservation and technology' },
-  { id: 'forest', name: 'Forest Tech', category: 'Environmental', description: 'Forestry and forest conservation' },
+
 
   // Technology
   { id: 'fintech', name: 'FinTech', category: 'Technology', description: 'Financial technology' },

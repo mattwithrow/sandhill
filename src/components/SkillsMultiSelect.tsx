@@ -6,13 +6,15 @@ interface SkillsMultiSelectProps {
   onChange: (skills: string[]) => void;
   placeholder?: string;
   className?: string;
+  userType?: 'expert' | 'ventures' | 'both';
 }
 
 const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
   selectedSkills,
   onChange,
   placeholder = "Select skill areas...",
-  className = ""
+  className = "",
+  userType = 'expert'
 }) => {
   const selectedSkillIds = getSimplifiedSkillIds(selectedSkills);
   const selectedSkillNames = getSimplifiedSkillNames(selectedSkillIds);
@@ -39,16 +41,14 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
     onChange([]);
   };
 
-  // Group skills by category
-  const skillsByCategory = SIMPLIFIED_SKILLS.reduce((acc, skill) => {
-    if (!acc[skill.category]) {
-      acc[skill.category] = [];
-    }
-    acc[skill.category].push(skill);
-    return acc;
-  }, {} as Record<string, Skill[]>);
 
-  const categories = Object.keys(skillsByCategory).sort();
+
+  // Contextual labels based on user type
+  const isVenture = userType === 'ventures';
+  const selectedLabel = isVenture ? 'Skills Needed' : 'Skills I Have';
+  const emptyStateText = isVenture 
+    ? "What skills do you need help with for your venture?"
+    : "What skills can you offer to help ventures?";
 
   return (
     <div className={`${className}`}>
@@ -57,7 +57,7 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
         <div className="mb-4 p-3 bg-gradient-to-r from-orange-50 to-teal-50 border border-orange-200 rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">
-              Selected Skill Areas ({selectedSkillNames.length})
+              {selectedLabel} ({selectedSkillNames.length})
             </span>
             <button
               onClick={clearAll}
@@ -88,31 +88,23 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
         </div>
       )}
 
-      {/* Skills Grid by Category */}
+      {/* Skills Grid */}
       <div className="skills-grid">
-        {categories.map(category => {
-          const categorySkills = skillsByCategory[category] || [];
-          if (categorySkills.length === 0) return null;
-
-          return (
-            <div key={category} className="skills-category">
-              <h4 className="text-lg font-semibold text-gray-800 mb-3">{category}</h4>
-              <div className="skill-tags">
-                {categorySkills.map(skill => (
-                  <button
-                    key={skill.id}
-                    onClick={() => toggleSkill(skill.id)}
-                    className={`skill-tag ${
-                      selectedSkillIds.includes(skill.id) ? 'selected' : ''
-                    }`}
-                  >
-                    {skill.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+        <div className="skills-category">
+          <div className="skill-tags">
+            {SIMPLIFIED_SKILLS.map(skill => (
+              <button
+                key={skill.id}
+                onClick={() => toggleSkill(skill.id)}
+                className={`skill-tag ${
+                  selectedSkillIds.includes(skill.id) ? 'selected' : ''
+                }`}
+              >
+                {skill.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Empty State */}
@@ -120,7 +112,7 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">🔧</div>
           <p className="text-sm">{placeholder}</p>
-          <p className="text-xs mt-1">Click on skill areas below to select them</p>
+          <p className="text-xs mt-1">{emptyStateText}</p>
         </div>
       )}
     </div>

@@ -104,15 +104,14 @@ export const ENGAGEMENT_TYPES: EngagementType[] = [
 
 // Create simplified engagement types with only category titles
 export const SIMPLIFIED_ENGAGEMENT_TYPES: EngagementType[] = [
-  { id: 'advisory', name: 'Advisory', category: 'Strategic Support', description: 'Strategic guidance, mentorship, and consulting' },
-  { id: 'hands-on-work', name: 'Hands-on Work', category: 'Direct Involvement', description: 'Direct involvement in operations and development' },
-  { id: 'investment', name: 'Investment', category: 'Financial Support', description: 'Financial investment and funding support' },
-  { id: 'partnership', name: 'Partnership', category: 'Collaboration', description: 'Strategic partnerships and alliances' },
-  { id: 'networking', name: 'Networking', category: 'Connections', description: 'Professional networking and connections' },
-  { id: 'education', name: 'Education', category: 'Knowledge Sharing', description: 'Educational programs and training' },
-  { id: 'advocacy', name: 'Advocacy', category: 'Policy & Influence', description: 'Policy advocacy and lobbying' },
-  { id: 'research', name: 'Research', category: 'Analysis & Insights', description: 'Research and development activities' },
-  { id: 'volunteering', name: 'Volunteering', category: 'Pro Bono Support', description: 'Volunteer work and pro bono services' },
+  { id: 'analytics-insights', name: 'Analytics & Insights', category: 'Analysis', description: 'Data analysis and insights' },
+  { id: 'collaboration', name: 'Collaboration', category: 'Partnership', description: 'Strategic partnerships and alliances' },
+  { id: 'direct-involvement', name: 'Direct Involvement', category: 'Hands-on', description: 'Direct involvement in operations' },
+  { id: 'financial-support', name: 'Financial Support', category: 'Investment', description: 'Financial investment and funding' },
+  { id: 'knowledge-sharing', name: 'Knowledge Sharing', category: 'Education', description: 'Educational programs and training' },
+  { id: 'policy-influence', name: 'Policy & Influence', category: 'Advocacy', description: 'Policy advocacy and lobbying' },
+  { id: 'volunteer', name: 'Volunteer', category: 'Volunteering', description: 'Volunteer work and pro bono services' },
+  { id: 'advisory', name: 'Advisory', category: 'Strategic Support', description: 'Strategic guidance and mentorship' },
 ];
 
 export const ENGAGEMENT_CATEGORIES = Array.from(new Set(ENGAGEMENT_TYPES.map(type => type.category))).sort();

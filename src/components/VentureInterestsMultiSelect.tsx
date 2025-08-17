@@ -78,31 +78,24 @@ const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = 
         </div>
       )}
 
-      {/* Interests Grid by Category */}
+      {/* Interests Grid */}
       <div className="skills-grid">
-        {VENTURE_INTEREST_CATEGORIES.map(category => {
-          const categoryInterests = interestsByCategory[category] || [];
-          if (categoryInterests.length === 0) return null;
-
-          return (
-            <div key={category} className="skills-category">
-              <h4>{category}</h4>
-              <div className="skill-tags">
-                {categoryInterests.map(interest => (
-                  <button
-                    key={interest.id}
-                    onClick={() => toggleInterest(interest.id)}
-                    className={`skill-tag ${
-                      selectedInterestIds.includes(interest.id) ? 'selected' : ''
-                    }`}
-                  >
-                    {interest.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+        <div className="skills-category">
+          <div className="skill-tags">
+            {VENTURE_INTERESTS.map(interest => (
+              <button
+                key={interest.id}
+                onClick={() => toggleInterest(interest.id)}
+                className={`skill-tag ${
+                  selectedInterestIds.includes(interest.id) ? 'selected' : ''
+                }`}
+                title={interest.description}
+              >
+                {interest.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Empty State */}
