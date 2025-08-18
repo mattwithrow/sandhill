@@ -1237,7 +1237,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <div className="skills-multi-select-container">
                           <SkillsMultiSelect
                             selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
-                            onChange={(skills) => handleInputChange('skills', skills.join(', '))}
+                            onChange={(skills) => {
+                              console.log('🔧 MyAccountPage SkillsMultiSelect onChange called with:', skills);
+                              handleInputChange('skills', skills.join(', '));
+                            }}
                             placeholder={
                               formData.userType === 'ventures' 
                                 ? "Select skills you're looking for..." 
@@ -1284,7 +1287,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <div className="p-4 bg-white">
                         <MissionValuesMultiSelect
                           selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
-                          onChange={(values) => handleInputChange('missionValuesAlignment', values.join(', '))}
+                          onChange={(values) => {
+                            console.log('🎯 MyAccountPage MissionValuesMultiSelect onChange called with:', values);
+                            handleInputChange('missionValuesAlignment', values.join(', '));
+                          }}
                           placeholder="Select values that align with your mission..."
                         />
                         <div className="mt-4">
@@ -1338,7 +1344,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <div className="p-4 bg-white">
                         <VentureInterestsMultiSelect
                           selectedInterests={formData.ventureInterests ? formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean) : []}
-                          onChange={(interests) => handleInputChange('ventureInterests', interests.join(', '))}
+                          onChange={(interests) => {
+                            console.log('🚀 MyAccountPage VentureInterestsMultiSelect onChange called with:', interests);
+                            handleInputChange('ventureInterests', interests.join(', '));
+                          }}
                           placeholder="Select venture types and industries that interest you..."
                         />
                       </div>
@@ -1378,7 +1387,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <div className="p-4 bg-white">
                         <PreferredEngagementMultiSelect
                           selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
-                          onChange={(engagements) => handleInputChange('preferredEngagement', engagements.join(', '))}
+                          onChange={(engagements) => {
+                            console.log('🤝 MyAccountPage PreferredEngagementMultiSelect onChange called with:', engagements);
+                            handleInputChange('preferredEngagement', engagements.join(', '));
+                          }}
                           placeholder="Select how you'd like to engage with ventures..."
                         />
                       </div>
