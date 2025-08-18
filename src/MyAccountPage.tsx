@@ -65,6 +65,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     values: '',
     timeCommitment: '',
     expertSupportNeeded: '',
+    ventureInterestsDescription: '',
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
@@ -1091,6 +1092,24 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     {formData.userType === 'expert' && (
                       <div>
                         <label className="block text-lg font-semibold text-gray-800 mb-3">
+                          Ventures You Want to Work With
+                        </label>
+                        <div className="text-sm text-gray-600 mb-2">
+                          Types of ventures or projects you're interested in
+                        </div>
+                        <textarea
+                          value={formData.ventureInterestsDescription}
+                          onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
+                          rows={4}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                          placeholder="Describe the types of ventures, projects, or companies you'd like to work with..."
+                        />
+                      </div>
+                    )}
+
+                    {formData.userType === 'expert' && (
+                      <div>
+                        <label className="block text-lg font-semibold text-gray-800 mb-3">
                           Time Commitment
                         </label>
                         <select
@@ -1203,22 +1222,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* User Type Specific Fields */}
 
 
-                  {formData.userType === 'expert' && (
-                    <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
-                        Ventures You Want to Work With
-                      </label>
-                      <div className="text-sm text-gray-600 mb-2">
-                        Types of ventures or projects you're interested in
-                      </div>
-                      <textarea
-                                                    value=""
-                            onChange={(e) => {}}
-                        rows={4}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                      />
-                    </div>
-                  )}
+
 
                   {/* Links - Compact Layout */}
                   <div>
