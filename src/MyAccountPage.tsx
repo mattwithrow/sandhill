@@ -47,6 +47,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     values: string;
     timeCommitment: string;
     expertSupportNeeded: string;
+    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -88,6 +89,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     values: string;
     timeCommitment: string;
     expertSupportNeeded: string;
+    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -370,6 +372,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           // preferredEngagement: formData.preferredEngagement,
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
+          // ventureInterestsDescription: formData.ventureInterestsDescription,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
           githubUrl: formatSocialUrl('github', formData.githubUrl),
           portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),
@@ -409,6 +412,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           // preferredEngagement: formData.preferredEngagement,
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
+          // ventureInterestsDescription: formData.ventureInterestsDescription,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
           githubUrl: formatSocialUrl('github', formData.githubUrl),
           portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),
