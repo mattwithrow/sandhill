@@ -375,11 +375,11 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           skills: formData.skills,
           location: formData.location,
           values: formData.values,
-          // missionValuesAlignment: formData.missionValuesAlignment, // TODO: Add back after schema deployment
-          // ventureInterests: formData.ventureInterests, // TODO: Add back after schema deployment
-          // preferredEngagement: formData.preferredEngagement, // TODO: Add back after schema deployment
-          // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
-          // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
+          missionValuesAlignment: formData.missionValuesAlignment,
+          ventureInterests: formData.ventureInterests,
+          preferredEngagement: formData.preferredEngagement,
+          timeCommitment: formData.timeCommitment,
+          expertSupportNeeded: formData.expertSupportNeeded,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
           githubUrl: formatSocialUrl('github', formData.githubUrl),
           portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),
@@ -414,11 +414,11 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           skills: formData.skills,
           location: formData.location,
           values: formData.values,
-          // missionValuesAlignment: formData.missionValuesAlignment, // TODO: Add back after schema deployment
-          // ventureInterests: formData.ventureInterests, // TODO: Add back after schema deployment
-          // preferredEngagement: formData.preferredEngagement, // TODO: Add back after schema deployment
-          // timeCommitment: formData.timeCommitment, // TODO: Add back after schema deployment
-          // expertSupportNeeded: formData.expertSupportNeeded, // TODO: Add back after schema deployment
+          missionValuesAlignment: formData.missionValuesAlignment,
+          ventureInterests: formData.ventureInterests,
+          preferredEngagement: formData.preferredEngagement,
+          timeCommitment: formData.timeCommitment,
+          expertSupportNeeded: formData.expertSupportNeeded,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
           githubUrl: formatSocialUrl('github', formData.githubUrl),
           portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),

@@ -8,6 +8,93 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createMessage = /* GraphQL */ `mutation CreateMessage(
+  $condition: ModelMessageConditionInput
+  $input: CreateMessageInput!
+) {
+  createMessage(condition: $condition, input: $input) {
+    content
+    createdAt
+    id
+    isRead
+    owner
+    recipient {
+      bio
+      contributionGoals
+      createdAt
+      email
+      experience
+      expertSupportNeeded
+      githubUrl
+      id
+      instagramUrl
+      latitude
+      linkedinUrl
+      location
+      longitude
+      messagingEnabled
+      missionValuesAlignment
+      owner
+      passions
+      portfolioUrl
+      preferredEngagement
+      projectDetails
+      skills
+      timeCommitment
+      timezone
+      twitterUrl
+      updatedAt
+      userType
+      username
+      values
+      ventureInterests
+      websiteUrl
+      __typename
+    }
+    recipientId
+    sender {
+      bio
+      contributionGoals
+      createdAt
+      email
+      experience
+      expertSupportNeeded
+      githubUrl
+      id
+      instagramUrl
+      latitude
+      linkedinUrl
+      location
+      longitude
+      messagingEnabled
+      missionValuesAlignment
+      owner
+      passions
+      portfolioUrl
+      preferredEngagement
+      projectDetails
+      skills
+      timeCommitment
+      timezone
+      twitterUrl
+      updatedAt
+      userType
+      username
+      values
+      ventureInterests
+      websiteUrl
+      __typename
+    }
+    senderId
+    subject
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateMessageMutationVariables,
+  APITypes.CreateMessageMutation
+>;
 export const createTodo = /* GraphQL */ `mutation CreateTodo(
   $condition: ModelTodoConditionInput
   $input: CreateTodoInput!
@@ -34,21 +121,38 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     createdAt
     email
     experience
+    expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    latitude
     linkedinUrl
     location
+    longitude
+    messagingEnabled
+    missionValuesAlignment
     owner
     passions
     portfolioUrl
+    preferredEngagement
     projectDetails
+    receivedMessages {
+      nextToken
+      __typename
+    }
+    sentMessages {
+      nextToken
+      __typename
+    }
     skills
+    timeCommitment
+    timezone
     twitterUrl
     updatedAt
     userType
     username
     values
+    ventureInterests
     websiteUrl
     __typename
   }
@@ -56,6 +160,93 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
 ` as GeneratedMutation<
   APITypes.CreateUserProfileMutationVariables,
   APITypes.CreateUserProfileMutation
+>;
+export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
+  $condition: ModelMessageConditionInput
+  $input: DeleteMessageInput!
+) {
+  deleteMessage(condition: $condition, input: $input) {
+    content
+    createdAt
+    id
+    isRead
+    owner
+    recipient {
+      bio
+      contributionGoals
+      createdAt
+      email
+      experience
+      expertSupportNeeded
+      githubUrl
+      id
+      instagramUrl
+      latitude
+      linkedinUrl
+      location
+      longitude
+      messagingEnabled
+      missionValuesAlignment
+      owner
+      passions
+      portfolioUrl
+      preferredEngagement
+      projectDetails
+      skills
+      timeCommitment
+      timezone
+      twitterUrl
+      updatedAt
+      userType
+      username
+      values
+      ventureInterests
+      websiteUrl
+      __typename
+    }
+    recipientId
+    sender {
+      bio
+      contributionGoals
+      createdAt
+      email
+      experience
+      expertSupportNeeded
+      githubUrl
+      id
+      instagramUrl
+      latitude
+      linkedinUrl
+      location
+      longitude
+      messagingEnabled
+      missionValuesAlignment
+      owner
+      passions
+      portfolioUrl
+      preferredEngagement
+      projectDetails
+      skills
+      timeCommitment
+      timezone
+      twitterUrl
+      updatedAt
+      userType
+      username
+      values
+      ventureInterests
+      websiteUrl
+      __typename
+    }
+    senderId
+    subject
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteMessageMutationVariables,
+  APITypes.DeleteMessageMutation
 >;
 export const deleteTodo = /* GraphQL */ `mutation DeleteTodo(
   $condition: ModelTodoConditionInput
@@ -83,21 +274,38 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     createdAt
     email
     experience
+    expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    latitude
     linkedinUrl
     location
+    longitude
+    messagingEnabled
+    missionValuesAlignment
     owner
     passions
     portfolioUrl
+    preferredEngagement
     projectDetails
+    receivedMessages {
+      nextToken
+      __typename
+    }
+    sentMessages {
+      nextToken
+      __typename
+    }
     skills
+    timeCommitment
+    timezone
     twitterUrl
     updatedAt
     userType
     username
     values
+    ventureInterests
     websiteUrl
     __typename
   }
@@ -105,6 +313,93 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
 ` as GeneratedMutation<
   APITypes.DeleteUserProfileMutationVariables,
   APITypes.DeleteUserProfileMutation
+>;
+export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
+  $condition: ModelMessageConditionInput
+  $input: UpdateMessageInput!
+) {
+  updateMessage(condition: $condition, input: $input) {
+    content
+    createdAt
+    id
+    isRead
+    owner
+    recipient {
+      bio
+      contributionGoals
+      createdAt
+      email
+      experience
+      expertSupportNeeded
+      githubUrl
+      id
+      instagramUrl
+      latitude
+      linkedinUrl
+      location
+      longitude
+      messagingEnabled
+      missionValuesAlignment
+      owner
+      passions
+      portfolioUrl
+      preferredEngagement
+      projectDetails
+      skills
+      timeCommitment
+      timezone
+      twitterUrl
+      updatedAt
+      userType
+      username
+      values
+      ventureInterests
+      websiteUrl
+      __typename
+    }
+    recipientId
+    sender {
+      bio
+      contributionGoals
+      createdAt
+      email
+      experience
+      expertSupportNeeded
+      githubUrl
+      id
+      instagramUrl
+      latitude
+      linkedinUrl
+      location
+      longitude
+      messagingEnabled
+      missionValuesAlignment
+      owner
+      passions
+      portfolioUrl
+      preferredEngagement
+      projectDetails
+      skills
+      timeCommitment
+      timezone
+      twitterUrl
+      updatedAt
+      userType
+      username
+      values
+      ventureInterests
+      websiteUrl
+      __typename
+    }
+    senderId
+    subject
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateMessageMutationVariables,
+  APITypes.UpdateMessageMutation
 >;
 export const updateTodo = /* GraphQL */ `mutation UpdateTodo(
   $condition: ModelTodoConditionInput
@@ -132,21 +427,38 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     createdAt
     email
     experience
+    expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    latitude
     linkedinUrl
     location
+    longitude
+    messagingEnabled
+    missionValuesAlignment
     owner
     passions
     portfolioUrl
+    preferredEngagement
     projectDetails
+    receivedMessages {
+      nextToken
+      __typename
+    }
+    sentMessages {
+      nextToken
+      __typename
+    }
     skills
+    timeCommitment
+    timezone
     twitterUrl
     updatedAt
     userType
     username
     values
+    ventureInterests
     websiteUrl
     __typename
   }
