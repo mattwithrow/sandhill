@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from 'aws-amplify/api';
+import { listUserProfiles } from '../../queries';
+import { createMessage } from '../../mutations';
 
 interface UserProfile {
   id: string;
@@ -57,24 +58,29 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       setLoading(true);
       setError(null);
 
-      const client = generateClient<Schema>();
+      const client = generateClient();
       
       // Get all users who have messaging enabled
-      const profilesResult = await client.models.UserProfile.list({
-        filter: {
-          messagingEnabled: { eq: true }
+      const profilesResult = await client.graphql({
+        query: listUserProfiles,
+        variables: {
+          filter: {
+            messagingEnabled: { eq: true }
+          }
         }
       });
 
+      const profiles = profilesResult.data.listUserProfiles.items;
+
       // Filter out the current user
-      const currentUserProfile = profilesResult.data.find(
-        profile => profile.email === user?.signInDetails?.loginId
+      const currentUserProfile = profiles.find(
+        (profile: any) => profile.email === user?.signInDetails?.loginId
       );
 
-      const availableRecipients = profilesResult.data
-        .filter(profile => profile.id !== currentUserProfile?.id)
-        .filter(profile => profile.messagingEnabled === true)
-        .map(profile => ({
+      const availableRecipients = profiles
+        .filter((profile: any) => profile.id !== currentUserProfile?.id)
+        .filter((profile: any) => profile.messagingEnabled === true)
+        .map((profile: any) => ({
           id: profile.id,
           username: profile.username || 'Unknown User',
           userType: profile.userType || 'both',
@@ -100,29 +106,38 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       setSending(true);
       setError(null);
 
-      const client = generateClient<Schema>();
+      const client = generateClient();
       
       // Get current user's profile
-      const profileResult = await client.models.UserProfile.list({
-        filter: {
-          email: { eq: user?.signInDetails?.loginId }
+      const profileResult = await client.graphql({
+        query: listUserProfiles,
+        variables: {
+          filter: {
+            email: { eq: user?.signInDetails?.loginId }
+          }
         }
       });
 
-      if (profileResult.data.length === 0) {
+      const profiles = profileResult.data.listUserProfiles.items;
+      if (profiles.length === 0) {
         setError('User profile not found');
         return;
       }
 
-      const senderProfile = profileResult.data[0];
+      const senderProfile = profiles[0];
 
       // Create the message
-      await client.models.Message.create({
-        content: messageContent,
-        subject: messageSubject,
-        senderId: senderProfile.id,
-        recipientId: selectedRecipient,
-        isRead: false
+      await client.graphql({
+        query: createMessage,
+        variables: {
+          input: {
+            content: messageContent,
+            subject: messageSubject,
+            senderId: senderProfile.id,
+            recipientId: selectedRecipient,
+            isRead: false
+          }
+        }
       });
 
       onMessageSent();

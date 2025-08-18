@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from 'aws-amplify/api';
+import { listMessages, listUserProfiles, getUserProfile } from '../../queries';
+import { updateMessage } from '../../mutations';
 
 interface Message {
   id: string;
@@ -39,65 +40,44 @@ const MessagingInbox: React.FC<MessagingInboxProps> = () => {
       setLoading(true);
       setError(null);
 
-      const client = generateClient<Schema>();
+      const client = generateClient();
       
       // Get user's profile to find their ID
-      const profileResult = await client.models.UserProfile.list({
-        filter: {
-          email: { eq: user?.signInDetails?.loginId }
+      const profileResult = await client.graphql({
+        query: listUserProfiles,
+        variables: {
+          filter: {
+            email: { eq: user?.signInDetails?.loginId }
+          }
         }
       });
 
-      if (profileResult.data.length === 0) {
+      const profiles = profileResult.data.listUserProfiles.items;
+      if (profiles.length === 0) {
         setError('User profile not found');
         setLoading(false);
         return;
       }
 
-      const userProfile = profileResult.data[0];
+      const userProfile = profiles[0];
       
       // Get received messages
-      const messagesResult = await client.models.Message.list({
-        filter: {
-          recipientId: { eq: userProfile.id }
+      const messagesResult = await client.graphql({
+        query: listMessages,
+        variables: {
+          filter: {
+            recipientId: { eq: userProfile.id }
+          }
         }
       });
 
-                      // Get sender information for each message
-        const messagesWithSenders = await Promise.all(
-          messagesResult.data.map(async (message) => {
-            try {
-              if (!message.senderId) {
-                return {
-                  id: message.id,
-                  content: message.content,
-                  subject: message.subject,
-                  senderId: message.senderId,
-                  recipientId: message.recipientId,
-                  isRead: message.isRead,
-                  createdAt: message.createdAt,
-                  sender: { username: 'Unknown User' },
-                  recipient: { username: null }
-                };
-              }
-              const senderResult = await client.models.UserProfile.get({
-                id: message.senderId
-              });
-              return {
-                id: message.id,
-                content: message.content,
-                subject: message.subject,
-                senderId: message.senderId,
-                recipientId: message.recipientId,
-                isRead: message.isRead,
-                createdAt: message.createdAt,
-                sender: {
-                  username: senderResult.data?.username || 'Unknown User'
-                },
-                recipient: { username: null }
-              };
-            } catch (error) {
-              console.error('Error fetching sender:', error);
+      const messages = messagesResult.data.listMessages.items;
+      
+      // Get sender information for each message
+      const messagesWithSenders = await Promise.all(
+        messages.map(async (message: any) => {
+          try {
+            if (!message.senderId) {
               return {
                 id: message.id,
                 content: message.content,
@@ -110,12 +90,43 @@ const MessagingInbox: React.FC<MessagingInboxProps> = () => {
                 recipient: { username: null }
               };
             }
-          })
-        );
+            const senderResult = await client.graphql({
+              query: getUserProfile,
+              variables: { id: message.senderId }
+            });
+            return {
+              id: message.id,
+              content: message.content,
+              subject: message.subject,
+              senderId: message.senderId,
+              recipientId: message.recipientId,
+              isRead: message.isRead,
+              createdAt: message.createdAt,
+              sender: {
+                username: senderResult.data.getUserProfile?.username || 'Unknown User'
+              },
+              recipient: { username: null }
+            };
+          } catch (error) {
+            console.error('Error fetching sender:', error);
+            return {
+              id: message.id,
+              content: message.content,
+              subject: message.subject,
+              senderId: message.senderId,
+              recipientId: message.recipientId,
+              isRead: message.isRead,
+              createdAt: message.createdAt,
+              sender: { username: 'Unknown User' },
+              recipient: { username: null }
+            };
+          }
+        })
+      );
 
-        setMessages(messagesWithSenders.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        ));
+      setMessages(messagesWithSenders.sort((a: Message, b: Message) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      ));
     } catch (error) {
       console.error('Error loading messages:', error);
       setError('Failed to load messages');
@@ -126,10 +137,15 @@ const MessagingInbox: React.FC<MessagingInboxProps> = () => {
 
   const markAsRead = async (messageId: string) => {
     try {
-      const client = generateClient<Schema>();
-      await client.models.Message.update({
-        id: messageId,
-        isRead: true
+      const client = generateClient();
+      await client.graphql({
+        query: updateMessage,
+        variables: {
+          input: {
+            id: messageId,
+            isRead: true
+          }
+        }
       });
 
       setMessages(prev => prev.map(msg => 
