@@ -1285,14 +1285,20 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     
                     {isMissionValuesExpanded && (
                       <div className="p-4 bg-white">
-                        <MissionValuesMultiSelect
-                          selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
-                          onChange={(values) => {
-                            console.log('🎯 MyAccountPage MissionValuesMultiSelect onChange called with:', values);
-                            handleInputChange('missionValuesAlignment', values.join(', '));
-                          }}
-                          placeholder="Select values that align with your mission..."
-                        />
+                        <div className="text-sm text-gray-600 mb-3">
+                          Values that align with your mission and goals
+                        </div>
+                        <div className="skills-multi-select-container">
+                          <MissionValuesMultiSelect
+                            selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
+                            onChange={(values) => {
+                              console.log('🎯 MyAccountPage MissionValuesMultiSelect onChange called with:', values);
+                              handleInputChange('missionValuesAlignment', values.join(', '));
+                            }}
+                            placeholder="Select values that align with your mission..."
+                            className="w-full"
+                          />
+                        </div>
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Additional Details
@@ -1342,14 +1348,20 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     
                     {isVentureInterestsExpanded && (
                       <div className="p-4 bg-white">
-                        <VentureInterestsMultiSelect
-                          selectedInterests={formData.ventureInterests ? formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean) : []}
-                          onChange={(interests) => {
-                            console.log('🚀 MyAccountPage VentureInterestsMultiSelect onChange called with:', interests);
-                            handleInputChange('ventureInterests', interests.join(', '));
-                          }}
-                          placeholder="Select venture types and industries that interest you..."
-                        />
+                        <div className="text-sm text-gray-600 mb-3">
+                          Types of ventures and industries you're interested in
+                        </div>
+                        <div className="skills-multi-select-container">
+                          <VentureInterestsMultiSelect
+                            selectedInterests={formData.ventureInterests ? formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean) : []}
+                            onChange={(interests) => {
+                              console.log('🚀 MyAccountPage VentureInterestsMultiSelect onChange called with:', interests);
+                              handleInputChange('ventureInterests', interests.join(', '));
+                            }}
+                            placeholder="Select venture types and industries that interest you..."
+                            className="w-full"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -1385,14 +1397,20 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     
                     {isPreferredEngagementExpanded && (
                       <div className="p-4 bg-white">
-                        <PreferredEngagementMultiSelect
-                          selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
-                          onChange={(engagements) => {
-                            console.log('🤝 MyAccountPage PreferredEngagementMultiSelect onChange called with:', engagements);
-                            handleInputChange('preferredEngagement', engagements.join(', '));
-                          }}
-                          placeholder="Select how you'd like to engage with ventures..."
-                        />
+                        <div className="text-sm text-gray-600 mb-3">
+                          How you prefer to engage with ventures or projects
+                        </div>
+                        <div className="skills-multi-select-container">
+                          <PreferredEngagementMultiSelect
+                            selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
+                            onChange={(engagements) => {
+                              console.log('🤝 MyAccountPage PreferredEngagementMultiSelect onChange called with:', engagements);
+                              handleInputChange('preferredEngagement', engagements.join(', '));
+                            }}
+                            placeholder="Select how you'd like to engage with ventures..."
+                            className="w-full"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
