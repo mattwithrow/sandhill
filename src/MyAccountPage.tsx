@@ -117,7 +117,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       case UserProfileUserType.expert:
         return 'Skilled professional ready to help bring ideas to life';
       case UserProfileUserType.ventures:
-        return 'Building something meaningful and looking for the right people';
+        return 'Find the right people and build something meaningful';
       
       default:
         return 'Member of the Sandhill community';
