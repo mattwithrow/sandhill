@@ -1201,22 +1201,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
 
                   {/* User Type Specific Fields */}
-                  {formData.userType === 'ventures' && (
-                    <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
-                        What You're Building
-                      </label>
-                      <div className="text-sm text-gray-600 mb-2">
-                        Describe your venture and the support you need
-                      </div>
-                      <textarea
-                        value={formData.expertSupportNeeded}
-                        onChange={(e) => handleInputChange('expertSupportNeeded', e.target.value)}
-                        rows={4}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                      />
-                    </div>
-                  )}
+
 
                   {formData.userType === 'expert' && (
                     <div>
