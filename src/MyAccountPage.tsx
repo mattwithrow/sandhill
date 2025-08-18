@@ -1222,29 +1222,58 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                  {/* Skills - Single Line Text */}
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      {formData.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
-                    </label>
-                    <div className="text-sm text-gray-600 mb-2">
-                      {formData.userType === 'ventures' 
-                        ? "e.g., Frontend Development, Design, Marketing, Business Strategy"
-                        : "e.g., React, UI/UX Design, Growth Marketing, Product Management"
-                      }
-                    </div>
-                    <input
-                      type="text"
-                      value={formData.skills}
-                      onChange={(e) => handleInputChange('skills', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                    />
-                    <div className="mt-2 text-sm text-gray-600">
-                      {formData.userType === 'ventures' 
-                        ? "What skills do you need help with for your venture?"
-                        : "What skills can you offer to help ventures?"
-                      }
-                    </div>
+                  {/* Skills - Collapsible Multi-Select */}
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setIsSkillsExpanded(!isSkillsExpanded)}
+                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
+                    >
+                      <div>
+                        <span className="text-lg font-semibold text-gray-800">
+                          {formData.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                        </span>
+                        {formData.skills && (
+                          <span className="ml-2 text-sm text-gray-500">
+                            ({formData.skills.split(',').map(s => s.trim()).filter(Boolean).length} selected)
+                          </span>
+                        )}
+                      </div>
+                      <svg
+                        className={`w-5 h-5 text-gray-500 transition-transform ${
+                          isSkillsExpanded ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {isSkillsExpanded && (
+                      <div className="p-4 bg-white">
+                        <div className="text-sm text-gray-600 mb-3">
+                          {formData.userType === 'ventures' 
+                            ? "What skills do you need help with for your venture?"
+                            : "What skills can you offer to help ventures?"
+                          }
+                        </div>
+                        <div className="skills-multi-select-container">
+                          <SkillsMultiSelect
+                            selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
+                            onChange={(skills) => handleInputChange('skills', skills.join(', '))}
+                            placeholder={
+                              formData.userType === 'ventures' 
+                                ? "Select skills you're looking for..." 
+                                : "Select skills you have..."
+                            }
+                            className="w-full"
+                            userType={formData.userType}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Mission & Values - Collapsible Section */}
