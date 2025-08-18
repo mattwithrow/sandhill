@@ -593,6 +593,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   }>({ isUnique: true, message: '' });
   const [isSkillsExpanded, setIsSkillsExpanded] = useState(false);
   const [isSkillsDisplayExpanded, setIsSkillsDisplayExpanded] = useState(false);
+  const [isMissionValuesExpanded, setIsMissionValuesExpanded] = useState(false);
+  const [isVentureInterestsExpanded, setIsVentureInterestsExpanded] = useState(false);
+  const [isPreferredEngagementExpanded, setIsPreferredEngagementExpanded] = useState(false);
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -1145,11 +1148,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
                         Location
                       </label>
+                      <div className="text-sm text-gray-600 mb-2">
+                        San Francisco, CA or Remote
+                      </div>
                       <input
                         type="text"
                         value={formData.location}
                         onChange={(e) => handleInputChange('location', e.target.value)}
-                        placeholder="San Francisco, CA or Remote"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                       />
                       {formData.location && (
@@ -1190,10 +1195,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
                       Bio
                     </label>
+                    <div className="text-sm text-gray-600 mb-2">
+                      Tell us about yourself...
+                    </div>
                     <textarea
                       value={formData.bio}
                       onChange={(e) => handleInputChange('bio', e.target.value)}
-                      placeholder="Tell us about yourself..."
                       rows={4}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                     />
@@ -1204,35 +1211,62 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
                       Experience
                     </label>
+                    <div className="text-sm text-gray-600 mb-2">
+                      What's your background and experience?
+                    </div>
                     <textarea
                       value={formData.experience}
                       onChange={(e) => handleInputChange('experience', e.target.value)}
-                      placeholder="What's your background and experience?"
                       rows={5}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                     />
                   </div>
 
-                  {/* Skills - Collapsible Section */}
+                  {/* Skills - Single Line Text */}
+                  <div>
+                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      {formData.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                    </label>
+                    <div className="text-sm text-gray-600 mb-2">
+                      {formData.userType === 'ventures' 
+                        ? "e.g., Frontend Development, Design, Marketing, Business Strategy"
+                        : "e.g., React, UI/UX Design, Growth Marketing, Product Management"
+                      }
+                    </div>
+                    <input
+                      type="text"
+                      value={formData.skills}
+                      onChange={(e) => handleInputChange('skills', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                    />
+                    <div className="mt-2 text-sm text-gray-600">
+                      {formData.userType === 'ventures' 
+                        ? "What skills do you need help with for your venture?"
+                        : "What skills can you offer to help ventures?"
+                      }
+                    </div>
+                  </div>
+
+                  {/* Mission & Values - Collapsible Section */}
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     <button
                       type="button"
-                      onClick={() => setIsSkillsExpanded(!isSkillsExpanded)}
+                      onClick={() => setIsMissionValuesExpanded(!isMissionValuesExpanded)}
                       className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
                     >
                       <div>
                         <span className="text-lg font-semibold text-gray-800">
-                          {formData.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                          Mission & Values
                         </span>
-                        {formData.skills && (
+                        {formData.missionValuesAlignment && (
                           <span className="ml-2 text-sm text-gray-500">
-                            ({formData.skills.split(',').map(s => s.trim()).filter(Boolean).length} selected)
+                            ({formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean).length} selected)
                           </span>
                         )}
                       </div>
                       <svg
                         className={`w-5 h-5 text-gray-500 transition-transform ${
-                          isSkillsExpanded ? 'rotate-180' : ''
+                          isMissionValuesExpanded ? 'rotate-180' : ''
                         }`}
                         fill="none"
                         stroke="currentColor"
@@ -1242,74 +1276,109 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </svg>
                     </button>
                     
-                    {isSkillsExpanded && (
+                    {isMissionValuesExpanded && (
                       <div className="p-4 bg-white">
-                        <div className="skills-multi-select-container">
-                          <SkillsMultiSelect
-                            selectedSkills={formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : []}
-                            onChange={(skills) => handleInputChange('skills', skills.join(', '))}
-                            placeholder={
-                              formData.userType === 'ventures' 
-                                ? "Select skills you're looking for..." 
-                                : "Select skills you have..."
-                            }
-                            className="w-full"
-                            userType={formData.userType}
+                        <MissionValuesMultiSelect
+                          selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
+                          onChange={(values) => handleInputChange('missionValuesAlignment', values.join(', '))}
+                          placeholder="Select values that align with your mission..."
+                        />
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Additional Values & Mission Details
+                          </label>
+                          <div className="text-sm text-gray-600 mb-2">
+                            Add any additional values or mission details that are important to you...
+                          </div>
+                          <textarea
+                            value={formData.values}
+                            onChange={(e) => handleInputChange('values', e.target.value)}
+                            rows={3}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                           />
-                        </div>
-                        <div className="mt-2 text-sm text-gray-600">
-                          {formData.userType === 'ventures' 
-                            ? "What skills do you need help with for your venture?"
-                            : "What skills can you offer to help ventures?"
-                          }
                         </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Mission & Values Alignment */}
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Mission & Values
-                    </label>
-                    <MissionValuesMultiSelect
-                      selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
-                      onChange={(values) => handleInputChange('missionValuesAlignment', values.join(', '))}
-                      placeholder="Select values that align with your mission..."
-                    />
-                    <div className="mt-2">
-                      <textarea
-                        value={formData.values}
-                        onChange={(e) => handleInputChange('values', e.target.value)}
-                        placeholder="Add any additional values or mission details that are important to you..."
-                        rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                      />
-                    </div>
+                  {/* Venture Interests - Collapsible Section */}
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setIsVentureInterestsExpanded(!isVentureInterestsExpanded)}
+                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
+                    >
+                      <div>
+                        <span className="text-lg font-semibold text-gray-800">
+                          Types of Ventures You're Interested In
+                        </span>
+                        {formData.ventureInterests && (
+                          <span className="ml-2 text-sm text-gray-500">
+                            ({formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean).length} selected)
+                          </span>
+                        )}
+                      </div>
+                      <svg
+                        className={`w-5 h-5 text-gray-500 transition-transform ${
+                          isVentureInterestsExpanded ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {isVentureInterestsExpanded && (
+                      <div className="p-4 bg-white">
+                        <VentureInterestsMultiSelect
+                          selectedInterests={formData.ventureInterests ? formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean) : []}
+                          onChange={(interests) => handleInputChange('ventureInterests', interests.join(', '))}
+                          placeholder="Select venture types and industries that interest you..."
+                        />
+                      </div>
+                    )}
                   </div>
 
-                  {/* Venture Interests */}
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Types of Ventures You're Interested In
-                    </label>
-                    <VentureInterestsMultiSelect
-                      selectedInterests={formData.ventureInterests ? formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean) : []}
-                      onChange={(interests) => handleInputChange('ventureInterests', interests.join(', '))}
-                      placeholder="Select venture types and industries that interest you..."
-                    />
-                  </div>
-
-                  {/* Preferred Engagement */}
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Preferred Engagement Types
-                    </label>
-                    <PreferredEngagementMultiSelect
-                      selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
-                      onChange={(engagements) => handleInputChange('preferredEngagement', engagements.join(', '))}
-                      placeholder="Select how you'd like to engage with ventures..."
-                    />
+                  {/* Preferred Engagement - Collapsible Section */}
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setIsPreferredEngagementExpanded(!isPreferredEngagementExpanded)}
+                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
+                    >
+                      <div>
+                        <span className="text-lg font-semibold text-gray-800">
+                          Preferred Engagement Types
+                        </span>
+                        {formData.preferredEngagement && (
+                          <span className="ml-2 text-sm text-gray-500">
+                            ({formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean).length} selected)
+                          </span>
+                        )}
+                      </div>
+                      <svg
+                        className={`w-5 h-5 text-gray-500 transition-transform ${
+                          isPreferredEngagementExpanded ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    
+                    {isPreferredEngagementExpanded && (
+                      <div className="p-4 bg-white">
+                        <PreferredEngagementMultiSelect
+                          selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
+                          onChange={(engagements) => handleInputChange('preferredEngagement', engagements.join(', '))}
+                          placeholder="Select how you'd like to engage with ventures..."
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/* User Type Specific Fields */}
@@ -1318,10 +1387,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
                         Tell us as much as you want about what you're trying to do
                       </label>
+                      <div className="text-sm text-gray-600 mb-2">
+                        What type of expert support are you looking for? (e.g., technical development, design, marketing, business strategy, etc.)
+                      </div>
                       <textarea
                         value={formData.expertSupportNeeded}
                         onChange={(e) => handleInputChange('expertSupportNeeded', e.target.value)}
-                        placeholder="What type of expert support are you looking for? (e.g., technical development, design, marketing, business strategy, etc.)"
                         rows={4}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
@@ -1333,10 +1404,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
                         What type of ventures do you want to get involved with?
                       </label>
+                      <div className="text-sm text-gray-600 mb-2">
+                        Describe the types of ventures, projects, or ideas you're interested in working on...
+                      </div>
                       <textarea
                         value={formData.ventureInterestsDescription}
                         onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
-                        placeholder="Describe the types of ventures, projects, or ideas you're interested in working on..."
                         rows={4}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
@@ -1351,11 +1424,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           LinkedIn
                         </label>
+                        <div className="text-xs text-gray-500 mb-1">
+                          linkedin.com/in/yourprofile or @yourprofile
+                        </div>
                         <input
                           type="text"
                           value={formData.linkedinUrl}
                           onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
-                          placeholder="linkedin.com/in/yourprofile or @yourprofile"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
@@ -1363,11 +1438,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           GitHub
                         </label>
+                        <div className="text-xs text-gray-500 mb-1">
+                          github.com/yourusername or @yourusername
+                        </div>
                         <input
                           type="text"
                           value={formData.githubUrl}
                           onChange={(e) => handleInputChange('githubUrl', e.target.value)}
-                          placeholder="github.com/yourusername or @yourusername"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
@@ -1375,6 +1452,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Website/Portfolio
                         </label>
+                        <div className="text-xs text-gray-500 mb-1">
+                          yourwebsite.com or yourportfolio.com
+                        </div>
                         <input
                           type="text"
                           value={formData.websiteUrl || formData.portfolioUrl}
@@ -1382,7 +1462,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                             handleInputChange('websiteUrl', e.target.value);
                             handleInputChange('portfolioUrl', e.target.value);
                           }}
-                          placeholder="yourwebsite.com or yourportfolio.com"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
@@ -1390,11 +1469,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Twitter
                         </label>
+                        <div className="text-xs text-gray-500 mb-1">
+                          @yourusername or twitter.com/yourusername
+                        </div>
                         <input
                           type="text"
                           value={formData.twitterUrl}
                           onChange={(e) => handleInputChange('twitterUrl', e.target.value)}
-                          placeholder="@yourusername or twitter.com/yourusername"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
@@ -1402,11 +1483,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Instagram
                         </label>
+                        <div className="text-xs text-gray-500 mb-1">
+                          @yourusername or instagram.com/yourusername
+                        </div>
                         <input
                           type="text"
                           value={formData.instagramUrl}
                           onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
-                          placeholder="@yourusername or instagram.com/yourusername"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
