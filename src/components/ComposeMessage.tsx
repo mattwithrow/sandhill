@@ -179,26 +179,19 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
 
       <div className="compose-form">
         <div className="form-group">
-          <label htmlFor="recipient">To:</label>
+          <label htmlFor="recipient">
+            {selectedRecipient ? 'Message to:' : 'To:'}
+          </label>
           {selectedRecipient ? (
-            // Show selected recipient (non-editable)
+            // Show selected recipient (completely non-editable)
             <div className="selected-recipient-display">
               <div className="recipient-info">
                 <span className="recipient-name">{recipients.find(r => r.id === selectedRecipient)?.username}</span>
                 <span className="recipient-type">({recipients.find(r => r.id === selectedRecipient)?.userType})</span>
               </div>
-              <button 
-                onClick={() => {
-                  setSelectedRecipient('');
-                  setSearchTerm('');
-                }}
-                className="btn btn-ghost btn-sm"
-              >
-                Change
-              </button>
             </div>
           ) : (
-            // Show search interface only if no recipient is pre-filled
+            // Show search interface only when starting from Messages page (no pre-filled recipient)
             <div className="recipient-selector">
               <input
                 type="text"
