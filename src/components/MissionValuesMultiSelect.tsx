@@ -18,6 +18,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
   const selectedValueNames = getSimplifiedMissionValueNames(selectedValueIds);
 
   const toggleValue = (valueId: string) => {
+    console.log('🎯 MissionValuesMultiSelect toggleValue called with:', valueId);
     const value = SIMPLIFIED_MISSION_VALUES.find(v => v.id === valueId);
     if (!value) return;
 
@@ -26,6 +27,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
       : [...selectedValueIds, valueId];
 
     const newSelectedValueNames = getSimplifiedMissionValueNames(newSelectedValues);
+    console.log('🎯 MissionValuesMultiSelect calling onChange with:', newSelectedValueNames);
     onChange(newSelectedValueNames);
   };
 

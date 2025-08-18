@@ -18,6 +18,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
   const selectedEngagementNames = getSimplifiedEngagementTypeNames(selectedEngagementIds);
 
   const toggleEngagement = (engagementId: string) => {
+    console.log('🤝 PreferredEngagementMultiSelect toggleEngagement called with:', engagementId);
     const engagement = SIMPLIFIED_ENGAGEMENT_TYPES.find(e => e.id === engagementId);
     if (!engagement) return;
 
@@ -26,6 +27,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
       : [...selectedEngagementIds, engagementId];
 
     const newSelectedEngagementNames = getSimplifiedEngagementTypeNames(newSelectedEngagements);
+    console.log('🤝 PreferredEngagementMultiSelect calling onChange with:', newSelectedEngagementNames);
     onChange(newSelectedEngagementNames);
   };
 

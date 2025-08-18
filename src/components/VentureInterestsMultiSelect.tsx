@@ -19,6 +19,7 @@ const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = 
   const selectedInterestNames = getVentureInterestNames(selectedInterestIds);
 
   const toggleInterest = (interestId: string) => {
+    console.log('🚀 VentureInterestsMultiSelect toggleInterest called with:', interestId);
     const interest = VENTURE_INTERESTS.find(i => i.id === interestId);
     if (!interest) return;
 
@@ -27,6 +28,7 @@ const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = 
       : [...selectedInterestIds, interestId];
 
     const newSelectedInterestNames = getVentureInterestNames(newSelectedInterests);
+    console.log('🚀 VentureInterestsMultiSelect calling onChange with:', newSelectedInterestNames);
     onChange(newSelectedInterestNames);
   };
 
