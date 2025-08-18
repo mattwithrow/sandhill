@@ -28,6 +28,7 @@ interface ExpertProfile {
   preferredEngagement: string;
   timeCommitment: string;
   ventureInterestsDescription: string;
+  messagingEnabled: boolean | null;
   linkedinUrl: string;
   githubUrl: string;
   portfolioUrl: string;
@@ -114,6 +115,7 @@ const ExpertsPage: React.FC = () => {
         preferredEngagement: profile.preferredEngagement || '',
         timeCommitment: profile.timeCommitment || '',
         ventureInterestsDescription: profile.ventureInterestsDescription || '',
+        messagingEnabled: profile.messagingEnabled,
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
@@ -751,6 +753,14 @@ const ExpertsPage: React.FC = () => {
                           >
                             View Profile
                           </button>
+                          {expert.messagingEnabled !== false && (
+                            <button
+                              onClick={() => navigate(`/messages?compose=true&recipient=${expert.username}`)}
+                              className="btn btn-outline"
+                            >
+                              💬 Message
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

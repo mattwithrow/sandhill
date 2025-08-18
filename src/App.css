@@ -2104,6 +2104,7 @@ p {
 .expert-list-actions {
   display: flex;
   align-items: flex-start;
+  gap: var(--space-sm);
   padding-top: var(--space-sm);
 }
 
@@ -2229,7 +2230,8 @@ p {
   }
   
   .expert-list-actions .btn {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
   }
   
   .expert-list-meta-row {

@@ -24,6 +24,7 @@ interface VentureProfile {
   preferredEngagement: string;
   timeCommitment: string;
   expertSupportNeeded: string;
+  messagingEnabled: boolean | null;
   linkedinUrl: string;
   githubUrl: string;
   portfolioUrl: string;
@@ -107,6 +108,7 @@ const VenturesPage: React.FC = () => {
         preferredEngagement: profile.preferredEngagement || '',
         timeCommitment: profile.timeCommitment || '',
         expertSupportNeeded: profile.expertSupportNeeded || '',
+        messagingEnabled: profile.messagingEnabled,
         linkedinUrl: profile.linkedinUrl || '',
         githubUrl: profile.githubUrl || '',
         portfolioUrl: profile.portfolioUrl || '',
@@ -707,6 +709,14 @@ const VenturesPage: React.FC = () => {
                           >
                             View Venture
                           </button>
+                          {venture.messagingEnabled !== false && (
+                            <button
+                              onClick={() => navigate(`/messages?compose=true&recipient=${venture.username}`)}
+                              className="btn btn-outline"
+                            >
+                              💬 Message
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
