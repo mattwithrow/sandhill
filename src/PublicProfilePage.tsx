@@ -268,11 +268,11 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
         <div className="max-w-4xl mx-auto">
           <section className="section">
             <div className="content-card">
-              <div className="space-y-8">
+              <div className="space-y-8 text-left">
                 {/* Bio */}
                 {profile.bio && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">About</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">About</h3>
                     <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.bio}</p>
                   </div>
                 )}
@@ -280,7 +280,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Values (if not already shown in Mission & Values Alignment) */}
                 {profile.values && !profile.missionValuesAlignment && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Values</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Values</h3>
                     <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
                   </div>
                 )}
@@ -288,7 +288,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Experience */}
                 {profile.experience && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Experience</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Background</h3>
                     <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.experience}</p>
                   </div>
                 )}
@@ -296,60 +296,57 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Skills */}
                 {profile.skills && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
                       {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
                     </h3>
-                    <div className="flex flex-wrap gap-3">
+                    <ul className="list-none p-0 m-0">
                       {profile.skills.split(',').map((skill, index) => (
-                        <span
-                          key={index}
-                          className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300"
-                        >
-                          {skill.trim()}
-                        </span>
+                        <li key={index} className="inline-block mb-3 mr-3">
+                          <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
+                            {skill.trim()}
+                          </span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
                 )}
 
                 {/* Mission & Values Alignment */}
                 <div className="feature-card">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Mission & Values Alignment</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Mission & Values</h3>
                   {profile.missionValuesAlignment ? (
                     <>
-                      <div className="flex flex-wrap gap-3 mb-4">
+                      <ul className="list-none p-0 m-0 mb-4">
                         {profile.missionValuesAlignment.split(',').map((value, index) => (
-                          <span
-                            key={index}
-                            className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200"
-                          >
-                            {value.trim()}
-                          </span>
+                          <li key={index} className="inline-block mb-3 mr-3">
+                            <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200">
+                              {value.trim()}
+                            </span>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                       {profile.values && (
                         <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
                       )}
                     </>
                   ) : (
-                    <p className="text-gray-500 italic">No mission and values alignment information provided yet.</p>
+                    <p className="text-gray-500 italic">No mission and values information provided yet.</p>
                   )}
                 </div>
 
                 {/* Venture Interests */}
                 <div className="feature-card">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Venture Interests</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Venture Interests</h3>
                   {profile.ventureInterests ? (
-                    <div className="flex flex-wrap gap-3">
+                    <ul className="list-none p-0 m-0">
                       {profile.ventureInterests.split(',').map((interest, index) => (
-                        <span
-                          key={index}
-                          className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200"
-                        >
-                          {interest.trim()}
-                        </span>
+                        <li key={index} className="inline-block mb-3 mr-3">
+                          <span className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200">
+                            {interest.trim()}
+                          </span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   ) : (
                     <p className="text-gray-500 italic">No venture interests specified yet.</p>
                   )}
@@ -357,18 +354,17 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
 
                 {/* Preferred Engagement */}
                 <div className="feature-card">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferred Engagement</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">How I Want to Engage</h3>
                   {profile.preferredEngagement ? (
-                    <div className="flex flex-wrap gap-3">
+                    <ul className="list-none p-0 m-0">
                       {profile.preferredEngagement.split(',').map((engagement, index) => (
-                        <span
-                          key={index}
-                          className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200"
-                        >
-                          {engagement.trim()}
-                        </span>
+                        <li key={index} className="inline-block mb-3 mr-3">
+                          <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
+                            {engagement.trim()}
+                          </span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   ) : (
                     <p className="text-gray-500 italic">No preferred engagement types specified yet.</p>
                   )}
@@ -377,7 +373,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Expert Support Needed (for Ventures and Both) */}
                 {(profile.userType === 'ventures' || profile.userType === 'both') && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">What I'm Building</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">What I'm Building</h3>
                     {profile.expertSupportNeeded ? (
                       <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
                     ) : (
@@ -389,7 +385,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Venture Interests Description (for Experts and Both) */}
                 {(profile.userType === 'expert' || profile.userType === 'both') && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Ventures I Want to Get Involved With</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Ventures I Want to Work With</h3>
                     {profile.ventureInterestsDescription ? (
                       <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.ventureInterestsDescription}</p>
                     ) : (
@@ -402,7 +398,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 <div className="grid-2">
                   {profile.location && (
                     <div className="feature-card">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Location</h3>
                       <p className="text-gray-700 text-lg">{profile.location}</p>
                       {profile.timezone ? (
                         <p className="text-sm text-gray-500 mt-1">
@@ -422,7 +418,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   )}
                   {profile.userType === 'expert' && (
                     <div className="feature-card">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Time Commitment</h3>
                       {profile.timeCommitment ? (
                         <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
                       ) : (
@@ -435,7 +431,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                 {/* Social Links */}
                 {(profile.linkedinUrl || profile.githubUrl || profile.portfolioUrl || profile.websiteUrl || profile.twitterUrl || profile.instagramUrl) && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Connect</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Connect</h3>
                     <ul className="space-y-3">
                       {profile.linkedinUrl && (
                         <li>
