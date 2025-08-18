@@ -335,6 +335,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       console.log('🔍 User username:', user?.username);
       console.log('🔍 User userId:', user?.userId);
       console.log('Form data to save:', formData);
+      console.log('🔍 Multi-select fields:');
+      console.log('  - missionValuesAlignment:', formData.missionValuesAlignment);
+      console.log('  - ventureInterests:', formData.ventureInterests);
+      console.log('  - preferredEngagement:', formData.preferredEngagement);
+      console.log('  - timeCommitment:', formData.timeCommitment);
+      console.log('  - expertSupportNeeded:', formData.expertSupportNeeded);
       
       // Try multiple ways to get the user email
       let userEmail = user?.signInDetails?.loginId || (user as any)?.email || user?.username;
@@ -480,6 +486,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
+    console.log(`🔄 handleInputChange called - field: ${field}, value:`, value);
     setFormData(prev => {
       const updatedData = {
         ...prev,
@@ -491,6 +498,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         updatedData.timezone = detectTimezoneFromLocation(value);
       }
       
+      console.log(`📝 Updated formData for ${field}:`, (updatedData as any)[field]);
       return updatedData;
     });
   };
