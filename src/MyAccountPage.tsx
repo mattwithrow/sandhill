@@ -704,7 +704,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               </span>!
             </h1>
             <p className="hero-subtitle">
-              {profile ? getUserTypeDescription(profile.userType) : 'Welcome to your Sandhill profile. This is where your journey begins.'}
+              {profile ? getUserTypeDescription(profile.userType) : 'Create your profile to connect with amazing people and opportunities.'}
             </p>
             
             <div className="cta-buttons">
@@ -765,7 +765,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               <div className="content-card">
                 <div className="section-header-left">
                   <div className="eyebrow">Your Profile</div>
-                  <h2 className="section-title">Manage your personal information and preferences</h2>
+                  <h2 className="section-title">Your information and preferences</h2>
                 </div>
 
                 <div className="flex justify-end mb-8">
@@ -1016,16 +1016,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 ) : (
                   <div className="text-center py-12">
                     <div className="max-w-md mx-auto">
-                      <h3 className="text-2xl font-bold text-gray-800 mb-4">Welcome to Sandhill!</h3>
-                      <p className="text-gray-600 mb-6">Create your profile to get started and connect with amazing people.</p>
-                      <p className="text-sm text-gray-500 mb-8">
-                        This will help us connect you with the right people and opportunities.
-                      </p>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-4">Create Your Profile</h3>
+                      <p className="text-gray-600 mb-8">Tell us about yourself to connect with the right people and opportunities.</p>
                       <button
                         onClick={() => setIsEditing(true)}
                         className="btn btn-primary btn-large"
                       >
-                        Create Profile
+                        Get Started
                       </button>
                     </div>
                   </div>
@@ -1037,8 +1034,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             <section className="section">
               <div className="content-card">
                 <div className="section-header-left">
-                  <div className="eyebrow">{profile ? 'Edit Your Profile' : 'Create Your Profile'}</div>
-                  <h2 className="section-title">Update your information to help us connect you better</h2>
+                  <div className="eyebrow">{profile ? 'Edit Profile' : 'Create Profile'}</div>
+                  <h2 className="section-title">Tell us about yourself</h2>
                 </div>
 
                 <div className="flex justify-end mb-8">
@@ -1193,10 +1190,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Bio */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Bio
+                      About You
                     </label>
                     <div className="text-sm text-gray-600 mb-2">
-                      Tell us about yourself...
+                      A brief introduction about yourself
                     </div>
                     <textarea
                       value={formData.bio}
@@ -1209,10 +1206,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Experience */}
                   <div>
                     <label className="block text-lg font-semibold text-gray-800 mb-3">
-                      Experience
+                      Background
                     </label>
                     <div className="text-sm text-gray-600 mb-2">
-                      What's your background and experience?
+                      Your relevant experience and background
                     </div>
                     <textarea
                       value={formData.experience}
@@ -1255,8 +1252,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <div className="p-4 bg-white">
                         <div className="text-sm text-gray-600 mb-3">
                           {formData.userType === 'ventures' 
-                            ? "What skills do you need help with for your venture?"
-                            : "What skills can you offer to help ventures?"
+                            ? "Skills you need for your venture"
+                            : "Skills you can offer to ventures"
                           }
                         </div>
                         <div className="skills-multi-select-container">
@@ -1314,10 +1311,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         />
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Additional Values & Mission Details
+                            Additional Details
                           </label>
                           <div className="text-sm text-gray-600 mb-2">
-                            Add any additional values or mission details that are important to you...
+                            Any additional values or mission details
                           </div>
                           <textarea
                             value={formData.values}
@@ -1339,7 +1336,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     >
                       <div>
                         <span className="text-lg font-semibold text-gray-800">
-                          Types of Ventures You're Interested In
+                          Venture Interests
                         </span>
                         {formData.ventureInterests && (
                           <span className="ml-2 text-sm text-gray-500">
@@ -1379,7 +1376,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     >
                       <div>
                         <span className="text-lg font-semibold text-gray-800">
-                          Preferred Engagement Types
+                          How You Want to Engage
                         </span>
                         {formData.preferredEngagement && (
                           <span className="ml-2 text-sm text-gray-500">
@@ -1414,10 +1411,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {formData.userType === 'ventures' && (
                     <div>
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
-                        Tell us as much as you want about what you're trying to do
+                        What You're Building
                       </label>
                       <div className="text-sm text-gray-600 mb-2">
-                        What type of expert support are you looking for? (e.g., technical development, design, marketing, business strategy, etc.)
+                        Describe your venture and the support you need
                       </div>
                       <textarea
                         value={formData.expertSupportNeeded}
@@ -1431,10 +1428,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {formData.userType === 'expert' && (
                     <div>
                       <label className="block text-lg font-semibold text-gray-800 mb-3">
-                        What type of ventures do you want to get involved with?
+                        Ventures You Want to Work With
                       </label>
                       <div className="text-sm text-gray-600 mb-2">
-                        Describe the types of ventures, projects, or ideas you're interested in working on...
+                        Types of ventures or projects you're interested in
                       </div>
                       <textarea
                         value={formData.ventureInterestsDescription}
@@ -1447,7 +1444,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
                   {/* Links - Compact Layout */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Links</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Social Links</h3>
                     <div className="grid-3 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1479,10 +1476,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Website/Portfolio
+                          Website
                         </label>
                         <div className="text-xs text-gray-500 mb-1">
-                          yourwebsite.com or yourportfolio.com
+                          yourwebsite.com
                         </div>
                         <input
                           type="text"
@@ -1537,16 +1534,14 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       />
                       <div className="flex-1">
                         <label htmlFor="messagingEnabled" className="block text-lg font-semibold text-gray-800 mb-2">
-                          Enable Messaging
+                          Allow Messages
                         </label>
                         <p className="text-gray-600 text-sm">
-                          Allow other users to send you messages and start conversations. 
-                          You can disable this if you prefer not to receive messages from other users.
+                          Let other users send you messages and start conversations.
                         </p>
                         {!formData.messagingEnabled && (
                           <p className="text-orange-600 text-sm mt-2">
-                            <strong>Note:</strong> When disabled, other users won't be able to message you, 
-                            and you won't be able to send messages to others.
+                            <strong>Note:</strong> When disabled, you won't be able to send or receive messages.
                           </p>
                         )}
                       </div>
@@ -1577,10 +1572,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           {/* Privacy Statement */}
           <section className="section">
             <div className="cta-section">
-              <h3 className="section-title">Your Privacy Matters</h3>
+              <h3 className="section-title">Your Privacy</h3>
               <p className="cta-text">
-                We won't sell your information because like you, we want to see greatness being built. 
-                Your data is secure and will only be used to connect you with the right opportunities and people.
+                We don't sell your information. Your data is secure and used only to connect you with the right opportunities.
               </p>
             </div>
           </section>
