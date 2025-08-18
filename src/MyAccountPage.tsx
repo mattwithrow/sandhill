@@ -845,16 +845,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       
                       {isSkillsDisplayExpanded && (
                         <div className="p-4 bg-white">
-                          <div className="flex flex-wrap gap-3">
+                          <ul className="list-none p-0 m-0">
                             {profile.skills.split(',').map((skill, index) => (
-                              <span
-                                key={index}
-                                className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300"
-                              >
-                                {skill.trim()}
-                              </span>
+                              <li key={index} className="inline-block mb-3 mr-3">
+                                <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
+                                  {skill.trim()}
+                                </span>
+                              </li>
                             ))}
-                          </div>
+                          </ul>
                         </div>
                       )}
                     </div>
@@ -863,17 +862,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     {/* Mission & Values Alignment */}
                     {profile.missionValuesAlignment && (
                       <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Mission & Values Alignment</h3>
-                        <div className="flex flex-wrap gap-3 mb-4">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Mission & Values</h3>
+                        <ul className="list-none p-0 m-0 mb-4">
                           {profile.missionValuesAlignment.split(',').map((value, index) => (
-                            <span
-                              key={index}
-                              className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200"
-                            >
-                              {value.trim()}
-                            </span>
+                            <li key={index} className="inline-block mb-3 mr-3">
+                              <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200">
+                                {value.trim()}
+                              </span>
+                            </li>
                           ))}
-                        </div>
+                        </ul>
                         {profile.values && (
                           <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
                         )}
@@ -883,34 +881,32 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     {/* Venture Interests */}
                     {profile.ventureInterests && (
                       <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Venture Interests</h3>
-                        <div className="flex flex-wrap gap-3">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Venture Interests</h3>
+                        <ul className="list-none p-0 m-0">
                           {profile.ventureInterests.split(',').map((interest, index) => (
-                            <span
-                              key={index}
-                              className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200"
-                            >
-                              {interest.trim()}
-                            </span>
+                            <li key={index} className="inline-block mb-3 mr-3">
+                              <span className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200">
+                                {interest.trim()}
+                              </span>
+                            </li>
                           ))}
-                        </div>
+                        </ul>
                       </div>
                     )}
 
                     {/* Preferred Engagement */}
                     {profile.preferredEngagement && (
                       <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Preferred Engagement</h3>
-                        <div className="flex flex-wrap gap-3">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">How I Want to Engage</h3>
+                        <ul className="list-none p-0 m-0">
                           {profile.preferredEngagement.split(',').map((engagement, index) => (
-                            <span
-                              key={index}
-                              className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200"
-                            >
-                              {engagement.trim()}
-                            </span>
+                            <li key={index} className="inline-block mb-3 mr-3">
+                              <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
+                                {engagement.trim()}
+                              </span>
+                            </li>
                           ))}
-                        </div>
+                        </ul>
                       </div>
                     )}
 
@@ -918,7 +914,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                      <div className="grid-2">
                        {profile.location && (
                          <div className="feature-card">
-                           <h3 className="text-lg font-semibold text-gray-800 mb-2">Location</h3>
+                           <h3 className="text-lg font-semibold text-gray-800 mb-4">Location</h3>
                            <p className="text-gray-700 text-lg">{profile.location}</p>
                            {profile.timezone && (
                              <p className="text-sm text-gray-500 mt-1">
@@ -934,7 +930,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                        )}
                        {profile.timeCommitment && profile.userType === 'expert' && (
                          <div className="feature-card">
-                           <h3 className="text-lg font-semibold text-gray-800 mb-2">Time Commitment</h3>
+                           <h3 className="text-lg font-semibold text-gray-800 mb-4">Time Commitment</h3>
                            <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
                          </div>
                        )}
