@@ -13,9 +13,7 @@ import {
 import { listUserProfiles } from '../queries';
 import { createUserProfile, updateUserProfile } from '../mutations';
 import SkillsMultiSelect from './components/SkillsMultiSelect';
-import MissionValuesMultiSelect from './components/MissionValuesMultiSelect';
-import VentureInterestsMultiSelect from './components/VentureInterestsMultiSelect';
-import PreferredEngagementMultiSelect from './components/PreferredEngagementMultiSelect';
+
 import { 
   detectTimezoneFromLocation, 
   getUserTimezone, 
@@ -47,12 +45,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     latitude?: number;
     longitude?: number;
     values: string;
-    missionValuesAlignment: string;
-    ventureInterests: string;
-    preferredEngagement: string;
     timeCommitment: string;
     expertSupportNeeded: string;
-    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -69,12 +63,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     location: '',
     timezone: getUserTimezone(),
     values: '',
-    missionValuesAlignment: '',
-    ventureInterests: '',
-    preferredEngagement: '',
     timeCommitment: '',
     expertSupportNeeded: '',
-    ventureInterestsDescription: '',
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
@@ -335,10 +325,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       console.log('🔍 User username:', user?.username);
       console.log('🔍 User userId:', user?.userId);
       console.log('Form data to save:', formData);
-      console.log('🔍 Multi-select fields:');
-      console.log('  - missionValuesAlignment:', formData.missionValuesAlignment);
-      console.log('  - ventureInterests:', formData.ventureInterests);
-      console.log('  - preferredEngagement:', formData.preferredEngagement);
+      console.log('🔍 Form fields:');
       console.log('  - timeCommitment:', formData.timeCommitment);
       console.log('  - expertSupportNeeded:', formData.expertSupportNeeded);
       
@@ -601,9 +588,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   }>({ isUnique: true, message: '' });
   const [isSkillsExpanded, setIsSkillsExpanded] = useState(false);
 
-  const [isMissionValuesExpanded, setIsMissionValuesExpanded] = useState(false);
-  const [isVentureInterestsExpanded, setIsVentureInterestsExpanded] = useState(false);
-  const [isPreferredEngagementExpanded, setIsPreferredEngagementExpanded] = useState(false);
+
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -1254,166 +1239,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     )}
                   </div>
 
-                  {/* Mission & Values - Collapsible Section */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setIsMissionValuesExpanded(!isMissionValuesExpanded)}
-                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
-                    >
-                      <div>
-                        <span className="text-lg font-semibold text-gray-800">
-                          Mission & Values
-                        </span>
-                        {formData.missionValuesAlignment && (
-                          <span className="ml-2 text-sm text-gray-500">
-                            ({formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean).length} selected)
-                          </span>
-                        )}
-                      </div>
-                      <svg
-                        className={`w-5 h-5 text-gray-500 transition-transform ${
-                          isMissionValuesExpanded ? 'rotate-180' : ''
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {isMissionValuesExpanded && (
-                      <div className="p-4 bg-white">
-                        <div className="text-sm text-gray-600 mb-3">
-                          Values that align with your mission and goals
-                        </div>
-                        <div className="skills-multi-select-container">
-                          <MissionValuesMultiSelect
-                            selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
-                            onChange={(values) => {
-                              console.log('🎯 MyAccountPage MissionValuesMultiSelect onChange called with:', values);
-                              handleInputChange('missionValuesAlignment', values.join(', '));
-                            }}
-                            placeholder="Select values that align with your mission..."
-                            className="w-full"
-                          />
-                        </div>
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Additional Details
-                          </label>
-                          <div className="text-sm text-gray-600 mb-2">
-                            Any additional values or mission details
-                          </div>
-                          <textarea
-                            value={formData.values}
-                            onChange={(e) => handleInputChange('values', e.target.value)}
-                            rows={3}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
 
-                  {/* Venture Interests - Collapsible Section */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setIsVentureInterestsExpanded(!isVentureInterestsExpanded)}
-                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
-                    >
-                      <div>
-                        <span className="text-lg font-semibold text-gray-800">
-                          Venture Interests
-                        </span>
-                        {formData.ventureInterests && (
-                          <span className="ml-2 text-sm text-gray-500">
-                            ({formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean).length} selected)
-                          </span>
-                        )}
-                      </div>
-                      <svg
-                        className={`w-5 h-5 text-gray-500 transition-transform ${
-                          isVentureInterestsExpanded ? 'rotate-180' : ''
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {isVentureInterestsExpanded && (
-                      <div className="p-4 bg-white">
-                        <div className="text-sm text-gray-600 mb-3">
-                          Types of ventures and industries you're interested in
-                        </div>
-                        <div className="skills-multi-select-container">
-                          <VentureInterestsMultiSelect
-                            selectedInterests={formData.ventureInterests ? formData.ventureInterests.split(',').map(s => s.trim()).filter(Boolean) : []}
-                            onChange={(interests) => {
-                              console.log('🚀 MyAccountPage VentureInterestsMultiSelect onChange called with:', interests);
-                              handleInputChange('ventureInterests', interests.join(', '));
-                            }}
-                            placeholder="Select venture types and industries that interest you..."
-                            className="w-full"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Preferred Engagement - Collapsible Section */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setIsPreferredEngagementExpanded(!isPreferredEngagementExpanded)}
-                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
-                    >
-                      <div>
-                        <span className="text-lg font-semibold text-gray-800">
-                          How You Want to Engage
-                        </span>
-                        {formData.preferredEngagement && (
-                          <span className="ml-2 text-sm text-gray-500">
-                            ({formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean).length} selected)
-                          </span>
-                        )}
-                      </div>
-                      <svg
-                        className={`w-5 h-5 text-gray-500 transition-transform ${
-                          isPreferredEngagementExpanded ? 'rotate-180' : ''
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {isPreferredEngagementExpanded && (
-                      <div className="p-4 bg-white">
-                        <div className="text-sm text-gray-600 mb-3">
-                          How you prefer to engage with ventures or projects
-                        </div>
-                        <div className="skills-multi-select-container">
-                          <PreferredEngagementMultiSelect
-                            selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
-                            onChange={(engagements) => {
-                              console.log('🤝 MyAccountPage PreferredEngagementMultiSelect onChange called with:', engagements);
-                              handleInputChange('preferredEngagement', engagements.join(', '));
-                            }}
-                            placeholder="Select how you'd like to engage with ventures..."
-                            className="w-full"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
 
                   {/* User Type Specific Fields */}
                   {formData.userType === 'ventures' && (
@@ -1442,8 +1268,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         Types of ventures or projects you're interested in
                       </div>
                       <textarea
-                        value={formData.ventureInterestsDescription}
-                        onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
+                                                    value=""
+                            onChange={(e) => {}}
                         rows={4}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                       />
