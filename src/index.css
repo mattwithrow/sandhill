@@ -747,6 +747,34 @@ a:hover {
   margin-top: var(--spacing-sm);
 }
 
+.selected-recipient-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-md);
+}
+
+.recipient-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.recipient-info .recipient-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.recipient-info .recipient-type {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  text-transform: capitalize;
+}
+
 .compose-actions {
   display: flex;
   gap: var(--spacing-md);

@@ -166,41 +166,13 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       <div className="compose-form">
         <div className="form-group">
           <label htmlFor="recipient">To:</label>
-          <div className="recipient-selector">
-            <input
-              type="text"
-              placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="form-input"
-            />
-            {searchTerm && (
-              <div className="recipient-dropdown">
-                {loading ? (
-                  <div className="loading-item">Loading...</div>
-                ) : filteredRecipients.length === 0 ? (
-                  <div className="no-results">No users found</div>
-                ) : (
-                  filteredRecipients.map((recipient) => (
-                    <div
-                      key={recipient.id}
-                      className={`recipient-option ${selectedRecipient === recipient.id ? 'selected' : ''}`}
-                                              onClick={() => {
-                          setSelectedRecipient(recipient.id);
-                          setSearchTerm(recipient.username || '');
-                        }}
-                    >
-                      <span className="recipient-name">{recipient.username}</span>
-                      <span className="recipient-type">{recipient.userType}</span>
-                    </div>
-                  ))
-                )}
+          {selectedRecipient ? (
+            // Show selected recipient (non-editable)
+            <div className="selected-recipient-display">
+              <div className="recipient-info">
+                <span className="recipient-name">{recipients.find(r => r.id === selectedRecipient)?.username}</span>
+                <span className="recipient-type">({recipients.find(r => r.id === selectedRecipient)?.userType})</span>
               </div>
-            )}
-          </div>
-          {selectedRecipient && (
-            <div className="selected-recipient">
-              <span>To: {recipients.find(r => r.id === selectedRecipient)?.username}</span>
               <button 
                 onClick={() => {
                   setSelectedRecipient('');
@@ -208,8 +180,42 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
                 }}
                 className="btn btn-ghost btn-sm"
               >
-                Clear
+                Change
               </button>
+            </div>
+          ) : (
+            // Show search interface
+            <div className="recipient-selector">
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-input"
+              />
+              {searchTerm && (
+                <div className="recipient-dropdown">
+                  {loading ? (
+                    <div className="loading-item">Loading...</div>
+                  ) : filteredRecipients.length === 0 ? (
+                    <div className="no-results">No users found</div>
+                  ) : (
+                    filteredRecipients.map((recipient) => (
+                      <div
+                        key={recipient.id}
+                        className={`recipient-option ${selectedRecipient === recipient.id ? 'selected' : ''}`}
+                        onClick={() => {
+                          setSelectedRecipient(recipient.id);
+                          setSearchTerm(recipient.username || '');
+                        }}
+                      >
+                        <span className="recipient-name">{recipient.username}</span>
+                        <span className="recipient-type">{recipient.userType}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
