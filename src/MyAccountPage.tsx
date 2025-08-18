@@ -85,12 +85,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     latitude?: number;
     longitude?: number;
     values: string;
-    missionValuesAlignment: string;
-    ventureInterests: string;
-    preferredEngagement: string;
     timeCommitment: string;
     expertSupportNeeded: string;
-    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -826,56 +822,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                    {/* Mission & Values Alignment */}
-                    {profile.missionValuesAlignment && (
-                      <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Mission & Values</h3>
-                        <ul className="list-none p-0 m-0 mb-4">
-                          {profile.missionValuesAlignment.split(',').map((value, index) => (
-                            <li key={index} className="inline-block mb-3 mr-3">
-                              <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200">
-                                {value.trim()}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                        {profile.values && (
-                          <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
-                        )}
-                      </div>
-                    )}
 
-                    {/* Venture Interests */}
-                    {profile.ventureInterests && (
-                      <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Venture Interests</h3>
-                        <ul className="list-none p-0 m-0">
-                          {profile.ventureInterests.split(',').map((interest, index) => (
-                            <li key={index} className="inline-block mb-3 mr-3">
-                              <span className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200">
-                                {interest.trim()}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Preferred Engagement */}
-                    {profile.preferredEngagement && (
-                      <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-4">How I Want to Engage</h3>
-                        <ul className="list-none p-0 m-0">
-                          {profile.preferredEngagement.split(',').map((engagement, index) => (
-                            <li key={index} className="inline-block mb-3 mr-3">
-                              <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                                {engagement.trim()}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
 
                                          {/* Location, Time Commitment, and Expert Support */}
                      <div className="grid-2">
@@ -911,13 +858,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                        </div>
                      )}
 
-                                            {/* Venture Interests Description (for Experts) */}
-                     {profile.ventureInterestsDescription && profile.userType === 'expert' && (
-                       <div className="feature-card">
-                         <h3 className="text-lg font-semibold text-gray-800 mb-3">Ventures I Want to Get Involved With</h3>
-                         <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.ventureInterestsDescription}</p>
-                       </div>
-                     )}
+                                            
 
                     {/* Social Links */}
                     {(profile.linkedinUrl || profile.githubUrl || profile.portfolioUrl || profile.websiteUrl || profile.twitterUrl || profile.instagramUrl) && (
