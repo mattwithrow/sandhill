@@ -51,6 +51,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
               Selected Engagement Types ({selectedEngagementNames.length})
             </span>
             <button
+              type="button"
               onClick={clearAll}
               className="text-xs text-red-600 hover:text-red-800 font-medium"
             >
@@ -67,6 +68,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
                 >
                   {engagementName}
                   <button
+                    type="button"
                     onClick={() => removeEngagement(engagement?.id || '')}
                     className="text-gray-500 hover:text-red-600 ml-1 font-bold"
                   >
@@ -86,6 +88,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
             {SIMPLIFIED_ENGAGEMENT_TYPES.map(engagement => (
               <button
                 key={engagement.id}
+                type="button"
                 onClick={() => toggleEngagement(engagement.id)}
                 className={`skill-tag ${
                   selectedEngagementIds.includes(engagement.id) ? 'selected' : ''
@@ -104,7 +107,6 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">🤝</div>
           <p className="text-sm">{placeholder}</p>
-          <p className="text-xs mt-1">Click on engagement types below to select them</p>
         </div>
       )}
     </div>

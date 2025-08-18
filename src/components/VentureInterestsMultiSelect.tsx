@@ -50,6 +50,7 @@ const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = 
               Selected Interests ({selectedInterestNames.length})
             </span>
             <button
+              type="button"
               onClick={clearAll}
               className="text-xs text-red-600 hover:text-red-800 font-medium"
             >
@@ -66,6 +67,7 @@ const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = 
                 >
                   {interestName}
                   <button
+                    type="button"
                     onClick={() => removeInterest(interest?.id || '')}
                     className="text-gray-500 hover:text-red-600 ml-1 font-bold"
                   >
@@ -85,6 +87,7 @@ const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = 
             {VENTURE_INTERESTS.map(interest => (
               <button
                 key={interest.id}
+                type="button"
                 onClick={() => toggleInterest(interest.id)}
                 className={`skill-tag ${
                   selectedInterestIds.includes(interest.id) ? 'selected' : ''
@@ -103,7 +106,6 @@ const VentureInterestsMultiSelect: React.FC<VentureInterestsMultiSelectProps> = 
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">🚀</div>
           <p className="text-sm">{placeholder}</p>
-          <p className="text-xs mt-1">Click on interests below to select them</p>
         </div>
       )}
     </div>

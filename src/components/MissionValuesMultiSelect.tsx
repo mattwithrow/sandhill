@@ -51,6 +51,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
               Selected Values ({selectedValueNames.length})
             </span>
             <button
+              type="button"
               onClick={clearAll}
               className="text-xs text-red-600 hover:text-red-800 font-medium"
             >
@@ -67,6 +68,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
                 >
                   {valueName}
                   <button
+                    type="button"
                     onClick={() => removeValue(value?.id || '')}
                     className="text-gray-500 hover:text-red-600 ml-1 font-bold"
                   >
@@ -86,6 +88,7 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
             {SIMPLIFIED_MISSION_VALUES.map(value => (
               <button
                 key={value.id}
+                type="button"
                 onClick={() => toggleValue(value.id)}
                 className={`skill-tag ${
                   selectedValueIds.includes(value.id) ? 'selected' : ''
@@ -104,7 +107,6 @@ const MissionValuesMultiSelect: React.FC<MissionValuesMultiSelectProps> = ({
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">🎯</div>
           <p className="text-sm">{placeholder}</p>
-          <p className="text-xs mt-1">Click on values below to select them</p>
         </div>
       )}
     </div>

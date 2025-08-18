@@ -60,6 +60,7 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
               {selectedLabel} ({selectedSkillNames.length})
             </span>
             <button
+              type="button"
               onClick={clearAll}
               className="text-xs text-red-600 hover:text-red-800 font-medium"
             >
@@ -76,6 +77,7 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
                 >
                   {skillName}
                   <button
+                    type="button"
                     onClick={() => removeSkill(skill?.id || '')}
                     className="text-gray-500 hover:text-red-600 ml-1 font-bold"
                   >
@@ -95,6 +97,7 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
             {SIMPLIFIED_SKILLS.map(skill => (
               <button
                 key={skill.id}
+                type="button"
                 onClick={() => toggleSkill(skill.id)}
                 className={`skill-tag ${
                   selectedSkillIds.includes(skill.id) ? 'selected' : ''
@@ -112,7 +115,6 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">🔧</div>
           <p className="text-sm">{placeholder}</p>
-          <p className="text-xs mt-1">{emptyStateText}</p>
         </div>
       )}
     </div>
