@@ -10,7 +10,7 @@ import { formatTimezone, getTimeInTimezone, isRemoteLocation } from './utils/loc
 import { getMissionValueNames } from './data/missionValues';
 import { getVentureInterestNames } from './data/ventureInterests';
 import { getEngagementTypeNames } from './data/engagementTypes';
-import { getCachedProfile, setCachedProfile, getCachedProfileFromStorage } from './utils/profileCache';
+import { getCachedProfile, setCachedProfile, getCachedProfileFromStorage, clearProfileCache } from './utils/profileCache';
 
 const PublicProfilePage: React.FC = (): React.ReactNode => {
   const { username } = useParams<{ username: string }>();
@@ -115,29 +115,25 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             skills: dbProfile.skills || '',
             location: dbProfile.location || '',
             values: dbProfile.values || '',
-            timeCommitment: '', // Will be loaded from localStorage
-            expertSupportNeeded: '', // TODO: Add back after schema deployment
-            ventureInterestsDescription: '', // TODO: Add back after schema deployment
+            timeCommitment: dbProfile.timeCommitment || '',
+            expertSupportNeeded: dbProfile.expertSupportNeeded || '',
+            ventureInterestsDescription: '', // Not in schema
             linkedinUrl: dbProfile.linkedinUrl || '',
             githubUrl: dbProfile.githubUrl || '',
             portfolioUrl: dbProfile.portfolioUrl || '',
             websiteUrl: dbProfile.websiteUrl || '',
             twitterUrl: dbProfile.twitterUrl || '',
             instagramUrl: dbProfile.instagramUrl || '',
-            // New fields that will be available after schema deployment
-            missionValuesAlignment: '', // TODO: Add back after schema deployment
-            ventureInterests: '', // TODO: Add back after schema deployment
-            preferredEngagement: '', // TODO: Add back after schema deployment
-            timezone: '', // TODO: Add back after schema deployment
-            latitude: undefined, // TODO: Add back after schema deployment
-            longitude: undefined // TODO: Add back after schema deployment
+            // Multi-select fields from database
+            missionValuesAlignment: dbProfile.missionValuesAlignment || '',
+            ventureInterests: dbProfile.ventureInterests || '',
+            preferredEngagement: dbProfile.preferredEngagement || '',
+            timezone: dbProfile.timezone || '',
+            latitude: dbProfile.latitude || undefined,
+            longitude: dbProfile.longitude || undefined
           };
           
-          // Load timeCommitment from localStorage if available
-          const savedTimeCommitment = localStorage.getItem(`timeCommitment_${dbProfile.email}`);
-          if (savedTimeCommitment) {
-            profileData.timeCommitment = savedTimeCommitment;
-          }
+          // Note: timeCommitment is now loaded directly from the database
           
           console.log('📄 Converted profile data:', profileData);
           
@@ -195,6 +191,15 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Loading Profile</h2>
             <p className="text-gray-600">Please wait...</p>
+            <button
+              onClick={() => {
+                clearProfileCache(`public_${username}`);
+                window.location.reload();
+              }}
+              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Clear Cache & Reload
+            </button>
           </div>
         </div>
       </div>
