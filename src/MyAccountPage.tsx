@@ -600,7 +600,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     message: string;
   }>({ isUnique: true, message: '' });
   const [isSkillsExpanded, setIsSkillsExpanded] = useState(false);
-  const [isSkillsDisplayExpanded, setIsSkillsDisplayExpanded] = useState(false);
+
   const [isMissionValuesExpanded, setIsMissionValuesExpanded] = useState(false);
   const [isVentureInterestsExpanded, setIsVentureInterestsExpanded] = useState(false);
   const [isPreferredEngagementExpanded, setIsPreferredEngagementExpanded] = useState(false);
@@ -823,49 +823,23 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                                      {/* Skills - Collapsible Display */}
-                  {profile.skills && (
-                    <div className="feature-card border border-gray-200 rounded-lg overflow-hidden">
-                      <button
-                        type="button"
-                        onClick={() => setIsSkillsDisplayExpanded(!isSkillsDisplayExpanded)}
-                        className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
-                      >
-                        <div>
-                          <span className="text-lg font-semibold text-gray-800">
-                            {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
-                          </span>
-                          <span className="ml-2 text-sm text-gray-500">
-                            ({profile.skills.split(',').map(s => s.trim()).filter(Boolean).length} skills)
-                          </span>
-                        </div>
-                        <svg
-                          className={`w-5 h-5 text-gray-500 transition-transform ${
-                            isSkillsDisplayExpanded ? 'rotate-180' : ''
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                      
-                      {isSkillsDisplayExpanded && (
-                        <div className="p-4 bg-white">
-                          <ul className="list-none p-0 m-0">
-                            {profile.skills.split(',').map((skill, index) => (
-                              <li key={index} className="inline-block mb-3 mr-3">
-                                <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
-                                  {skill.trim()}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                    {/* Skills */}
+                    {profile.skills && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                          {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                        </h3>
+                        <ul className="list-none p-0 m-0">
+                          {profile.skills.split(',').map((skill, index) => (
+                            <li key={index} className="inline-block mb-3 mr-3">
+                              <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
+                                {skill.trim()}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     {/* Mission & Values Alignment */}
                     {profile.missionValuesAlignment && (

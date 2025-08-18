@@ -20,6 +20,7 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
   const selectedSkillNames = getSimplifiedSkillNames(selectedSkillIds);
 
   const toggleSkill = (skillId: string) => {
+    console.log('🔧 SkillsMultiSelect toggleSkill called with:', skillId);
     const skill = SIMPLIFIED_SKILLS.find(s => s.id === skillId);
     if (!skill) return;
 
@@ -28,6 +29,7 @@ const SkillsMultiSelect: React.FC<SkillsMultiSelectProps> = ({
       : [...selectedSkillIds, skillId];
 
     const newSelectedSkillNames = getSimplifiedSkillNames(newSelectedSkills);
+    console.log('🔧 SkillsMultiSelect calling onChange with:', newSelectedSkillNames);
     onChange(newSelectedSkillNames);
   };
 
