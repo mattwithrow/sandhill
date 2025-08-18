@@ -53,6 +53,15 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
     }
   }, [recipientUsername, recipients]);
 
+  // If we have a recipientUsername but no recipients loaded yet, store it for later
+  const [pendingRecipient, setPendingRecipient] = useState<string>('');
+  
+  useEffect(() => {
+    if (recipientUsername && !selectedRecipient) {
+      setPendingRecipient(recipientUsername);
+    }
+  }, [recipientUsername, selectedRecipient]);
+
   const loadRecipients = async () => {
     try {
       setLoading(true);
@@ -60,14 +69,10 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
 
       const client = generateClient();
       
-      // Get all users who have messaging enabled
+      // Get all users
       const profilesResult = await client.graphql({
         query: listUserProfiles,
-        variables: {
-          filter: {
-            messagingEnabled: { eq: true }
-          }
-        }
+        variables: {}
       });
 
       const profiles = profilesResult.data.listUserProfiles.items;
@@ -79,15 +84,24 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
 
       const availableRecipients = profiles
         .filter((profile: any) => profile.id !== currentUserProfile?.id)
-        .filter((profile: any) => profile.messagingEnabled === true)
         .map((profile: any) => ({
           id: profile.id,
           username: profile.username || 'Unknown User',
           userType: profile.userType || 'both',
-          messagingEnabled: profile.messagingEnabled || false
+          messagingEnabled: profile.messagingEnabled !== false // Default to true if not explicitly false
         }));
 
       setRecipients(availableRecipients);
+      
+      // If we have a pending recipient, try to find and select it
+      if (pendingRecipient && availableRecipients.length > 0) {
+        const recipient = availableRecipients.find(r => r.username === pendingRecipient);
+        if (recipient) {
+          setSelectedRecipient(recipient.id);
+          setSearchTerm(recipient.username || '');
+          setPendingRecipient(''); // Clear pending recipient
+        }
+      }
     } catch (error) {
       console.error('Error loading recipients:', error);
       setError('Failed to load recipients');
@@ -184,7 +198,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
               </button>
             </div>
           ) : (
-            // Show search interface
+            // Show search interface only if no recipient is pre-filled
             <div className="recipient-selector">
               <input
                 type="text"
