@@ -19,15 +19,18 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
     id
     isRead
     recipient {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -40,6 +43,7 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -53,15 +57,18 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
     }
     recipientId
     sender {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -74,6 +81,7 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -116,15 +124,18 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
   $input: CreateUserProfileInput!
 ) {
   createUserProfile(condition: $condition, input: $input) {
+    accountStatus
     bio
     contributionGoals
     createdAt
+    deletedAt
     email
     experience
     expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    isDeleted
     latitude
     linkedinUrl
     location
@@ -145,6 +156,7 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
       __typename
     }
     skills
+    statusMessage
     timeCommitment
     timezone
     twitterUrl
@@ -172,15 +184,18 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
     id
     isRead
     recipient {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -193,6 +208,7 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -206,15 +222,18 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
     }
     recipientId
     sender {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -227,6 +246,7 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -269,15 +289,18 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
   $input: DeleteUserProfileInput!
 ) {
   deleteUserProfile(condition: $condition, input: $input) {
+    accountStatus
     bio
     contributionGoals
     createdAt
+    deletedAt
     email
     experience
     expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    isDeleted
     latitude
     linkedinUrl
     location
@@ -298,6 +321,7 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
       __typename
     }
     skills
+    statusMessage
     timeCommitment
     timezone
     twitterUrl
@@ -325,15 +349,18 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
     id
     isRead
     recipient {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -346,6 +373,7 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -359,15 +387,18 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
     }
     recipientId
     sender {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -380,6 +411,7 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -422,15 +454,18 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
   $input: UpdateUserProfileInput!
 ) {
   updateUserProfile(condition: $condition, input: $input) {
+    accountStatus
     bio
     contributionGoals
     createdAt
+    deletedAt
     email
     experience
     expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    isDeleted
     latitude
     linkedinUrl
     location
@@ -451,6 +486,7 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
       __typename
     }
     skills
+    statusMessage
     timeCommitment
     timezone
     twitterUrl

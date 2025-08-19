@@ -16,15 +16,18 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
     id
     isRead
     recipient {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -37,6 +40,7 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -50,15 +54,18 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
     }
     recipientId
     sender {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -71,6 +78,7 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -110,15 +118,18 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
   $owner: String
 ) {
   onCreateUserProfile(filter: $filter, owner: $owner) {
+    accountStatus
     bio
     contributionGoals
     createdAt
+    deletedAt
     email
     experience
     expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    isDeleted
     latitude
     linkedinUrl
     location
@@ -139,6 +150,7 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
       __typename
     }
     skills
+    statusMessage
     timeCommitment
     timezone
     twitterUrl
@@ -163,15 +175,18 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
     id
     isRead
     recipient {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -184,6 +199,7 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -197,15 +213,18 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
     }
     recipientId
     sender {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -218,6 +237,7 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -257,15 +277,18 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
   $owner: String
 ) {
   onDeleteUserProfile(filter: $filter, owner: $owner) {
+    accountStatus
     bio
     contributionGoals
     createdAt
+    deletedAt
     email
     experience
     expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    isDeleted
     latitude
     linkedinUrl
     location
@@ -286,6 +309,7 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
       __typename
     }
     skills
+    statusMessage
     timeCommitment
     timezone
     twitterUrl
@@ -310,15 +334,18 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
     id
     isRead
     recipient {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -331,6 +358,7 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -344,15 +372,18 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
     }
     recipientId
     sender {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -365,6 +396,7 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -404,15 +436,18 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
   $owner: String
 ) {
   onUpdateUserProfile(filter: $filter, owner: $owner) {
+    accountStatus
     bio
     contributionGoals
     createdAt
+    deletedAt
     email
     experience
     expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    isDeleted
     latitude
     linkedinUrl
     location
@@ -433,6 +468,7 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
       __typename
     }
     skills
+    statusMessage
     timeCommitment
     timezone
     twitterUrl

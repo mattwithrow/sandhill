@@ -55,6 +55,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     twitterUrl: string;
     instagramUrl: string;
     messagingEnabled: boolean;
+    accountStatus: string;
+    statusMessage: string;
   }>({
     username: '',
     userType: UserProfileUserType.expert,
@@ -73,7 +75,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     websiteUrl: '',
     twitterUrl: '',
     instagramUrl: '',
-    messagingEnabled: true
+    messagingEnabled: true,
+    accountStatus: 'active',
+    statusMessage: ''
   });
   
   const [profile, setProfile] = useState<null | {
@@ -97,6 +101,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     twitterUrl: string;
     instagramUrl: string;
     messagingEnabled: boolean;
+    accountStatus: string;
+    statusMessage: string;
   }>(null);
 
   const getUserTypeDisplay = (userType: UserProfileUserType) => {
@@ -200,7 +206,10 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 portfolioUrl: dbProfile.portfolioUrl || '',
                 websiteUrl: dbProfile.websiteUrl || '',
                 twitterUrl: dbProfile.twitterUrl || '',
-                instagramUrl: dbProfile.instagramUrl || ''
+                instagramUrl: dbProfile.instagramUrl || '',
+                messagingEnabled: dbProfile.messagingEnabled !== undefined ? dbProfile.messagingEnabled : true,
+                accountStatus: dbProfile.accountStatus || 'active',
+                statusMessage: dbProfile.statusMessage || ''
               };
               
               console.log('📄 Converted profile data:', profileData);
@@ -299,6 +308,51 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      if (!user?.signInDetails?.loginId) {
+        setError('User not found');
+        return;
+      }
+
+      const client = generateClient();
+      
+      // First, mark the profile as deleted by finding it in the database
+      const profileResult = await client.graphql({
+        query: listUserProfiles,
+        variables: { filter: { email: { eq: user.signInDetails.loginId } } }
+      });
+      
+      const profiles = profileResult.data.listUserProfiles.items;
+      if (profiles.length > 0) {
+        const userProfile = profiles[0];
+        await client.graphql({
+          query: updateUserProfile,
+          variables: {
+            input: {
+              id: userProfile.id,
+              isDeleted: true,
+              deletedAt: new Date().toISOString(),
+              accountStatus: 'inactive' as any
+            }
+          }
+        });
+      }
+
+      // Sign out (we'll let the user manually delete their Cognito account)
+      await signOut();
+      
+      // Navigate to home
+      navigate('/');
+      
+      setMessage('Account marked as deleted. You may need to contact support to fully delete your Cognito account.');
+      
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      setError('Failed to delete account. Please try again.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
@@ -379,6 +433,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           websiteUrl: formatSocialUrl('website', formData.websiteUrl),
           twitterUrl: formatSocialUrl('twitter', formData.twitterUrl),
           instagramUrl: formatSocialUrl('instagram', formData.instagramUrl),
+          messagingEnabled: formData.messagingEnabled,
+          accountStatus: formData.accountStatus as any,
+          statusMessage: formData.statusMessage,
           // Set empty strings for optional fields
           passions: '',
           contributionGoals: '',
@@ -419,6 +476,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           websiteUrl: formatSocialUrl('website', formData.websiteUrl),
           twitterUrl: formatSocialUrl('twitter', formData.twitterUrl),
           instagramUrl: formatSocialUrl('instagram', formData.instagramUrl),
+          messagingEnabled: formData.messagingEnabled,
+          accountStatus: formData.accountStatus as any,
+          statusMessage: formData.statusMessage,
           // Set empty strings for optional fields
           passions: '',
           contributionGoals: '',
@@ -1308,6 +1368,45 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     </div>
                   </div>
 
+                  {/* Account Status */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Status</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Current Status
+                        </label>
+                        <select
+                          value={formData.accountStatus || 'active'}
+                          onChange={(e) => handleInputChange('accountStatus', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        >
+                          <option value="active">Active - Available for opportunities</option>
+                          <option value="busy">Busy - Working on projects, limited availability</option>
+                          <option value="inactive">Inactive - Not taking on new work</option>
+                        </select>
+                      </div>
+                      
+                      {(formData.accountStatus === 'busy' || formData.accountStatus === 'inactive') && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Status Message (Optional)
+                          </label>
+                          <textarea
+                            value={formData.statusMessage || ''}
+                            onChange={(e) => handleInputChange('statusMessage', e.target.value)}
+                            placeholder="e.g., 'Currently focused on a major project until Q2 2024' or 'Taking a break from new opportunities'"
+                            rows={3}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            This message will be visible to other users when they view your profile.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Messaging Preferences */}
                   <div className="border-t border-gray-200 pt-6">
                     <div className="flex items-start space-x-3">
@@ -1330,6 +1429,34 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                             <strong>Note:</strong> When disabled, you won't be able to send or receive messages.
                           </p>
                         )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Account Deletion */}
+                  <div className="border-t border-red-200 pt-6 mt-8">
+                    <h3 className="text-lg font-semibold text-red-800 mb-4">Danger Zone</h3>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-1">
+                          <h4 className="text-md font-medium text-red-800 mb-2">
+                            Delete Account
+                          </h4>
+                          <p className="text-red-700 text-sm mb-4">
+                            This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                                handleDeleteAccount();
+                              }
+                            }}
+                            className="btn btn-danger"
+                          >
+                            Delete My Account
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -1,61 +1,69 @@
-//import { useEffect, useState } from "react";
-//import type { Schema } from "../amplify/data/resource";
-//import { useAuthenticator } from '@aws-amplify/ui-react';
-//import { generateClient } from "aws-amplify/data";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import Layout from "./components/Layout";
-import AboutPage from "./AboutPage";
-import StartPage from "./StartPage";
 import LoginPage from "./LoginPage";
-import AuthHomePage from "./AuthHomePage";
-import VenturesPage from "./VenturesPage";
-import ExpertsPage from "./ExpertsPage";
-import MyAccountPage from "./MyAccountPage";
-import PublicProfilePage from "./PublicProfilePage";
-import MessagingPage from "./MessagingPage";
-import AdminCleanup from "./components/AdminCleanup";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+// Lazy load pages for better performance
+const AboutPage = lazy(() => import("./AboutPage"));
+const StartPage = lazy(() => import("./StartPage"));
+const AuthHomePage = lazy(() => import("./AuthHomePage"));
+const VenturesPage = lazy(() => import("./VenturesPage"));
+const ExpertsPage = lazy(() => import("./ExpertsPage"));
+const MyAccountPage = lazy(() => import("./MyAccountPage"));
+const PublicProfilePage = lazy(() => import("./PublicProfilePage"));
+const MessagingPage = lazy(() => import("./MessagingPage"));
+const AdminCleanup = lazy(() => import("./components/AdminCleanup"));
+
 //const client = generateClient<Schema>();
+
+// Loading component for lazy-loaded pages
+const LoadingSpinner = () => (
+  <div className="loading-container">
+    <div className="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+);
 
 function App() {
   return (
     <BrowserRouter>
       <Layout>
-      <Routes>
-        <Route path="/" element={<StartPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/start" element={<StartPage />} />
-        <Route path="/auth_home" element={<AuthHomePage />} />
-        <Route path="/profile/:username" element={<PublicProfilePage />} />
-        <Route path="/my-account" element={
-          <ProtectedRoute>
-            <MyAccountPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/ventures" element={
-          <ProtectedRoute>
-            <VenturesPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/experts" element={
-          <ProtectedRoute>
-            <ExpertsPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/messages" element={
-          <ProtectedRoute>
-            <MessagingPage />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/cleanup" element={
-          <ProtectedRoute>
-            <AdminCleanup />
-          </ProtectedRoute>
-        } />
-      </Routes>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<StartPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/start" element={<StartPage />} />
+            <Route path="/auth_home" element={<AuthHomePage />} />
+            <Route path="/profile/:username" element={<PublicProfilePage />} />
+            <Route path="/my-account" element={
+              <ProtectedRoute>
+                <MyAccountPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/ventures" element={
+              <ProtectedRoute>
+                <VenturesPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/experts" element={
+              <ProtectedRoute>
+                <ExpertsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/messages" element={
+              <ProtectedRoute>
+                <MessagingPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/cleanup" element={
+              <ProtectedRoute>
+                <AdminCleanup />
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </Suspense>
       </Layout>
     </BrowserRouter>
   );

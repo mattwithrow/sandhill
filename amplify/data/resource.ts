@@ -42,6 +42,12 @@ const schema = a.schema({
       projectDetails: a.string(),
       // Messaging preferences
       messagingEnabled: a.boolean().default(true),
+      // Account status
+      accountStatus: a.enum(['active', 'busy', 'inactive']),
+      statusMessage: a.string(),
+      // Account deletion
+      isDeleted: a.boolean().default(false),
+      deletedAt: a.string(),
       // Relationships
       sentMessages: a.hasMany('Message', 'senderId'),
       receivedMessages: a.hasMany('Message', 'recipientId'),

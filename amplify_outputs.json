@@ -295,6 +295,36 @@
               "isRequired": false,
               "attributes": []
             },
+            "accountStatus": {
+              "name": "accountStatus",
+              "isArray": false,
+              "type": {
+                "enum": "UserProfileAccountStatus"
+              },
+              "isRequired": false,
+              "attributes": []
+            },
+            "statusMessage": {
+              "name": "statusMessage",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "isDeleted": {
+              "name": "isDeleted",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
+            "deletedAt": {
+              "name": "deletedAt",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
             "sentMessages": {
               "name": "sentMessages",
               "isArray": true,
@@ -525,6 +555,14 @@
             "expert",
             "ventures",
             "both"
+          ]
+        },
+        "UserProfileAccountStatus": {
+          "name": "UserProfileAccountStatus",
+          "values": [
+            "active",
+            "busy",
+            "inactive"
           ]
         }
       },

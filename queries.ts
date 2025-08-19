@@ -16,15 +16,18 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
     id
     isRead
     recipient {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -37,6 +40,7 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -50,15 +54,18 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
     }
     recipientId
     sender {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -71,6 +78,7 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl
@@ -104,15 +112,18 @@ export const getTodo = /* GraphQL */ `query GetTodo($id: ID!) {
 ` as GeneratedQuery<APITypes.GetTodoQueryVariables, APITypes.GetTodoQuery>;
 export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
   getUserProfile(id: $id) {
+    accountStatus
     bio
     contributionGoals
     createdAt
+    deletedAt
     email
     experience
     expertSupportNeeded
     githubUrl
     id
     instagramUrl
+    isDeleted
     latitude
     linkedinUrl
     location
@@ -133,6 +144,7 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
       __typename
     }
     skills
+    statusMessage
     timeCommitment
     timezone
     twitterUrl
@@ -200,15 +212,18 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
 ) {
   listUserProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
+      accountStatus
       bio
       contributionGoals
       createdAt
+      deletedAt
       email
       experience
       expertSupportNeeded
       githubUrl
       id
       instagramUrl
+      isDeleted
       latitude
       linkedinUrl
       location
@@ -221,6 +236,7 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       preferredEngagement
       projectDetails
       skills
+      statusMessage
       timeCommitment
       timezone
       twitterUrl

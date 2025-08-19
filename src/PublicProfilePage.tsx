@@ -34,7 +34,9 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     websiteUrl: string;
     twitterUrl: string;
     instagramUrl: string;
-    messagingEnabled?: boolean;
+    messagingEnabled?: boolean | null;
+    accountStatus?: string | null;
+    statusMessage?: string | null;
     // New fields that will be available after schema deployment
     missionValuesAlignment?: string;
     ventureInterests?: string;
@@ -124,6 +126,9 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             websiteUrl: dbProfile.websiteUrl || '',
             twitterUrl: dbProfile.twitterUrl || '',
             instagramUrl: dbProfile.instagramUrl || '',
+            messagingEnabled: dbProfile.messagingEnabled !== undefined ? dbProfile.messagingEnabled : true,
+            accountStatus: dbProfile.accountStatus || 'active',
+            statusMessage: dbProfile.statusMessage || '',
             // Multi-select fields from database
             missionValuesAlignment: dbProfile.missionValuesAlignment || '',
             ventureInterests: dbProfile.ventureInterests || '',
@@ -268,6 +273,45 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
 
           </div>
         </section>
+
+        {/* Account Status Alert */}
+        {(profile.accountStatus === 'busy' || profile.accountStatus === 'inactive') && (
+          <section className="section">
+            <div className={`content-card ${profile.accountStatus === 'busy' ? 'border-orange-200 bg-orange-50' : 'border-red-200 bg-red-50'}`}>
+              <div className="flex items-start space-x-3">
+                <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
+                  profile.accountStatus === 'busy' ? 'bg-orange-500' : 'bg-red-500'
+                }`}>
+                  <span className="text-white text-sm font-bold">
+                    {profile.accountStatus === 'busy' ? '!' : '⏸'}
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h3 className={`text-lg font-semibold mb-2 ${
+                    profile.accountStatus === 'busy' ? 'text-orange-800' : 'text-red-800'
+                  }`}>
+                    {profile.accountStatus === 'busy' ? 'Currently Busy' : 'Not Taking New Work'}
+                  </h3>
+                  {profile.statusMessage && (
+                    <p className={`text-sm ${
+                      profile.accountStatus === 'busy' ? 'text-orange-700' : 'text-red-700'
+                    }`}>
+                      {profile.statusMessage}
+                    </p>
+                  )}
+                  <p className={`text-xs mt-2 ${
+                    profile.accountStatus === 'busy' ? 'text-orange-600' : 'text-red-600'
+                  }`}>
+                    {profile.accountStatus === 'busy' 
+                      ? 'This person is currently focused on other projects and may have limited availability.'
+                      : 'This person is not currently taking on new opportunities or collaborations.'
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto">
