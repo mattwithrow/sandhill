@@ -31,6 +31,7 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -69,6 +70,7 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -136,6 +138,7 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     id
     instagramUrl
     isDeleted
+    isProfileHidden
     latitude
     linkedinUrl
     location
@@ -196,6 +199,7 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -234,6 +238,7 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -301,6 +306,7 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     id
     instagramUrl
     isDeleted
+    isProfileHidden
     latitude
     linkedinUrl
     location
@@ -361,6 +367,7 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -399,6 +406,7 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -466,6 +474,7 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     id
     instagramUrl
     isDeleted
+    isProfileHidden
     latitude
     linkedinUrl
     location

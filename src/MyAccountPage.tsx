@@ -57,6 +57,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     messagingEnabled: boolean;
     accountStatus: string;
     statusMessage: string;
+    isProfileHidden: boolean;
   }>({
     username: '',
     userType: UserProfileUserType.expert,
@@ -77,7 +78,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     instagramUrl: '',
     messagingEnabled: true,
     accountStatus: 'active',
-    statusMessage: ''
+    statusMessage: '',
+    isProfileHidden: false
   });
   
   const [profile, setProfile] = useState<null | {
@@ -103,6 +105,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     messagingEnabled: boolean;
     accountStatus: string;
     statusMessage: string;
+    isProfileHidden: boolean;
   }>(null);
 
   const getUserTypeDisplay = (userType: UserProfileUserType) => {
@@ -209,7 +212,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 instagramUrl: dbProfile.instagramUrl || '',
                 messagingEnabled: dbProfile.messagingEnabled !== undefined ? dbProfile.messagingEnabled : true,
                 accountStatus: dbProfile.accountStatus || 'active',
-                statusMessage: dbProfile.statusMessage || ''
+                statusMessage: dbProfile.statusMessage || '',
+                isProfileHidden: dbProfile.isProfileHidden !== undefined ? dbProfile.isProfileHidden : false
               };
               
               console.log('📄 Converted profile data:', profileData);
@@ -436,6 +440,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           messagingEnabled: formData.messagingEnabled,
           accountStatus: formData.accountStatus as any,
           statusMessage: formData.statusMessage,
+          isProfileHidden: formData.isProfileHidden,
           // Set empty strings for optional fields
           passions: '',
           contributionGoals: '',
@@ -479,6 +484,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           messagingEnabled: formData.messagingEnabled,
           accountStatus: formData.accountStatus as any,
           statusMessage: formData.statusMessage,
+          isProfileHidden: formData.isProfileHidden,
           // Set empty strings for optional fields
           passions: '',
           contributionGoals: '',
@@ -788,6 +794,47 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto">
+
+          {/* Profile Status Indicators */}
+          {profile && (
+            <section className="mb-8">
+              <div className="flex flex-wrap gap-4">
+                {profile.isProfileHidden && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">👁️</span>
+                    </div>
+                    <div>
+                      <h3 className="text-blue-800 font-semibold">Profile Hidden</h3>
+                      <p className="text-blue-700 text-sm">Your profile is not visible in search results</p>
+                    </div>
+                  </div>
+                )}
+                {profile.accountStatus === 'busy' && (
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">!</span>
+                    </div>
+                    <div>
+                      <h3 className="text-orange-800 font-semibold">Currently Busy</h3>
+                      <p className="text-orange-700 text-sm">Limited availability for new opportunities</p>
+                    </div>
+                  </div>
+                )}
+                {profile.accountStatus === 'inactive' && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">⏸</span>
+                    </div>
+                    <div>
+                      <h3 className="text-red-800 font-semibold">Not Taking New Work</h3>
+                      <p className="text-red-700 text-sm">Currently not accepting new opportunities</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
 
           {/* Success/Error Messages */}
           {message && (
@@ -1364,6 +1411,38 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                           onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Profile Visibility */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Profile Visibility</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-3">
+                        <input
+                          type="checkbox"
+                          id="isProfileHidden"
+                          checked={formData.isProfileHidden}
+                          onChange={(e) => handleInputChange('isProfileHidden', e.target.checked)}
+                          className="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                        />
+                        <div className="flex-1">
+                          <label htmlFor="isProfileHidden" className="block text-lg font-semibold text-gray-800 mb-2">
+                            Hide My Profile
+                          </label>
+                          <p className="text-gray-600 text-sm mb-2">
+                            When enabled, your profile will not appear in search results on the Experts or Ventures pages.
+                          </p>
+                          {formData.isProfileHidden && (
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                              <p className="text-blue-800 text-sm">
+                                <strong>Profile Hidden:</strong> Your profile is currently hidden from search results. 
+                                Other users won't be able to find you when browsing experts or ventures.
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

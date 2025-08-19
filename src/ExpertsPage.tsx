@@ -99,30 +99,32 @@ const ExpertsPage: React.FC = () => {
 
       const profiles = result.data?.listUserProfiles?.items || [];
       
-      // Convert to ExpertProfile format
-      const expertProfiles: ExpertProfile[] = profiles.map((profile: any) => ({
-        id: profile.id,
-        username: profile.username || '',
-        userType: profile.userType || UserProfileUserType.expert,
-        bio: profile.bio || '',
-        experience: profile.experience || '',
-        skills: profile.skills || '',
-        location: profile.location || '',
-        timezone: profile.timezone || '',
-        values: profile.values || '',
-        missionValuesAlignment: profile.missionValuesAlignment || '',
-        ventureInterests: profile.ventureInterests || '',
-        preferredEngagement: profile.preferredEngagement || '',
-        timeCommitment: profile.timeCommitment || '',
-        ventureInterestsDescription: profile.ventureInterestsDescription || '',
-        messagingEnabled: profile.messagingEnabled,
-        linkedinUrl: profile.linkedinUrl || '',
-        githubUrl: profile.githubUrl || '',
-        portfolioUrl: profile.portfolioUrl || '',
-        websiteUrl: profile.websiteUrl || '',
-        twitterUrl: profile.twitterUrl || '',
-        instagramUrl: profile.instagramUrl || ''
-      }));
+      // Convert to ExpertProfile format and filter out hidden profiles
+      const expertProfiles: ExpertProfile[] = profiles
+        .filter((profile: any) => !profile.isProfileHidden) // Filter out hidden profiles
+        .map((profile: any) => ({
+          id: profile.id,
+          username: profile.username || '',
+          userType: profile.userType || UserProfileUserType.expert,
+          bio: profile.bio || '',
+          experience: profile.experience || '',
+          skills: profile.skills || '',
+          location: profile.location || '',
+          timezone: profile.timezone || '',
+          values: profile.values || '',
+          missionValuesAlignment: profile.missionValuesAlignment || '',
+          ventureInterests: profile.ventureInterests || '',
+          preferredEngagement: profile.preferredEngagement || '',
+          timeCommitment: profile.timeCommitment || '',
+          ventureInterestsDescription: profile.ventureInterestsDescription || '',
+          messagingEnabled: profile.messagingEnabled,
+          linkedinUrl: profile.linkedinUrl || '',
+          githubUrl: profile.githubUrl || '',
+          portfolioUrl: profile.portfolioUrl || '',
+          websiteUrl: profile.websiteUrl || '',
+          twitterUrl: profile.twitterUrl || '',
+          instagramUrl: profile.instagramUrl || ''
+        }));
 
       setExperts(expertProfiles);
       setFilteredExperts(expertProfiles);

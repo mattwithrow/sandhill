@@ -311,6 +311,13 @@
               "isRequired": false,
               "attributes": []
             },
+            "isProfileHidden": {
+              "name": "isProfileHidden",
+              "isArray": false,
+              "type": "Boolean",
+              "isRequired": false,
+              "attributes": []
+            },
             "isDeleted": {
               "name": "isDeleted",
               "isArray": false,

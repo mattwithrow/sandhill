@@ -28,6 +28,7 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -66,6 +67,7 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -124,6 +126,7 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
     id
     instagramUrl
     isDeleted
+    isProfileHidden
     latitude
     linkedinUrl
     location
@@ -224,6 +227,7 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location

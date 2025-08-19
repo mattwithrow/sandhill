@@ -92,30 +92,32 @@ const VenturesPage: React.FC = () => {
 
       const profiles = result.data?.listUserProfiles?.items || [];
       
-      // Convert to VentureProfile format
-      const ventureProfiles: VentureProfile[] = profiles.map((profile: any) => ({
-        id: profile.id,
-        username: profile.username || '',
-        userType: profile.userType || UserProfileUserType.ventures,
-        bio: profile.bio || '',
-        experience: profile.experience || '',
-        skills: profile.skills || '',
-        location: profile.location || '',
-        timezone: profile.timezone || '',
-        values: profile.values || '',
-        missionValuesAlignment: profile.missionValuesAlignment || '',
-        ventureInterests: profile.ventureInterests || '',
-        preferredEngagement: profile.preferredEngagement || '',
-        timeCommitment: profile.timeCommitment || '',
-        expertSupportNeeded: profile.expertSupportNeeded || '',
-        messagingEnabled: profile.messagingEnabled,
-        linkedinUrl: profile.linkedinUrl || '',
-        githubUrl: profile.githubUrl || '',
-        portfolioUrl: profile.portfolioUrl || '',
-        websiteUrl: profile.websiteUrl || '',
-        twitterUrl: profile.twitterUrl || '',
-        instagramUrl: profile.instagramUrl || ''
-      }));
+      // Convert to VentureProfile format and filter out hidden profiles
+      const ventureProfiles: VentureProfile[] = profiles
+        .filter((profile: any) => !profile.isProfileHidden) // Filter out hidden profiles
+        .map((profile: any) => ({
+          id: profile.id,
+          username: profile.username || '',
+          userType: profile.userType || UserProfileUserType.ventures,
+          bio: profile.bio || '',
+          experience: profile.experience || '',
+          skills: profile.skills || '',
+          location: profile.location || '',
+          timezone: profile.timezone || '',
+          values: profile.values || '',
+          missionValuesAlignment: profile.missionValuesAlignment || '',
+          ventureInterests: profile.ventureInterests || '',
+          preferredEngagement: profile.preferredEngagement || '',
+          timeCommitment: profile.timeCommitment || '',
+          expertSupportNeeded: profile.expertSupportNeeded || '',
+          messagingEnabled: profile.messagingEnabled,
+          linkedinUrl: profile.linkedinUrl || '',
+          githubUrl: profile.githubUrl || '',
+          portfolioUrl: profile.portfolioUrl || '',
+          websiteUrl: profile.websiteUrl || '',
+          twitterUrl: profile.twitterUrl || '',
+          instagramUrl: profile.instagramUrl || ''
+        }));
 
       setVentures(ventureProfiles);
       setFilteredVentures(ventureProfiles);

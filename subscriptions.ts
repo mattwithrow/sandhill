@@ -28,6 +28,7 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -66,6 +67,7 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -130,6 +132,7 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
     id
     instagramUrl
     isDeleted
+    isProfileHidden
     latitude
     linkedinUrl
     location
@@ -187,6 +190,7 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -225,6 +229,7 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -289,6 +294,7 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
     id
     instagramUrl
     isDeleted
+    isProfileHidden
     latitude
     linkedinUrl
     location
@@ -346,6 +352,7 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -384,6 +391,7 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
       id
       instagramUrl
       isDeleted
+      isProfileHidden
       latitude
       linkedinUrl
       location
@@ -448,6 +456,7 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
     id
     instagramUrl
     isDeleted
+    isProfileHidden
     latitude
     linkedinUrl
     location

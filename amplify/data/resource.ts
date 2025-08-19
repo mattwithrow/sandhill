@@ -45,6 +45,8 @@ const schema = a.schema({
       // Account status
       accountStatus: a.enum(['active', 'busy', 'inactive']),
       statusMessage: a.string(),
+      // Profile visibility
+      isProfileHidden: a.boolean().default(false),
       // Account deletion
       isDeleted: a.boolean().default(false),
       deletedAt: a.string(),
