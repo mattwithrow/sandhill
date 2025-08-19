@@ -8,6 +8,7 @@ import {
   UserProfileUserType
 } from '../API';
 import { listUserProfiles } from '../queries';
+import RecommendationSection from './components/RecommendationSection';
 
 interface VentureProfile {
   id: string;
@@ -380,6 +381,13 @@ const VenturesPage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Recommended Matches Section */}
+        <RecommendationSection 
+          title="Recommended Experts for You"
+          description="Based on your venture needs, values, and interests, here are some experts that might be a great fit for collaboration."
+          maxResults={6}
+        />
 
         {/* Main Content - Sidebar Layout */}
         <section className="section">

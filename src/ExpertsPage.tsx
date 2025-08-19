@@ -12,6 +12,7 @@ import { formatTimezone, getTimeInTimezone, isRemoteLocation } from './utils/loc
 import { getMissionValueNames } from './data/missionValues';
 import { getVentureInterestNames } from './data/ventureInterests';
 import { getEngagementTypeNames } from './data/engagementTypes';
+import RecommendationSection from './components/RecommendationSection';
 
 interface ExpertProfile {
   id: string;
@@ -389,6 +390,13 @@ const ExpertsPage: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Recommended Matches Section */}
+        <RecommendationSection 
+          title="Recommended Ventures for You"
+          description="Based on your skills, values, and interests, here are some ventures that might be a great fit for collaboration."
+          maxResults={6}
+        />
 
         {/* Main Content - Sidebar Layout */}
         <section className="section">
