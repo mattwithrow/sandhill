@@ -11,10 +11,10 @@ type GeneratedQuery<InputType, OutputType> = string & {
 export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
   getMessage(id: $id) {
     content
+    conversationId
     createdAt
     id
     isRead
-    owner
     recipient {
       bio
       contributionGoals
@@ -157,10 +157,10 @@ export const listMessages = /* GraphQL */ `query ListMessages(
   listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       content
+      conversationId
       createdAt
       id
       isRead
-      owner
       recipientId
       senderId
       subject

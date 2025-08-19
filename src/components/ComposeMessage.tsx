@@ -140,6 +140,9 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
 
       const senderProfile = profiles[0];
 
+      // Generate a unique conversation ID (combination of sender and recipient IDs)
+      const conversationId = [senderProfile.id, selectedRecipient].sort().join('_');
+
       // Create the message
       await client.graphql({
         query: createMessage,
@@ -149,6 +152,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
             subject: messageSubject,
             senderId: senderProfile.id,
             recipientId: selectedRecipient,
+            conversationId: conversationId,
             isRead: false
           }
         }

@@ -20,22 +20,29 @@ interface Message {
   };
 }
 
-interface MessagingInboxProps {}
+interface MessagingInboxProps {
+  onViewConversation?: (conversationId: string, otherUserId: string) => void;
+}
 
-const MessagingInbox: React.FC<MessagingInboxProps> = () => {
+const MessagingInbox: React.FC<MessagingInboxProps> = ({ onViewConversation }) => {
   const { user } = useAuthenticator();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [conversations, setConversations] = useState<Array<{
+    conversationId: string;
+    otherUserId: string;
+    otherUsername: string;
+    lastMessage: Message;
+    unreadCount: number;
+  }>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   useEffect(() => {
     if (user?.userId) {
-      loadMessages();
+      loadConversations();
     }
   }, [user?.userId]);
 
-  const loadMessages = async () => {
+  const loadConversations = async () => {
     try {
       setLoading(true);
       setError(null);
@@ -61,107 +68,95 @@ const MessagingInbox: React.FC<MessagingInboxProps> = () => {
 
       const userProfile = profiles[0];
       
-      // Get received messages
+      // Get all messages where user is sender or recipient
       const messagesResult = await client.graphql({
         query: listMessages,
         variables: {
           filter: {
-            recipientId: { eq: userProfile.id }
+            or: [
+              { senderId: { eq: userProfile.id } },
+              { recipientId: { eq: userProfile.id } }
+            ]
           }
         }
       });
 
-      const messages = messagesResult.data.listMessages.items;
+      const allMessages = messagesResult.data.listMessages.items;
       
-      // Get sender information for each message
-      const messagesWithSenders = await Promise.all(
-        messages.map(async (message: any) => {
-          try {
-            if (!message.senderId) {
-              return {
-                id: message.id,
-                content: message.content,
-                subject: message.subject,
-                senderId: message.senderId,
-                recipientId: message.recipientId,
-                isRead: message.isRead,
-                createdAt: message.createdAt,
-                sender: { username: 'Unknown User' },
-                recipient: { username: null }
-              };
-            }
-            const senderResult = await client.graphql({
-              query: getUserProfile,
-              variables: { id: message.senderId }
-            });
-            return {
-              id: message.id,
-              content: message.content,
-              subject: message.subject,
-              senderId: message.senderId,
-              recipientId: message.recipientId,
-              isRead: message.isRead,
-              createdAt: message.createdAt,
-              sender: {
-                username: senderResult.data.getUserProfile?.username || 'Unknown User'
-              },
+      // Group messages by conversation
+      const conversationMap = new Map();
+      
+      for (const message of allMessages) {
+        if (!message.conversationId) continue;
+        
+        const conversationId = message.conversationId;
+        const otherUserId = message.senderId === userProfile.id ? message.recipientId : message.senderId;
+        
+        if (!conversationMap.has(conversationId)) {
+          conversationMap.set(conversationId, {
+            conversationId,
+            otherUserId,
+            messages: [],
+            unreadCount: 0
+          });
+        }
+        
+        const conversation = conversationMap.get(conversationId);
+        conversation.messages.push(message);
+        
+        if (message.recipientId === userProfile.id && !message.isRead) {
+          conversation.unreadCount++;
+        }
+      }
+      
+      // Get the last message and other user info for each conversation
+      const conversationsWithDetails = await Promise.all(
+        Array.from(conversationMap.values()).map(async (conversation) => {
+          const sortedMessages = conversation.messages.sort((a: any, b: any) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          
+          const lastMessage = sortedMessages[0];
+          
+          // Get other user's info
+          const otherUserResult = await client.graphql({
+            query: getUserProfile,
+            variables: { id: conversation.otherUserId }
+          });
+          
+          return {
+            conversationId: conversation.conversationId,
+            otherUserId: conversation.otherUserId,
+            otherUsername: otherUserResult.data.getUserProfile?.username || 'Unknown User',
+            lastMessage: {
+              id: lastMessage.id,
+              content: lastMessage.content,
+              subject: lastMessage.subject,
+              senderId: lastMessage.senderId,
+              recipientId: lastMessage.recipientId,
+              conversationId: lastMessage.conversationId,
+              isRead: lastMessage.isRead,
+              createdAt: lastMessage.createdAt,
+              sender: { username: null },
               recipient: { username: null }
-            };
-          } catch (error) {
-            console.error('Error fetching sender:', error);
-            return {
-              id: message.id,
-              content: message.content,
-              subject: message.subject,
-              senderId: message.senderId,
-              recipientId: message.recipientId,
-              isRead: message.isRead,
-              createdAt: message.createdAt,
-              sender: { username: 'Unknown User' },
-              recipient: { username: null }
-            };
-          }
+            },
+            unreadCount: conversation.unreadCount
+          };
         })
       );
 
-      setMessages(messagesWithSenders.sort((a: Message, b: Message) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      setConversations(conversationsWithDetails.sort((a, b) => 
+        new Date(b.lastMessage.createdAt).getTime() - new Date(a.lastMessage.createdAt).getTime()
       ));
     } catch (error) {
-      console.error('Error loading messages:', error);
-      setError('Failed to load messages');
+      console.error('Error loading conversations:', error);
+      setError('Failed to load conversations');
     } finally {
       setLoading(false);
     }
   };
 
-  const markAsRead = async (messageId: string) => {
-    try {
-      const client = generateClient();
-      await client.graphql({
-        query: updateMessage,
-        variables: {
-          input: {
-            id: messageId,
-            isRead: true
-          }
-        }
-      });
 
-      setMessages(prev => prev.map(msg => 
-        msg.id === messageId ? { ...msg, isRead: true } : msg
-      ));
-    } catch (error) {
-      console.error('Error marking message as read:', error);
-    }
-  };
-
-  const handleMessageClick = (message: Message) => {
-    setSelectedMessage(message);
-    if (message.isRead === false) {
-      markAsRead(message.id);
-    }
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -198,7 +193,7 @@ const MessagingInbox: React.FC<MessagingInboxProps> = () => {
         </div>
         <div className="error-state">
           <p>{error}</p>
-          <button onClick={loadMessages} className="btn btn-primary">
+          <button onClick={loadConversations} className="btn btn-primary">
             Try Again
           </button>
         </div>
@@ -206,68 +201,53 @@ const MessagingInbox: React.FC<MessagingInboxProps> = () => {
     );
   }
 
-  return (
+    return (
     <div className="messaging-inbox">
       <div className="inbox-header">
-        <h2>Incoming Messages</h2>
+        <h2>Conversations</h2>
       </div>
 
       <div className="inbox-content">
-        <div className="message-list">
-          {messages.length === 0 ? (
+        <div className="conversation-list">
+          {conversations.length === 0 ? (
             <div className="empty-state">
               <div className="text-4xl mb-4">📥</div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">No Messages Yet</h3>
-              <p className="text-gray-600 mb-4">You haven't received any messages yet.</p>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">No Conversations Yet</h3>
+              <p className="text-gray-600 mb-4">You haven't had any conversations yet.</p>
               <p className="text-sm text-gray-500">
-                When other users send you messages, they'll appear here.
+                When other users send you messages, conversations will appear here.
               </p>
             </div>
           ) : (
-            messages.map((message) => (
-                              <div
-                  key={message.id}
-                  className={`message-item ${message.isRead === false ? 'unread' : ''} ${selectedMessage?.id === message.id ? 'selected' : ''}`}
-                  onClick={() => handleMessageClick(message)}
-                >
-                <div className="message-header">
-                  <span className="sender-name">
-                    {message.sender?.username || 'Unknown User'}
+            conversations.map((conversation) => (
+              <div
+                key={conversation.conversationId}
+                className={`conversation-item ${conversation.unreadCount > 0 ? 'unread' : ''}`}
+                onClick={() => onViewConversation?.(conversation.conversationId, conversation.otherUserId)}
+              >
+                <div className="conversation-header">
+                  <span className="conversation-name">
+                    {conversation.otherUsername}
                   </span>
-                  <span className="message-date">
-                    {formatDate(message.createdAt)}
+                  <span className="conversation-date">
+                    {formatDate(conversation.lastMessage.createdAt)}
                   </span>
                 </div>
-                <div className="message-subject">
-                  {message.subject || 'No Subject'}
-                </div>
-                <div className="message-preview">
-                  {message.content && message.content.length > 100 
-                    ? `${message.content.substring(0, 100)}...` 
-                    : message.content || 'No content'
+                <div className="conversation-preview">
+                  {conversation.lastMessage.content && conversation.lastMessage.content.length > 100 
+                    ? `${conversation.lastMessage.content.substring(0, 100)}...` 
+                    : conversation.lastMessage.content || 'No content'
                   }
                 </div>
-                {message.isRead === false && <div className="unread-indicator" />}
+                {conversation.unreadCount > 0 && (
+                  <div className="unread-indicator">
+                    <span className="unread-count">{conversation.unreadCount}</span>
+                  </div>
+                )}
               </div>
             ))
           )}
         </div>
-
-        {selectedMessage && (
-          <div className="message-detail">
-            <div className="message-detail-header">
-              <h3>{selectedMessage.subject || 'No Subject'}</h3>
-              <div className="message-meta">
-                <span>From: {selectedMessage.sender?.username || 'Unknown User'}</span>
-                <span>{formatDate(selectedMessage.createdAt)}</span>
-              </div>
-            </div>
-            <div className="message-content">
-              {selectedMessage.content || 'No content'}
-            </div>
-
-          </div>
-        )}
       </div>
     </div>
   );

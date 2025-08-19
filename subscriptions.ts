@@ -8,16 +8,13 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
-export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage(
-  $filter: ModelSubscriptionMessageFilterInput
-  $owner: String
-) {
-  onCreateMessage(filter: $filter, owner: $owner) {
+export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filter: ModelSubscriptionMessageFilterInput) {
+  onCreateMessage(filter: $filter) {
     content
+    conversationId
     createdAt
     id
     isRead
-    owner
     recipient {
       bio
       contributionGoals
@@ -158,16 +155,13 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
   APITypes.OnCreateUserProfileSubscriptionVariables,
   APITypes.OnCreateUserProfileSubscription
 >;
-export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage(
-  $filter: ModelSubscriptionMessageFilterInput
-  $owner: String
-) {
-  onDeleteMessage(filter: $filter, owner: $owner) {
+export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filter: ModelSubscriptionMessageFilterInput) {
+  onDeleteMessage(filter: $filter) {
     content
+    conversationId
     createdAt
     id
     isRead
-    owner
     recipient {
       bio
       contributionGoals
@@ -308,16 +302,13 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
   APITypes.OnDeleteUserProfileSubscriptionVariables,
   APITypes.OnDeleteUserProfileSubscription
 >;
-export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage(
-  $filter: ModelSubscriptionMessageFilterInput
-  $owner: String
-) {
-  onUpdateMessage(filter: $filter, owner: $owner) {
+export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filter: ModelSubscriptionMessageFilterInput) {
+  onUpdateMessage(filter: $filter) {
     content
+    conversationId
     createdAt
     id
     isRead
-    owner
     recipient {
       bio
       contributionGoals

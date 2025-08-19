@@ -5,10 +5,10 @@
 export type Message = {
   __typename: "Message",
   content?: string | null,
+  conversationId?: string | null,
   createdAt: string,
   id: string,
   isRead?: boolean | null,
-  owner?: string | null,
   recipient?: UserProfile | null,
   recipientId?: string | null,
   sender?: UserProfile | null,
@@ -77,12 +77,12 @@ export type Todo = {
 export type ModelMessageFilterInput = {
   and?: Array< ModelMessageFilterInput | null > | null,
   content?: ModelStringInput | null,
+  conversationId?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   id?: ModelIDInput | null,
   isRead?: ModelBooleanInput | null,
   not?: ModelMessageFilterInput | null,
   or?: Array< ModelMessageFilterInput | null > | null,
-  owner?: ModelStringInput | null,
   recipientId?: ModelStringInput | null,
   senderId?: ModelStringInput | null,
   subject?: ModelStringInput | null,
@@ -230,11 +230,11 @@ export type ModelUserProfileConnection = {
 export type ModelMessageConditionInput = {
   and?: Array< ModelMessageConditionInput | null > | null,
   content?: ModelStringInput | null,
+  conversationId?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   isRead?: ModelBooleanInput | null,
   not?: ModelMessageConditionInput | null,
   or?: Array< ModelMessageConditionInput | null > | null,
-  owner?: ModelStringInput | null,
   recipientId?: ModelStringInput | null,
   senderId?: ModelStringInput | null,
   subject?: ModelStringInput | null,
@@ -243,6 +243,7 @@ export type ModelMessageConditionInput = {
 
 export type CreateMessageInput = {
   content?: string | null,
+  conversationId?: string | null,
   id?: string | null,
   isRead?: boolean | null,
   recipientId?: string | null,
@@ -343,6 +344,7 @@ export type DeleteUserProfileInput = {
 
 export type UpdateMessageInput = {
   content?: string | null,
+  conversationId?: string | null,
   id: string,
   isRead?: boolean | null,
   recipientId?: string | null,
@@ -388,11 +390,11 @@ export type UpdateUserProfileInput = {
 export type ModelSubscriptionMessageFilterInput = {
   and?: Array< ModelSubscriptionMessageFilterInput | null > | null,
   content?: ModelSubscriptionStringInput | null,
+  conversationId?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   id?: ModelSubscriptionIDInput | null,
   isRead?: ModelSubscriptionBooleanInput | null,
   or?: Array< ModelSubscriptionMessageFilterInput | null > | null,
-  owner?: ModelStringInput | null,
   recipientId?: ModelSubscriptionStringInput | null,
   senderId?: ModelSubscriptionStringInput | null,
   subject?: ModelSubscriptionStringInput | null,
@@ -498,10 +500,10 @@ export type GetMessageQuery = {
   getMessage?:  {
     __typename: "Message",
     content?: string | null,
+    conversationId?: string | null,
     createdAt: string,
     id: string,
     isRead?: boolean | null,
-    owner?: string | null,
     recipient?:  {
       __typename: "UserProfile",
       bio?: string | null,
@@ -649,10 +651,10 @@ export type ListMessagesQuery = {
     items:  Array< {
       __typename: "Message",
       content?: string | null,
+      conversationId?: string | null,
       createdAt: string,
       id: string,
       isRead?: boolean | null,
-      owner?: string | null,
       recipientId?: string | null,
       senderId?: string | null,
       subject?: string | null,
@@ -737,10 +739,10 @@ export type CreateMessageMutation = {
   createMessage?:  {
     __typename: "Message",
     content?: string | null,
+    conversationId?: string | null,
     createdAt: string,
     id: string,
     isRead?: boolean | null,
-    owner?: string | null,
     recipient?:  {
       __typename: "UserProfile",
       bio?: string | null,
@@ -887,10 +889,10 @@ export type DeleteMessageMutation = {
   deleteMessage?:  {
     __typename: "Message",
     content?: string | null,
+    conversationId?: string | null,
     createdAt: string,
     id: string,
     isRead?: boolean | null,
-    owner?: string | null,
     recipient?:  {
       __typename: "UserProfile",
       bio?: string | null,
@@ -1037,10 +1039,10 @@ export type UpdateMessageMutation = {
   updateMessage?:  {
     __typename: "Message",
     content?: string | null,
+    conversationId?: string | null,
     createdAt: string,
     id: string,
     isRead?: boolean | null,
-    owner?: string | null,
     recipient?:  {
       __typename: "UserProfile",
       bio?: string | null,
@@ -1180,17 +1182,16 @@ export type UpdateUserProfileMutation = {
 
 export type OnCreateMessageSubscriptionVariables = {
   filter?: ModelSubscriptionMessageFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnCreateMessageSubscription = {
   onCreateMessage?:  {
     __typename: "Message",
     content?: string | null,
+    conversationId?: string | null,
     createdAt: string,
     id: string,
     isRead?: boolean | null,
-    owner?: string | null,
     recipient?:  {
       __typename: "UserProfile",
       bio?: string | null,
@@ -1329,17 +1330,16 @@ export type OnCreateUserProfileSubscription = {
 
 export type OnDeleteMessageSubscriptionVariables = {
   filter?: ModelSubscriptionMessageFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnDeleteMessageSubscription = {
   onDeleteMessage?:  {
     __typename: "Message",
     content?: string | null,
+    conversationId?: string | null,
     createdAt: string,
     id: string,
     isRead?: boolean | null,
-    owner?: string | null,
     recipient?:  {
       __typename: "UserProfile",
       bio?: string | null,
@@ -1478,17 +1478,16 @@ export type OnDeleteUserProfileSubscription = {
 
 export type OnUpdateMessageSubscriptionVariables = {
   filter?: ModelSubscriptionMessageFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnUpdateMessageSubscription = {
   onUpdateMessage?:  {
     __typename: "Message",
     content?: string | null,
+    conversationId?: string | null,
     createdAt: string,
     id: string,
     isRead?: boolean | null,
-    owner?: string | null,
     recipient?:  {
       __typename: "UserProfile",
       bio?: string | null,

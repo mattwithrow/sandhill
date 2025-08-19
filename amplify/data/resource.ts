@@ -57,13 +57,13 @@ const schema = a.schema({
       subject: a.string(),
       senderId: a.string(),
       recipientId: a.string(),
+      conversationId: a.string(),
       isRead: a.boolean().default(false),
       // Relationships
       sender: a.belongsTo('UserProfile', 'senderId'),
       recipient: a.belongsTo('UserProfile', 'recipientId'),
     })
     .authorization((allow) => [
-      allow.owner(), // Users can only access their own messages
       allow.publicApiKey(), // Allow API key access for all operations (temporary for testing)
     ]),
 });

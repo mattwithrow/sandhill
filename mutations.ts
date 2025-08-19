@@ -14,10 +14,10 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
 ) {
   createMessage(condition: $condition, input: $input) {
     content
+    conversationId
     createdAt
     id
     isRead
-    owner
     recipient {
       bio
       contributionGoals
@@ -167,10 +167,10 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
 ) {
   deleteMessage(condition: $condition, input: $input) {
     content
+    conversationId
     createdAt
     id
     isRead
-    owner
     recipient {
       bio
       contributionGoals
@@ -320,10 +320,10 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
 ) {
   updateMessage(condition: $condition, input: $input) {
     content
+    conversationId
     createdAt
     id
     isRead
-    owner
     recipient {
       bio
       contributionGoals
