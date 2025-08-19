@@ -9,12 +9,14 @@ interface RecommendationSectionProps {
   title: string;
   description: string;
   maxResults?: number;
+  userType?: 'expert' | 'venture';
 }
 
 const RecommendationSection: React.FC<RecommendationSectionProps> = ({ 
   title, 
   description, 
-  maxResults = 6 
+  maxResults = 6,
+  userType 
 }) => {
   const navigate = useNavigate();
   const { user, authStatus } = useAuthenticator();
@@ -129,17 +131,81 @@ const RecommendationSection: React.FC<RecommendationSectionProps> = ({
     return (
       <section className="section">
         <div className="content-card">
-          <div className="text-center py-8">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">No Recommendations Yet</h3>
-            <p className="text-gray-600 mb-4">
-              We need more profiles to generate personalized recommendations.
-            </p>
-            <button 
-              onClick={loadRecommendations}
-              className="btn btn-outline"
-            >
-              Refresh
-            </button>
+          <div className="text-center py-12">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                {userType === 'expert' ? 'No Venture Matches Yet' : 'No Expert Matches Yet'}
+              </h3>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                {userType === 'expert' 
+                  ? "Complete your profile to discover ventures that need your skills!"
+                  : "Complete your profile to find experts who can help bring your vision to life!"
+                }
+              </p>
+            </div>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-lg mx-auto mb-6">
+              <h4 className="text-blue-800 font-semibold mb-3">💡 Improve Your Recommendations</h4>
+              <ul className="text-blue-700 text-sm space-y-2 text-left">
+                {userType === 'expert' ? (
+                  <>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Add your skills and areas of expertise</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Share your values and mission alignment</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Specify types of ventures you're interested in</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Set your preferred collaboration style</span>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Describe what skills and expertise you need</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Share your mission and values</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Specify your venture focus areas</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <span className="text-blue-500 mt-1">•</span>
+                      <span>Set your preferred engagement types</span>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button 
+                onClick={() => navigate('/my-account')}
+                className="btn btn-primary"
+              >
+                Complete My Profile
+              </button>
+              <button 
+                onClick={loadRecommendations}
+                className="btn btn-outline"
+              >
+                Refresh Recommendations
+              </button>
+            </div>
           </div>
         </div>
       </section>

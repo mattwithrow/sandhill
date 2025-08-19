@@ -387,6 +387,7 @@ const VenturesPage: React.FC = () => {
           title="Recommended Experts for You"
           description="Based on your venture needs, values, and interests, here are some experts that might be a great fit for collaboration."
           maxResults={6}
+          userType="venture"
         />
 
         {/* Main Content - Sidebar Layout */}
