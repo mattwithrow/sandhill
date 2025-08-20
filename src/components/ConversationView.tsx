@@ -52,6 +52,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
   const loadConversation = async () => {
     try {
+      console.log('Loading conversation for ID:', conversationId);
       setLoading(true);
       setError(null);
 
@@ -145,9 +146,16 @@ const ConversationView: React.FC<ConversationViewProps> = ({
         })
       );
 
-      setMessages(messagesWithSenders.sort((a: Message, b: Message) => 
+      const sortedMessages = messagesWithSenders.sort((a: Message, b: Message) => 
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      ));
+      );
+      
+      console.log('Conversation loaded successfully:', {
+        messageCount: sortedMessages.length,
+        conversationId
+      });
+      
+      setMessages(sortedMessages);
     } catch (error) {
       console.error('Error loading conversation:', error);
       setError('Failed to load conversation. Please try again.');
@@ -174,6 +182,19 @@ const ConversationView: React.FC<ConversationViewProps> = ({
   const sendReply = async () => {
     if (!replyContent.trim()) {
       setError('Please enter a message');
+      return;
+    }
+
+    // Validate required data
+    if (!conversationId || !otherUserId) {
+      setError('Missing conversation or user data. Please try again.');
+      return;
+    }
+
+    // Validate conversation ID format (should contain underscore)
+    if (!conversationId.includes('_')) {
+      console.error('Invalid conversation ID format:', conversationId);
+      setError('Invalid conversation format. Please try again.');
       return;
     }
 
@@ -207,7 +228,21 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       const senderProfile = profiles[0];
 
+      // Validate that the recipient ID is different from sender ID
+      if (senderProfile.id === otherUserId) {
+        setError('Cannot send message to yourself');
+        return;
+      }
+
       console.log('Sender profile found:', senderProfile.id);
+      console.log('Message input data:', {
+        content: replyContent,
+        subject: messages[0]?.subject || 'Re: Message',
+        senderId: senderProfile.id,
+        recipientId: otherUserId,
+        conversationId: conversationId,
+        isRead: false
+      });
 
       // Create the reply message
       const result = await client.graphql({
@@ -228,14 +263,32 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       setReplyContent('');
       
+      console.log('Message sent, reloading conversation in 500ms...');
+      
       // Add a small delay before reloading to ensure the message is processed
       setTimeout(() => {
+        console.log('Reloading conversation...');
         loadConversation(); // Reload conversation to show new message
       }, 500);
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending reply:', error);
-      setError('Failed to send reply. Please try again.');
+      console.error('Error details:', {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name,
+        code: error?.code
+      });
+      
+      // Check if it's a GraphQL error
+      if (error?.errors) {
+        console.error('GraphQL errors:', error.errors);
+        setError(`GraphQL error: ${error.errors[0]?.message || 'Unknown error'}`);
+      } else if (error?.message) {
+        setError(`Error: ${error.message}`);
+      } else {
+        setError('Failed to send reply. Please try again.');
+      }
     } finally {
       setSending(false);
     }
