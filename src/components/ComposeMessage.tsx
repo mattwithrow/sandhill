@@ -116,6 +116,13 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       return;
     }
 
+    // Check if recipient has messaging enabled
+    const recipient = recipients.find(r => r.id === selectedRecipient);
+    if (recipient && recipient.messagingEnabled === false) {
+      setError(`Sorry, ${recipient.username} has messaging disabled and cannot receive messages at this time.`);
+      return;
+    }
+
     try {
       setSending(true);
       setError(null);
@@ -192,6 +199,12 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
               <div className="recipient-info">
                 <span className="recipient-name">{recipients.find(r => r.id === selectedRecipient)?.username}</span>
                 <span className="recipient-type">({recipients.find(r => r.id === selectedRecipient)?.userType})</span>
+                {recipients.find(r => r.id === selectedRecipient)?.messagingEnabled === false && (
+                  <div className="messaging-disabled-warning">
+                    <span className="warning-icon">⚠️</span>
+                    <span className="warning-text">Messaging disabled</span>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
@@ -220,8 +233,16 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
                           setSearchTerm(recipient.username || '');
                         }}
                       >
-                        <span className="recipient-name">{recipient.username}</span>
-                        <span className="recipient-type">{recipient.userType}</span>
+                        <div className="recipient-option-content">
+                          <span className="recipient-name">{recipient.username}</span>
+                          <span className="recipient-type">{recipient.userType}</span>
+                        </div>
+                        {recipient.messagingEnabled === false && (
+                          <div className="messaging-disabled-indicator">
+                            <span className="warning-icon">⚠️</span>
+                            <span className="warning-text">No messages</span>
+                          </div>
+                        )}
                       </div>
                     ))
                   )}
