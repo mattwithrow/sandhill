@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import MessagingInbox from './components/MessagingInbox';
-import MessagingOutbox from './components/MessagingOutbox';
+import MessagingSplitView from './components/MessagingSplitView';
 import ComposeMessage from './components/ComposeMessage';
-import ConversationView from './components/ConversationView';
 
-type MessagingTab = 'inbox' | 'outbox' | 'compose' | 'conversation';
+type MessagingTab = 'inbox' | 'outbox' | 'compose';
 
 const MessagingPage: React.FC = () => {
   const { authStatus } = useAuthenticator();
@@ -14,8 +12,6 @@ const MessagingPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<MessagingTab>('inbox');
   const [composeRecipient, setComposeRecipient] = useState<string>('');
   const [composeSubject, setComposeSubject] = useState<string>('');
-  const [conversationId, setConversationId] = useState<string>('');
-  const [otherUserId, setOtherUserId] = useState<string>('');
 
   // Check if user is authenticated
   const isAuthenticated = authStatus === 'authenticated';
@@ -72,21 +68,9 @@ const MessagingPage: React.FC = () => {
 
         <div className="messaging-content">
           {activeTab === 'inbox' ? (
-            <MessagingInbox 
-              onViewConversation={(convId, otherId) => {
-                setConversationId(convId);
-                setOtherUserId(otherId);
-                setActiveTab('conversation');
-              }}
-            />
+            <MessagingSplitView mode="inbox" />
           ) : activeTab === 'outbox' ? (
-            <MessagingOutbox />
-          ) : activeTab === 'conversation' ? (
-            <ConversationView
-              conversationId={conversationId}
-              otherUserId={otherUserId}
-              onBack={() => setActiveTab('inbox')}
-            />
+            <MessagingSplitView mode="outbox" />
           ) : (
             <ComposeMessage
               recipientUsername={composeRecipient}

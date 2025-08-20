@@ -43,12 +43,14 @@ interface ConversationViewProps {
   conversationId: string;
   otherUserId: string;
   onBack: () => void;
+  onMessageSent?: () => void;
 }
 
 const ConversationView: React.FC<ConversationViewProps> = ({ 
   conversationId, 
   otherUserId, 
-  onBack 
+  onBack,
+  onMessageSent
 }) => {
   const { user } = useAuthenticator();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -308,6 +310,11 @@ const ConversationView: React.FC<ConversationViewProps> = ({
       
       // Reload conversation immediately to ensure we have the latest data
       await loadConversation();
+      
+      // Call the callback to notify parent component
+      if (onMessageSent) {
+        onMessageSent();
+      }
       
     } catch (error: any) {
       console.error('Error sending reply:', error);
