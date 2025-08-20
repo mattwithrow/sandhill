@@ -4,6 +4,23 @@ import { generateClient } from 'aws-amplify/api';
 import { listMessages, getUserProfile, listUserProfiles } from '../../queries';
 import { createMessage } from '../../mutations';
 
+// Simplified createMessage mutation to avoid GraphQL errors
+const createMessageSimple = /* GraphQL */ `
+  mutation CreateMessageSimple($input: CreateMessageInput!) {
+    createMessage(input: $input) {
+      id
+      content
+      subject
+      senderId
+      recipientId
+      conversationId
+      isRead
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 interface Message {
   id: string;
   content: string | null;
@@ -246,7 +263,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       // Create the reply message
       const result = await client.graphql({
-        query: createMessage,
+        query: createMessageSimple,
         variables: {
           input: {
             content: replyContent,
