@@ -13,6 +13,7 @@ interface Message {
   conversationId: string | null;
   isRead: boolean | null;
   createdAt: string;
+  isFromCurrentUser: boolean;
   sender?: {
     username: string | null;
   };
@@ -39,9 +40,11 @@ const ConversationView: React.FC<ConversationViewProps> = ({
   const [replyContent, setReplyContent] = useState('');
   const [sending, setSending] = useState(false);
   const [otherUser, setOtherUser] = useState<{ username: string | null } | null>(null);
+  const [isInConversation, setIsInConversation] = useState(false);
 
   useEffect(() => {
-    if (user?.userId) {
+    if (user?.userId && conversationId) {
+      setIsInConversation(true);
       loadConversation();
       loadOtherUser();
     }
@@ -53,6 +56,25 @@ const ConversationView: React.FC<ConversationViewProps> = ({
       setError(null);
 
       const client = generateClient();
+      
+      // Get current user's profile ID for comparison
+      const profileResult = await client.graphql({
+        query: listUserProfiles,
+        variables: {
+          filter: {
+            email: { eq: user?.signInDetails?.loginId }
+          }
+        }
+      });
+
+      const profiles = profileResult.data.listUserProfiles.items;
+      if (profiles.length === 0) {
+        setError('User profile not found');
+        setLoading(false);
+        return;
+      }
+
+      const currentUserProfileId = profiles[0].id;
       
       // Get messages for this conversation
       const messagesResult = await client.graphql({
@@ -67,7 +89,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
       const conversationMessages = messagesResult.data.listMessages.items;
       
       // Get sender information for each message
-      const messagesWithSenders = await Promise.all(
+      const messagesWithSenders: Message[] = await Promise.all(
         conversationMessages.map(async (message: any) => {
           try {
             if (!message.senderId) {
@@ -81,7 +103,8 @@ const ConversationView: React.FC<ConversationViewProps> = ({
                 isRead: message.isRead,
                 createdAt: message.createdAt,
                 sender: { username: 'Unknown User' },
-                recipient: { username: null }
+                recipient: { username: null },
+                isFromCurrentUser: false
               };
             }
             const senderResult = await client.graphql({
@@ -100,7 +123,8 @@ const ConversationView: React.FC<ConversationViewProps> = ({
               sender: {
                 username: senderResult.data.getUserProfile?.username || 'Unknown User'
               },
-              recipient: { username: null }
+              recipient: { username: null },
+              isFromCurrentUser: message.senderId === currentUserProfileId
             };
           } catch (error) {
             console.error('Error fetching sender:', error);
@@ -114,7 +138,8 @@ const ConversationView: React.FC<ConversationViewProps> = ({
               isRead: message.isRead,
               createdAt: message.createdAt,
               sender: { username: 'Unknown User' },
-              recipient: { username: null }
+              recipient: { username: null },
+              isFromCurrentUser: message.senderId === currentUserProfileId
             };
           }
         })
@@ -125,7 +150,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
       ));
     } catch (error) {
       console.error('Error loading conversation:', error);
-      setError('Failed to load conversation');
+      setError('Failed to load conversation. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -156,6 +181,12 @@ const ConversationView: React.FC<ConversationViewProps> = ({
       setSending(true);
       setError(null);
 
+      console.log('Sending reply...', {
+        content: replyContent,
+        conversationId,
+        otherUserId
+      });
+
       const client = generateClient();
       
       // Get current user's profile
@@ -176,8 +207,10 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       const senderProfile = profiles[0];
 
+      console.log('Sender profile found:', senderProfile.id);
+
       // Create the reply message
-      await client.graphql({
+      const result = await client.graphql({
         query: createMessage,
         variables: {
           input: {
@@ -191,11 +224,18 @@ const ConversationView: React.FC<ConversationViewProps> = ({
         }
       });
 
+      console.log('Message sent successfully:', result);
+
       setReplyContent('');
-      loadConversation(); // Reload conversation to show new message
+      
+      // Add a small delay before reloading to ensure the message is processed
+      setTimeout(() => {
+        loadConversation(); // Reload conversation to show new message
+      }, 500);
+      
     } catch (error) {
       console.error('Error sending reply:', error);
-      setError('Failed to send reply');
+      setError('Failed to send reply. Please try again.');
     } finally {
       setSending(false);
     }
@@ -268,14 +308,14 @@ const ConversationView: React.FC<ConversationViewProps> = ({
           messages.map((message) => (
             <div
               key={message.id}
-              className={`message-bubble ${message.senderId === user?.userId ? 'sent' : 'received'}`}
+              className={`message-bubble ${message.isFromCurrentUser ? 'sent' : 'received'}`}
             >
               <div className="message-content">
                 {message.content}
               </div>
               <div className="message-meta">
                 <span className="message-time">{formatDate(message.createdAt)}</span>
-                {message.senderId === user?.userId && (
+                {message.isFromCurrentUser && (
                   <span className="message-status">
                     {message.isRead ? '✓✓' : '✓'}
                   </span>
