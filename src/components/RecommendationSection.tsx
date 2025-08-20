@@ -147,50 +147,7 @@ const RecommendationSection: React.FC<RecommendationSectionProps> = ({
               </p>
             </div>
             
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-lg mx-auto mb-6">
-              <h4 className="text-blue-800 font-semibold mb-3">💡 Improve Your Recommendations</h4>
-              <ul className="text-blue-700 text-sm space-y-2 text-left">
-                {userType === 'expert' ? (
-                  <>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Add your skills and areas of expertise</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Share your values and mission alignment</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Specify types of ventures you're interested in</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Set your preferred collaboration style</span>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Describe what skills and expertise you need</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Share your mission and values</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Specify your venture focus areas</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>Set your preferred engagement types</span>
-                    </li>
-                  </>
-                )}
-              </ul>
-            </div>
+
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button 
