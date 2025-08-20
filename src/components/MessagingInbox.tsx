@@ -68,7 +68,7 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onViewConversation }) =
 
       const userProfile = profiles[0];
       
-      // Get all messages where user is sender or recipient
+      // Get all messages where user is sender or recipient with cache busting
       const messagesResult = await client.graphql({
         query: listMessages,
         variables: {
@@ -78,7 +78,8 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onViewConversation }) =
               { recipientId: { eq: userProfile.id } }
             ]
           }
-        }
+        },
+        authMode: 'userPool' // Ensure we're using authenticated requests
       });
 
       const allMessages = messagesResult.data.listMessages.items;

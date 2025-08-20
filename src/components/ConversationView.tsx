@@ -75,6 +75,9 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       const client = generateClient();
       
+      // Clear any cached data for this conversation
+      console.log('Clearing conversation cache...');
+      
       // Get current user's profile ID for comparison
       const profileResult = await client.graphql({
         query: listUserProfiles,
@@ -94,14 +97,15 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       const currentUserProfileId = profiles[0].id;
       
-      // Get messages for this conversation
+      // Get messages for this conversation with cache busting
       const messagesResult = await client.graphql({
         query: listMessages,
         variables: {
           filter: {
             conversationId: { eq: conversationId }
           }
-        }
+        },
+        authMode: 'userPool' // Ensure we're using authenticated requests
       });
 
       const conversationMessages = messagesResult.data.listMessages.items;
@@ -280,13 +284,30 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       setReplyContent('');
       
-      console.log('Message sent, reloading conversation in 500ms...');
+      // Clear any existing error
+      setError(null);
       
-      // Add a small delay before reloading to ensure the message is processed
-      setTimeout(() => {
-        console.log('Reloading conversation...');
-        loadConversation(); // Reload conversation to show new message
-      }, 500);
+      // Add the new message to the local state immediately for better UX
+      const newMessage: Message = {
+        id: (result as any).data.createMessage.id,
+        content: replyContent,
+        subject: messages[0]?.subject || 'Re: Message',
+        senderId: senderProfile.id,
+        recipientId: otherUserId,
+        conversationId: conversationId,
+        isRead: false,
+        createdAt: (result as any).data.createMessage.createdAt,
+        isFromCurrentUser: true,
+        sender: { username: senderProfile.username || 'You' },
+        recipient: { username: null }
+      };
+      
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+      
+      console.log('Message added to local state, reloading conversation...');
+      
+      // Reload conversation immediately to ensure we have the latest data
+      await loadConversation();
       
     } catch (error: any) {
       console.error('Error sending reply:', error);

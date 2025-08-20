@@ -168,7 +168,7 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
       const conversationId = [senderProfile.id, selectedRecipient].sort().join('_');
 
       // Create the message
-      await client.graphql({
+      const result = await client.graphql({
         query: createMessageSimple,
         variables: {
           input: {
@@ -182,10 +182,31 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
         }
       });
 
+      console.log('Message created successfully:', result);
+      
+      // Clear any existing error
+      setError(null);
+      
+      // Call the success callback
       onMessageSent();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message:', error);
-      setError('Failed to send message');
+      console.error('Error details:', {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name,
+        code: error?.code
+      });
+      
+      // Check if it's a GraphQL error
+      if (error?.errors) {
+        console.error('GraphQL errors:', error.errors);
+        setError(`GraphQL error: ${error.errors[0]?.message || 'Unknown error'}`);
+      } else if (error?.message) {
+        setError(`Error: ${error.message}`);
+      } else {
+        setError('Failed to send message. Please try again.');
+      }
     } finally {
       setSending(false);
     }
