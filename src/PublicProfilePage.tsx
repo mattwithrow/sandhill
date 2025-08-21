@@ -6,7 +6,7 @@ import {
   UserProfileUserType
 } from '../API';
 import { listUserProfiles } from '../queries';
-import { formatTimezone, getTimeInTimezone, isRemoteLocation } from './utils/locationUtils';
+import { formatTimezone, getTimeInTimezone, isRemoteLocation, detectTimezoneFromLocation } from './utils/locationUtils';
 import { getMissionValueNames } from './data/missionValues';
 import { getVentureInterestNames } from './data/ventureInterests';
 import { getEngagementTypeNames } from './data/engagementTypes';
@@ -133,7 +133,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             missionValuesAlignment: dbProfile.missionValuesAlignment || '',
             ventureInterests: dbProfile.ventureInterests || '',
             preferredEngagement: dbProfile.preferredEngagement || '',
-            timezone: dbProfile.timezone || '',
+            timezone: dbProfile.timezone || detectTimezoneFromLocation(dbProfile.location || ''),
             latitude: dbProfile.latitude || undefined,
             longitude: dbProfile.longitude || undefined
           };
@@ -460,7 +460,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                         </p>
                       ) : (
                         <p className="text-sm text-gray-500 mt-1 italic">
-                          Timezone information will be available after profile update
+                          Timezone will be auto-detected from location
                         </p>
                       )}
                     </div>

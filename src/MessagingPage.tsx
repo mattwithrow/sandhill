@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import MessagingSplitView from './components/MessagingSplitView';
+import MessagingCombinedView from './components/MessagingCombinedView';
 import ComposeMessage from './components/ComposeMessage';
 
-type MessagingTab = 'inbox' | 'outbox' | 'compose';
+type MessagingTab = 'messages' | 'compose';
 
 const MessagingPage: React.FC = () => {
   const { authStatus } = useAuthenticator();
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState<MessagingTab>('inbox');
+  const [activeTab, setActiveTab] = useState<MessagingTab>('messages');
   const [composeRecipient, setComposeRecipient] = useState<string>('');
   const [composeSubject, setComposeSubject] = useState<string>('');
 
@@ -42,21 +42,15 @@ const MessagingPage: React.FC = () => {
       <div className="container">
         <div className="messaging-header">
           <h1>Messages</h1>
-          <p>View and manage your conversations</p>
+          <p>View and manage all your conversations in one place</p>
         </div>
 
         <div className="messaging-tabs">
           <button
-            className={`tab-button ${activeTab === 'inbox' ? 'active' : ''}`}
-            onClick={() => setActiveTab('inbox')}
+            className={`tab-button ${activeTab === 'messages' ? 'active' : ''}`}
+            onClick={() => setActiveTab('messages')}
           >
-            Inbox
-          </button>
-          <button
-            className={`tab-button ${activeTab === 'outbox' ? 'active' : ''}`}
-            onClick={() => setActiveTab('outbox')}
-          >
-            Outbox
+            Messages
           </button>
           <button
             className={`tab-button ${activeTab === 'compose' ? 'active' : ''}`}
@@ -67,21 +61,19 @@ const MessagingPage: React.FC = () => {
         </div>
 
         <div className="messaging-content">
-          {activeTab === 'inbox' ? (
-            <MessagingSplitView mode="inbox" />
-          ) : activeTab === 'outbox' ? (
-            <MessagingSplitView mode="outbox" />
+          {activeTab === 'messages' ? (
+            <MessagingCombinedView />
           ) : (
             <ComposeMessage
               recipientUsername={composeRecipient}
               subject={composeSubject}
               onMessageSent={() => {
-                setActiveTab('outbox');
+                setActiveTab('messages');
                 setComposeRecipient('');
                 setComposeSubject('');
               }}
               onCancel={() => {
-                setActiveTab('inbox');
+                setActiveTab('messages');
                 setComposeRecipient('');
                 setComposeSubject('');
               }}

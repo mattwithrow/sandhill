@@ -197,6 +197,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 experience: dbProfile.experience || '',
                 skills: dbProfile.skills || '',
                 location: dbProfile.location || '',
+                timezone: dbProfile.timezone || getUserTimezone(),
                 values: dbProfile.values || '',
                 missionValuesAlignment: '', // TODO: Add back after schema deployment
                 ventureInterests: '', // TODO: Add back after schema deployment
@@ -415,15 +416,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         console.log('📝 Updating existing profile in AWS...');
         const existingProfile = existingProfiles[0];
         
-                 const updateInput: UpdateUserProfileInput = {
-           id: existingProfile.id,
-           email: userEmail,
-           username: formData.username,
+                         const updateInput: UpdateUserProfileInput = {
+          id: existingProfile.id,
+          email: userEmail,
+          username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
           experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
+          timezone: formData.timezone,
           values: formData.values,
           // missionValuesAlignment: formData.missionValuesAlignment,
           // ventureInterests: formData.ventureInterests,
@@ -460,14 +462,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         // Create new profile
         console.log('📝 Creating new profile in AWS...');
         
-                 const createInput: CreateUserProfileInput = {
-           email: userEmail,
-           username: formData.username,
+                         const createInput: CreateUserProfileInput = {
+          email: userEmail,
+          username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
           experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
+          timezone: formData.timezone,
           values: formData.values,
           // missionValuesAlignment: formData.missionValuesAlignment,
           // ventureInterests: formData.ventureInterests,
@@ -549,7 +552,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       
       // Auto-detect timezone when location changes
       if (field === 'location' && typeof value === 'string') {
-        updatedData.timezone = detectTimezoneFromLocation(value);
+        const detectedTimezone = detectTimezoneFromLocation(value);
+        updatedData.timezone = detectedTimezone;
+        console.log(`🌍 Auto-detected timezone for "${value}": ${detectedTimezone}`);
       }
       
       console.log(`📝 Updated formData for ${field}:`, (updatedData as any)[field]);
@@ -1172,12 +1177,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       />
                       {formData.location && (
                         <div className="mt-2 text-sm text-gray-600">
-                          <span className="font-medium">Detected timezone:</span> {formatTimezone(formData.timezone)} 
+                          <span className="font-medium">Auto-detected timezone:</span> {formatTimezone(formData.timezone)} 
                           {!isRemoteLocation(formData.location) && (
                             <span className="ml-2">
                               (Current time: {getTimeInTimezone(formData.timezone)})
                             </span>
                           )}
+                          <div className="text-xs text-gray-500 mt-1 flex items-center">
+                            <span className="mr-1">💡</span>
+                            Timezone automatically detected from "{formData.location}"
+                          </div>
                         </div>
                       )}
                     </div>
