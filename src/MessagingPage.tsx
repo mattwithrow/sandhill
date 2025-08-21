@@ -3,8 +3,9 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import MessagingCombinedView from './components/MessagingCombinedView';
 import ComposeMessage from './components/ComposeMessage';
+import MessageTest from './components/MessageTest';
 
-type MessagingTab = 'messages' | 'compose';
+type MessagingTab = 'messages' | 'compose' | 'test';
 
 const MessagingPage: React.FC = () => {
   const { authStatus } = useAuthenticator();
@@ -58,11 +59,19 @@ const MessagingPage: React.FC = () => {
           >
             New Message
           </button>
+          <button
+            className={`tab-button ${activeTab === 'test' ? 'active' : ''}`}
+            onClick={() => setActiveTab('test')}
+          >
+            Test
+          </button>
         </div>
 
         <div className="messaging-content">
           {activeTab === 'messages' ? (
             <MessagingCombinedView />
+          ) : activeTab === 'test' ? (
+            <MessageTest />
           ) : (
             <ComposeMessage
               recipientUsername={composeRecipient}

@@ -50,9 +50,14 @@ const MessagingCombinedView: React.FC = () => {
       setLoading(true);
       setError(null);
 
+      console.log('🔍 Starting to load conversations...');
+      console.log('👤 Current user:', user?.signInDetails?.loginId);
+
       const client = generateClient();
       
       // Get user's profile to find their ID
+      console.log('🔍 Querying for user profile with email:', user?.signInDetails?.loginId);
+      
       const profileResult = await client.graphql({
         query: listUserProfiles,
         variables: {
@@ -62,14 +67,19 @@ const MessagingCombinedView: React.FC = () => {
         }
       });
 
+      console.log('✅ Profile query result:', profileResult);
       const profiles = profileResult.data.listUserProfiles.items;
+      console.log('📄 Found profiles:', profiles.length);
+      
       if (profiles.length === 0) {
-        setError('User profile not found');
+        console.log('⚠️ No user profile found, showing empty state');
+        setConversations([]);
         setLoading(false);
         return;
       }
 
       const userProfile = profiles[0];
+      console.log('👤 User profile ID:', userProfile.id);
       
       // Get all messages where user is sender or recipient
       const messagesResult = await client.graphql({
@@ -81,11 +91,11 @@ const MessagingCombinedView: React.FC = () => {
               { recipientId: { eq: userProfile.id } }
             ]
           }
-        },
-        authMode: 'userPool'
+        }
       });
 
       const allMessages = messagesResult.data.listMessages.items;
+      console.log('💬 Found messages:', allMessages.length);
       
       // Group messages by conversation
       const conversationMap = new Map();
@@ -168,7 +178,21 @@ const MessagingCombinedView: React.FC = () => {
       }
     } catch (error) {
       console.error('Error loading conversations:', error);
-      setError('Failed to load conversations');
+      
+      // Log detailed error information
+      if (error && typeof error === 'object' && 'errors' in error) {
+        console.error('GraphQL Errors:', (error as any).errors);
+        const graphqlErrors = (error as any).errors;
+        if (graphqlErrors && graphqlErrors.length > 0) {
+          console.error('GraphQL Error Details:', graphqlErrors.map((err: any) => ({
+            message: err.message,
+            path: err.path,
+            extensions: err.extensions
+          })));
+        }
+      }
+      
+      setError(`Failed to load conversations: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -268,6 +292,9 @@ const MessagingCombinedView: React.FC = () => {
                  filter === 'inbox' ? 'When other users send you messages, they will appear here.' :
                  'When you send messages, they will appear here.'}
               </p>
+              <div className="mt-4 text-sm text-gray-500">
+                💡 Visit user profiles to start conversations and send messages.
+              </div>
             </div>
           ) : (
             filteredConversations.map((conversation) => (
