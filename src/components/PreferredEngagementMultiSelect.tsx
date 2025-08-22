@@ -1,114 +1,140 @@
-import React from 'react';
-import { SIMPLIFIED_ENGAGEMENT_TYPES, getSimplifiedEngagementTypeNames, getSimplifiedEngagementTypeIds, EngagementType } from '../data/engagementTypes';
+import React, { useState, useRef, useEffect } from 'react';
+import { ENGAGEMENT_TYPES, EngagementType } from '../data/engagementTypes';
 
 interface PreferredEngagementMultiSelectProps {
   selectedEngagements: string[];
   onChange: (engagements: string[]) => void;
   placeholder?: string;
   className?: string;
+  userType?: string;
 }
 
 const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectProps> = ({
   selectedEngagements,
   onChange,
-  placeholder = "Select preferred engagement types...",
-  className = ""
+  placeholder = "Select how you want to engage...",
+  className = "",
+  userType
 }) => {
-  const selectedEngagementIds = getSimplifiedEngagementTypeIds(selectedEngagements);
-  const selectedEngagementNames = getSimplifiedEngagementTypeNames(selectedEngagementIds);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleEngagement = (engagementId: string) => {
-    console.log('🤝 PreferredEngagementMultiSelect toggleEngagement called with:', engagementId);
-    const engagement = SIMPLIFIED_ENGAGEMENT_TYPES.find(e => e.id === engagementId);
-    if (!engagement) return;
+  // Group engagement types by category for better organization
+  const groupedEngagements = ENGAGEMENT_TYPES.reduce((acc, engagement) => {
+    if (!acc[engagement.category]) {
+      acc[engagement.category] = [];
+    }
+    acc[engagement.category].push(engagement);
+    return acc;
+  }, {} as Record<string, EngagementType[]>);
 
-    const newSelectedEngagements = selectedEngagementIds.includes(engagementId)
-      ? selectedEngagementIds.filter(id => id !== engagementId)
-      : [...selectedEngagementIds, engagementId];
+  // Filter engagements based on search term
+  const filteredGroupedEngagements = Object.entries(groupedEngagements).reduce((acc, [category, engagements]) => {
+    const filteredEngagements = engagements.filter(engagement =>
+      engagement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      engagement.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    if (filteredEngagements.length > 0) {
+      acc[category] = filteredEngagements;
+    }
+    return acc;
+  }, {} as Record<string, EngagementType[]>);
 
-    const newSelectedEngagementNames = getSimplifiedEngagementTypeNames(newSelectedEngagements);
-    console.log('🤝 PreferredEngagementMultiSelect calling onChange with:', newSelectedEngagementNames);
-    onChange(newSelectedEngagementNames);
+  const handleToggleEngagement = (engagementId: string) => {
+    const newSelectedEngagements = selectedEngagements.includes(engagementId)
+      ? selectedEngagements.filter(id => id !== engagementId)
+      : [...selectedEngagements, engagementId];
+    onChange(newSelectedEngagements);
   };
 
-  const removeEngagement = (engagementId: string) => {
-    const newSelectedEngagements = selectedEngagementIds.filter(id => id !== engagementId);
-    const newSelectedEngagementNames = getSimplifiedEngagementTypeNames(newSelectedEngagements);
-    onChange(newSelectedEngagementNames);
+  const handleRemoveEngagement = (engagementId: string) => {
+    const newSelectedEngagements = selectedEngagements.filter(id => id !== engagementId);
+    onChange(newSelectedEngagements);
   };
 
-  const clearAll = () => {
-    onChange([]);
+  const getSelectedEngagementNames = () => {
+    return selectedEngagements.map(id => 
+      ENGAGEMENT_TYPES.find(e => e.id === id)?.name || id
+    );
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <div className={`${className}`}>
+    <div className={`preferred-engagement-multi-select ${className}`} ref={dropdownRef}>
       {/* Selected Engagements Display */}
-      {selectedEngagementNames.length > 0 && (
-        <div className="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">
-              Selected Engagement Types ({selectedEngagementNames.length})
-            </span>
-            <button
-              type="button"
-              onClick={clearAll}
-              className="text-xs text-red-600 hover:text-red-800 font-medium"
-            >
-              Clear all
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {selectedEngagementNames.map((engagementName, index) => {
-              const engagement = SIMPLIFIED_ENGAGEMENT_TYPES.find(e => e.name === engagementName);
-              return (
-                <span
-                  key={engagement?.id || index}
-                  className="inline-flex items-center gap-1 bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-medium border border-green-300 shadow-sm"
-                >
-                  {engagementName}
-                  <button
-                    type="button"
-                    onClick={() => removeEngagement(engagement?.id || '')}
-                    className="text-gray-500 hover:text-red-600 ml-1 font-bold"
-                  >
-                    ×
-                  </button>
-                </span>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Engagements Grid */}
-      <div className="skills-grid">
-        <div className="skills-category">
-          <div className="skill-tags">
-            {SIMPLIFIED_ENGAGEMENT_TYPES.map(engagement => (
-              <button
-                key={engagement.id}
-                type="button"
-                onClick={() => toggleEngagement(engagement.id)}
-                className={`skill-tag ${
-                  selectedEngagementIds.includes(engagement.id) ? 'selected' : ''
-                }`}
-                title={engagement.description}
-              >
-                {engagement.name}
-              </button>
-            ))}
-          </div>
-        </div>
+      <div className="selected-engagements-container">
+        {getSelectedEngagementNames().map((engagementName, index) => (
+          <span
+            key={index}
+            className="selected-engagement-tag"
+            onClick={() => handleRemoveEngagement(selectedEngagements[index])}
+          >
+            {engagementName}
+            <span className="remove-icon">×</span>
+          </span>
+        ))}
       </div>
 
-      {/* Empty State */}
-      {selectedEngagementNames.length === 0 && (
-        <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-2">🤝</div>
-          <p className="text-sm">{placeholder}</p>
+      {/* Dropdown Trigger */}
+      <div
+        className="dropdown-trigger"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <input
+          type="text"
+          placeholder={placeholder}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(true);
+          }}
+          className="search-input"
+        />
+        <svg
+          className={`dropdown-arrow ${isOpen ? 'open' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+
+      {/* Dropdown Options */}
+      {isOpen && (
+        <div className="dropdown-options">
+          {Object.entries(filteredGroupedEngagements).map(([category, engagements]) => (
+            <div key={category} className="engagement-category">
+              <div className="category-header">{category}</div>
+              <div className="category-engagements">
+                {engagements.map((engagement) => (
+                  <div
+                    key={engagement.id}
+                    className={`engagement-option ${selectedEngagements.includes(engagement.id) ? 'selected' : ''}`}
+                    onClick={() => handleToggleEngagement(engagement.id)}
+                  >
+                    <div className="engagement-name">{engagement.name}</div>
+                    <div className="engagement-description">{engagement.description}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          {Object.keys(filteredGroupedEngagements).length === 0 && (
+            <div className="no-results">No engagement types found matching "{searchTerm}"</div>
+          )}
         </div>
       )}
     </div>
