@@ -180,7 +180,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
       });
       
       setMessages(sortedMessages);
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error loading conversation:', error);
       console.error('Error details:', {
         message: error?.message,
@@ -207,7 +207,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
       setOtherUser({
         username: username
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error loading other user:', error);
       console.error('Error details:', {
         message: error?.message,
