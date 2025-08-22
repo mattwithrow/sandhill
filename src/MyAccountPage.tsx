@@ -223,6 +223,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 isProfileHidden: dbProfile.isProfileHidden !== undefined ? dbProfile.isProfileHidden : false
               };
               
+              console.log('📄 Loaded social URLs from database:', {
+                linkedinUrl: profileData.linkedinUrl,
+                githubUrl: profileData.githubUrl,
+                twitterUrl: profileData.twitterUrl,
+                instagramUrl: profileData.instagramUrl
+              });
+              
               console.log('📄 Converted profile data:', profileData);
             } else {
               console.log('📝 No profile found in AWS database for email:', userEmail);
@@ -485,6 +492,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           projectDetails: ''
         };
         
+        console.log('💾 Saving social URLs to database:', {
+          linkedinUrl: updateInput.linkedinUrl,
+          githubUrl: updateInput.githubUrl,
+          twitterUrl: updateInput.twitterUrl,
+          instagramUrl: updateInput.instagramUrl
+        });
+        
         const updateResult = await client.graphql({
           query: updateUserProfile,
           variables: {
@@ -529,6 +543,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           contributionGoals: '',
           projectDetails: ''
         };
+        
+        console.log('💾 Creating profile with social URLs:', {
+          linkedinUrl: createInput.linkedinUrl,
+          githubUrl: createInput.githubUrl,
+          twitterUrl: createInput.twitterUrl,
+          instagramUrl: createInput.instagramUrl
+        });
         
         const createResult = await client.graphql({
           query: createUserProfile,
@@ -601,8 +622,11 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   const formatSocialUrl = (platform: string, value: string) => {
     if (!value) return '';
     
+    console.log(`🔗 Formatting ${platform} URL: "${value}"`);
+    
     // If it already has a protocol, return as is
     if (value.startsWith('http://') || value.startsWith('https://')) {
+      console.log(`✅ Already has protocol: ${value}`);
       return value;
     }
     
@@ -632,25 +656,42 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     switch (platform) {
       case 'linkedin':
         if (value.includes('linkedin.com')) {
-          return `https://${value}`;
+          const formatted = `https://${value}`;
+          console.log(`🔗 LinkedIn formatted: ${formatted}`);
+          return formatted;
         }
-        return `https://linkedin.com/in/${value}`;
+        const linkedinFormatted = `https://linkedin.com/in/${value}`;
+        console.log(`🔗 LinkedIn formatted: ${linkedinFormatted}`);
+        return linkedinFormatted;
       case 'github':
         if (value.includes('github.com')) {
-          return `https://github.com/${value}`;
+          const formatted = `https://${value}`;
+          console.log(`🔗 GitHub formatted: ${formatted}`);
+          return formatted;
         }
-        return `https://github.com/${value}`;
+        const githubFormatted = `https://github.com/${value}`;
+        console.log(`🔗 GitHub formatted: ${githubFormatted}`);
+        return githubFormatted;
       case 'twitter':
         if (value.includes('twitter.com')) {
-          return `https://${value}`;
+          const formatted = `https://${value}`;
+          console.log(`🔗 Twitter formatted: ${formatted}`);
+          return formatted;
         }
-        return `https://twitter.com/${value}`;
+        const twitterFormatted = `https://twitter.com/${value}`;
+        console.log(`🔗 Twitter formatted: ${twitterFormatted}`);
+        return twitterFormatted;
       case 'instagram':
         if (value.includes('instagram.com')) {
-          return `https://${value}`;
+          const formatted = `https://${value}`;
+          console.log(`🔗 Instagram formatted: ${formatted}`);
+          return formatted;
         }
-        return `https://instagram.com/${value}`;
+        const instagramFormatted = `https://instagram.com/${value}`;
+        console.log(`🔗 Instagram formatted: ${instagramFormatted}`);
+        return instagramFormatted;
       default:
+        console.log(`🔗 Default case: ${value}`);
         return value;
     }
   };

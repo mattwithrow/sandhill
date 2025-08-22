@@ -71,7 +71,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
   const loadConversation = async () => {
     try {
-      console.log('Loading conversation for ID:', conversationId);
+      console.log('🔍 Loading conversation for ID:', conversationId);
       setLoading(true);
       setError(null);
 
@@ -106,11 +106,12 @@ const ConversationView: React.FC<ConversationViewProps> = ({
           filter: {
             conversationId: { eq: conversationId }
           }
-        },
-        authMode: 'userPool' // Ensure we're using authenticated requests
+        }
       });
 
       const conversationMessages = messagesResult.data.listMessages.items;
+      
+      console.log('📨 Found messages:', conversationMessages.length);
       
       // Get sender information for each message
       const messagesWithSenders: Message[] = await Promise.all(
@@ -173,14 +174,20 @@ const ConversationView: React.FC<ConversationViewProps> = ({
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
       
-      console.log('Conversation loaded successfully:', {
+      console.log('✅ Conversation loaded successfully:', {
         messageCount: sortedMessages.length,
         conversationId
       });
       
       setMessages(sortedMessages);
     } catch (error) {
-      console.error('Error loading conversation:', error);
+      console.error('❌ Error loading conversation:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name,
+        code: error?.code
+      });
       setError('Failed to load conversation. Please try again.');
     } finally {
       setLoading(false);
@@ -189,16 +196,25 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
   const loadOtherUser = async () => {
     try {
+      console.log('👤 Loading other user:', otherUserId);
       const client = generateClient();
       const userResult = await client.graphql({
         query: getUserProfile,
         variables: { id: otherUserId }
       });
+      const username = userResult.data.getUserProfile?.username || 'Unknown User';
+      console.log('✅ Other user loaded:', username);
       setOtherUser({
-        username: userResult.data.getUserProfile?.username || 'Unknown User'
+        username: username
       });
     } catch (error) {
-      console.error('Error loading other user:', error);
+      console.error('❌ Error loading other user:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name,
+        code: error?.code
+      });
     }
   };
 
