@@ -104,14 +104,12 @@ export const ENGAGEMENT_TYPES: EngagementType[] = [
 
 // Create simplified engagement types with only category titles
 export const SIMPLIFIED_ENGAGEMENT_TYPES: EngagementType[] = [
-  { id: 'analytics-insights', name: 'Analytics & Insights', category: 'Analysis', description: 'Data analysis and insights' },
-  { id: 'collaboration', name: 'Collaboration', category: 'Partnership', description: 'Strategic partnerships and alliances' },
-  { id: 'direct-involvement', name: 'Direct Involvement', category: 'Hands-on', description: 'Direct involvement in operations' },
-  { id: 'financial-support', name: 'Financial Support', category: 'Investment', description: 'Financial investment and funding' },
-  { id: 'knowledge-sharing', name: 'Knowledge Sharing', category: 'Education', description: 'Educational programs and training' },
-  { id: 'policy-influence', name: 'Policy & Influence', category: 'Advocacy', description: 'Policy advocacy and lobbying' },
-  { id: 'volunteer', name: 'Volunteer', category: 'Volunteering', description: 'Volunteer work and pro bono services' },
   { id: 'advisory', name: 'Advisory', category: 'Strategic Support', description: 'Strategic guidance and mentorship' },
+  { id: 'hands-on', name: 'Hands-on Work', category: 'Direct Involvement', description: 'Direct involvement in operations' },
+  { id: 'investing', name: 'Investing', category: 'Financial Support', description: 'Financial investment and funding' },
+  { id: 'mentorship', name: 'Mentorship', category: 'Education', description: 'One-on-one mentoring and coaching' },
+  { id: 'partnership', name: 'Partnership', category: 'Collaboration', description: 'Strategic partnerships and alliances' },
+  { id: 'volunteering', name: 'Volunteering', category: 'Volunteering', description: 'Volunteer work and pro bono services' },
 ];
 
 export const ENGAGEMENT_CATEGORIES = Array.from(new Set(ENGAGEMENT_TYPES.map(type => type.category))).sort();

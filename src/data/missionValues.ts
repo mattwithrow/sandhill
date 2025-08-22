@@ -86,14 +86,11 @@ export const SIMPLIFIED_MISSION_VALUES: MissionValue[] = [
   { id: 'innovation', name: 'Innovation', category: 'Core Values', description: 'Creative problem-solving and forward-thinking' },
   { id: 'collaboration', name: 'Collaboration', category: 'Core Values', description: 'Working together and building partnerships' },
   { id: 'empathy', name: 'Empathy', category: 'Core Values', description: 'Understanding and caring for others' },
-  { id: 'authenticity', name: 'Authenticity', category: 'Core Values', description: 'Being genuine and true to oneself' },
 
   // Social Impact (key areas)
   { id: 'social-justice', name: 'Social Justice', category: 'Social Impact', description: 'Fighting inequality and promoting fairness' },
   { id: 'education-access', name: 'Education Access', category: 'Social Impact', description: 'Making quality education available to all' },
-  { id: 'healthcare-equity', name: 'Healthcare Equity', category: 'Social Impact', description: 'Improving access to healthcare' },
   { id: 'diversity-inclusion', name: 'Diversity & Inclusion', category: 'Social Impact', description: 'Promoting representation and belonging' },
-  { id: 'community-development', name: 'Community Development', category: 'Social Impact', description: 'Building stronger communities' },
 
   // Environmental (critical issues)
   { id: 'sustainability', name: 'Sustainability', category: 'Environmental', description: 'Environmental stewardship and conservation' },

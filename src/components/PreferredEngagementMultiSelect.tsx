@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ENGAGEMENT_TYPES, EngagementType } from '../data/engagementTypes';
+import { SIMPLIFIED_ENGAGEMENT_TYPES, EngagementType } from '../data/engagementTypes';
 
 interface PreferredEngagementMultiSelectProps {
   selectedEngagements: string[];
@@ -21,7 +21,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Group engagement types by category for better organization
-  const groupedEngagements = ENGAGEMENT_TYPES.reduce((acc, engagement) => {
+  const groupedEngagements = SIMPLIFIED_ENGAGEMENT_TYPES.reduce((acc, engagement) => {
     if (!acc[engagement.category]) {
       acc[engagement.category] = [];
     }
@@ -55,7 +55,7 @@ const PreferredEngagementMultiSelect: React.FC<PreferredEngagementMultiSelectPro
 
   const getSelectedEngagementNames = () => {
     return selectedEngagements.map(id => 
-      ENGAGEMENT_TYPES.find(e => e.id === id)?.name || id
+      SIMPLIFIED_ENGAGEMENT_TYPES.find(e => e.id === id)?.name || id
     );
   };
 
