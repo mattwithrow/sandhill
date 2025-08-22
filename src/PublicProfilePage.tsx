@@ -318,6 +318,18 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
           <section className="section">
             <div className="content-card">
               <div className="space-y-8 text-left">
+                {/* What I'm Building - Moved to top for ventures */}
+                {(profile.userType === 'ventures' || profile.userType === 'both') && (
+                  <div className="feature-card">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">What I'm Building</h3>
+                    {profile.expertSupportNeeded ? (
+                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
+                    ) : (
+                      <p className="text-gray-500 italic">No details about what they're building yet.</p>
+                    )}
+                  </div>
+                )}
+
                 {/* Bio */}
                 {profile.bio && (
                   <div className="feature-card">
@@ -419,17 +431,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   )}
                 </div>
 
-                {/* Expert Support Needed (for Ventures and Both) */}
-                {(profile.userType === 'ventures' || profile.userType === 'both') && (
-                  <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">What I'm Building</h3>
-                    {profile.expertSupportNeeded ? (
-                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.expertSupportNeeded}</p>
-                    ) : (
-                      <p className="text-gray-500 italic">No details about what they're building yet.</p>
-                    )}
-                  </div>
-                )}
+
 
                 {/* Venture Interests Description (for Experts and Both) */}
                 {(profile.userType === 'expert' || profile.userType === 'both') && (
@@ -443,8 +445,9 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
-                {/* Location and Time Commitment */}
+                {/* Location and Connect - Side by Side */}
                 <div className="grid-2">
+                  {/* Location */}
                   {profile.location && (
                     <div className="feature-card">
                       <h3 className="text-lg font-semibold text-gray-800 mb-4">Location</h3>
@@ -465,72 +468,74 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                       )}
                     </div>
                   )}
-                  {profile.userType === 'expert' && (
+
+                  {/* Connect */}
+                  {(profile.linkedinUrl || profile.githubUrl || profile.portfolioUrl || profile.websiteUrl || profile.twitterUrl || profile.instagramUrl) && (
                     <div className="feature-card">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Time Commitment</h3>
-                      {profile.timeCommitment ? (
-                        <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
-                      ) : (
-                        <p className="text-gray-500 italic">No time commitment specified yet.</p>
-                      )}
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Connect</h3>
+                      <ul className="space-y-3">
+                        {profile.linkedinUrl && (
+                          <li>
+                            <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center">
+                              <span className="w-4 h-4 mr-2">🔗</span>
+                              LinkedIn
+                            </a>
+                          </li>
+                        )}
+                        {profile.githubUrl && (
+                          <li>
+                            <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors flex items-center">
+                              <span className="w-4 h-4 mr-2">🔗</span>
+                              GitHub
+                            </a>
+                          </li>
+                        )}
+                        {profile.portfolioUrl && (
+                          <li>
+                            <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors flex items-center">
+                              <span className="w-4 h-4 mr-2">🔗</span>
+                              Portfolio
+                            </a>
+                          </li>
+                        )}
+                        {profile.websiteUrl && (
+                          <li>
+                            <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors flex items-center">
+                              <span className="w-4 h-4 mr-2">🔗</span>
+                              Website
+                            </a>
+                          </li>
+                        )}
+                        {profile.twitterUrl && (
+                          <li>
+                            <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors flex items-center">
+                              <span className="w-4 h-4 mr-2">🔗</span>
+                              Twitter
+                            </a>
+                          </li>
+                        )}
+                        {profile.instagramUrl && (
+                          <li>
+                            <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors flex items-center">
+                              <span className="w-4 h-4 mr-2">🔗</span>
+                              Instagram
+                            </a>
+                          </li>
+                        )}
+                      </ul>
                     </div>
                   )}
                 </div>
 
-                {/* Social Links */}
-                {(profile.linkedinUrl || profile.githubUrl || profile.portfolioUrl || profile.websiteUrl || profile.twitterUrl || profile.instagramUrl) && (
+                {/* Time Commitment - Separate section for experts */}
+                {profile.userType === 'expert' && (
                   <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Connect</h3>
-                    <ul className="space-y-3">
-                      {profile.linkedinUrl && (
-                        <li>
-                          <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center">
-                            <span className="w-4 h-4 mr-2">🔗</span>
-                            LinkedIn
-                          </a>
-                        </li>
-                      )}
-                      {profile.githubUrl && (
-                        <li>
-                          <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors flex items-center">
-                            <span className="w-4 h-4 mr-2">🔗</span>
-                            GitHub
-                          </a>
-                        </li>
-                      )}
-                      {profile.portfolioUrl && (
-                        <li>
-                          <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors flex items-center">
-                            <span className="w-4 h-4 mr-2">🔗</span>
-                            Portfolio
-                          </a>
-                        </li>
-                      )}
-                      {profile.websiteUrl && (
-                        <li>
-                          <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors flex items-center">
-                            <span className="w-4 h-4 mr-2">🔗</span>
-                            Website
-                          </a>
-                        </li>
-                      )}
-                      {profile.twitterUrl && (
-                        <li>
-                          <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors flex items-center">
-                            <span className="w-4 h-4 mr-2">🔗</span>
-                            Twitter
-                          </a>
-                        </li>
-                      )}
-                      {profile.instagramUrl && (
-                        <li>
-                          <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors flex items-center">
-                            <span className="w-4 h-4 mr-2">🔗</span>
-                            Instagram
-                          </a>
-                        </li>
-                      )}
-                    </ul>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Time Commitment</h3>
+                    {profile.timeCommitment ? (
+                      <p className="text-gray-700 text-lg">{profile.timeCommitment}</p>
+                    ) : (
+                      <p className="text-gray-500 italic">No time commitment specified yet.</p>
+                    )}
                   </div>
                 )}
               </div>
