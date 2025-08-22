@@ -38,7 +38,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     username: string;
     userType: UserProfileUserType;
     bio: string;
-    experience: string;
     skills: string;
     location: string;
     timezone: string;
@@ -62,7 +61,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     username: '',
     userType: UserProfileUserType.expert,
     bio: '',
-    experience: '',
     skills: '',
     location: '',
     timezone: getUserTimezone(),
@@ -86,7 +84,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     username: string;
     userType: UserProfileUserType;
     bio: string;
-    experience: string;
     skills: string;
     location: string;
     timezone: string;
@@ -200,7 +197,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 username: dbProfile.username || '',
                 userType: dbProfile.userType || UserProfileUserType.expert,
                 bio: dbProfile.bio || '',
-                experience: dbProfile.experience || '',
                 skills: dbProfile.skills || '',
                 location: dbProfile.location || '',
                 timezone: dbProfile.timezone || getUserTimezone(),
@@ -281,7 +277,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               username: '',
               userType: UserProfileUserType.expert,
               bio: '',
-              experience: '',
               skills: '',
               location: '',
               timezone: getUserTimezone(),
@@ -465,7 +460,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
-          experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
           timezone: formData.timezone,
@@ -517,7 +511,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
-          experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
           timezone: formData.timezone,
@@ -1006,13 +999,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                    {/* Experience */}
-                    {profile.experience && (
-                      <div className="feature-card">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Experience</h3>
-                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.experience}</p>
-                      </div>
-                    )}
+
 
                     {/* Skills */}
                     {profile.skills && (
@@ -1371,23 +1358,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
-                  {/* Experience */}
-                  <div>
-                    <label htmlFor="experience" className="block text-lg font-semibold text-gray-800 mb-3">
-                      Background
-                    </label>
-                    <div className="text-sm text-gray-600 mb-2">
-                      Your relevant experience and background
-                    </div>
-                    <textarea
-                      id="experience"
-                      name="experience"
-                      value={formData.experience}
-                      onChange={(e) => handleInputChange('experience', e.target.value)}
-                      rows={5}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                    />
-                  </div>
+
 
                   {/* Skills - Collapsible Multi-Select */}
                   <div className="border border-gray-200 rounded-lg overflow-hidden">

@@ -346,13 +346,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
-                {/* Experience */}
-                {profile.experience && (
-                  <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Background</h3>
-                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.experience}</p>
-                  </div>
-                )}
+
 
                 {/* Skills */}
                 {profile.skills && (
