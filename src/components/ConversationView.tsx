@@ -426,7 +426,10 @@ const ConversationView: React.FC<ConversationViewProps> = ({
 
       <div className="conversation-reply">
         <div className="reply-input">
+          <label htmlFor="reply-message" className="sr-only">Reply message</label>
           <textarea
+            id="reply-message"
+            name="reply-message"
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
             placeholder="Type your reply..."

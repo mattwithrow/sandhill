@@ -248,8 +248,11 @@ const ComposeMessage: React.FC<ComposeMessageProps> = ({
           ) : (
             // Show search interface only when starting from Messages page (no pre-filled recipient)
             <div className="recipient-selector">
+              <label htmlFor="recipient-search" className="form-label">Recipient:</label>
               <input
                 type="text"
+                id="recipient-search"
+                name="recipient-search"
                 placeholder="Search users..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

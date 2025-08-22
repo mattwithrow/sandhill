@@ -135,6 +135,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
   // Load profile from AWS database on component mount
   useEffect(() => {
+    // Add a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log('⏰ Loading timeout reached, forcing loading to complete');
+      setIsLoading(false);
+    }, 10000); // 10 second timeout
+
     const runDiagnostics = async () => {
       console.log('🔍 Starting MyAccountPage diagnostics...');
       
@@ -260,9 +266,34 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               ...profileData,
               messagingEnabled: profileData.messagingEnabled !== undefined ? profileData.messagingEnabled : true
             });
-                     } else {
-             console.log('📝 No saved profile found');
-           }
+          } else {
+            console.log('📝 No saved profile found - new user needs to create profile');
+            // For new users, set up empty form data and allow them to create their profile
+            setProfile(null);
+            setFormData({
+              username: '',
+              userType: UserProfileUserType.expert,
+              bio: '',
+              experience: '',
+              skills: '',
+              location: '',
+              timezone: getUserTimezone(),
+              values: '',
+              timeCommitment: '',
+              expertSupportNeeded: '',
+              ventureInterestsDescription: '',
+              linkedinUrl: '',
+              githubUrl: '',
+              portfolioUrl: '',
+              websiteUrl: '',
+              twitterUrl: '',
+              instagramUrl: '',
+              messagingEnabled: true,
+              accountStatus: 'active',
+              statusMessage: '',
+              isProfileHidden: false
+            });
+          }
            
            // Load timeCommitment from localStorage if available
            const savedTimeCommitment = localStorage.getItem(`timeCommitment_${userEmail}`);
@@ -290,6 +321,11 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     };
 
     runDiagnostics();
+
+    // Cleanup timeout on unmount
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [authStatus, user?.signInDetails?.loginId, user?.username, (user as any)?.email]);
 
   const handleSignOut = async () => {
@@ -704,8 +740,9 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
         <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-teal-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-orange-500 mx-auto mb-4"></div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Loading Your Profile</h2>
-            <p className="text-gray-600">Please wait...</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Setting Up Your Account</h2>
+            <p className="text-gray-600 mb-2">Loading your profile...</p>
+            <p className="text-sm text-gray-500">This should only take a moment</p>
           </div>
         </div>
       </div>
@@ -769,7 +806,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               </span>!
             </h1>
             <p className="hero-subtitle">
-              {profile ? getUserTypeDescription(profile.userType) : 'Create your profile to connect with amazing people and opportunities.'}
+              {profile ? getUserTypeDescription(profile.userType) : 'Welcome to Sandhill! Create your profile to start connecting with amazing people and opportunities.'}
             </p>
             
             <div className="cta-buttons">
@@ -839,6 +876,21 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 )}
               </div>
             </section>
+          )}
+
+          {/* Welcome Banner for New Users */}
+          {!profile && !isEditing && (
+            <div className="mb-8 p-6 rounded-2xl border-2 bg-gradient-to-r from-blue-50 to-teal-50 border-blue-200 shadow-lg">
+              <div className="flex items-center">
+                <div className="text-3xl mr-4">🎉</div>
+                <div>
+                  <h3 className="text-lg font-semibold text-blue-800 mb-1">Welcome to Sandhill!</h3>
+                  <p className="text-blue-700">
+                    Your account has been created successfully. Now let's set up your profile to help you connect with the right people and opportunities.
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* Success/Error Messages */}
@@ -1072,7 +1124,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Basic Information - 2 Columns */}
                   <div className="grid-2 gap-6">
                     <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      <label htmlFor="username" className="block text-lg font-semibold text-gray-800 mb-3">
                         Username *
                         {profile && profile.username && (
                           <span className="ml-2 text-sm font-normal text-orange-600">
@@ -1082,6 +1134,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </label>
                       <input
                         type="text"
+                        id="username"
+                        name="username"
                         value={formData.username}
                         onChange={(e) => {
                           // Don't allow changes if user already has a profile
@@ -1145,10 +1199,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     </div>
 
                     <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      <label htmlFor="userType" className="block text-lg font-semibold text-gray-800 mb-3">
                         User Type *
                       </label>
                       <select
+                        id="userType"
+                        name="userType"
                         value={formData.userType}
                         onChange={(e) => handleInputChange('userType', e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
@@ -1163,7 +1219,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                   {/* Location and Time Commitment - 2 Columns */}
                   <div className="grid-2 gap-6">
                     <div>
-                      <label className="block text-lg font-semibold text-gray-800 mb-3">
+                      <label htmlFor="location" className="block text-lg font-semibold text-gray-800 mb-3">
                         Location
                       </label>
                       <div className="text-sm text-gray-600 mb-2">
@@ -1171,6 +1227,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                       <input
                         type="text"
+                        id="location"
+                        name="location"
                         value={formData.location}
                         onChange={(e) => handleInputChange('location', e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
@@ -1193,13 +1251,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
                     {formData.userType === 'ventures' && (
                       <div>
-                        <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        <label htmlFor="expertSupportNeeded" className="block text-lg font-semibold text-gray-800 mb-3">
                           What You're Building
                         </label>
                         <div className="text-sm text-gray-600 mb-2">
                           Describe your venture and the support you need
                         </div>
                         <textarea
+                          id="expertSupportNeeded"
+                          name="expertSupportNeeded"
                           value={formData.expertSupportNeeded}
                           onChange={(e) => handleInputChange('expertSupportNeeded', e.target.value)}
                           rows={4}
@@ -1211,13 +1271,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
                     {formData.userType === 'expert' && (
                       <div>
-                        <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        <label htmlFor="ventureInterestsDescription" className="block text-lg font-semibold text-gray-800 mb-3">
                           Ventures You Want to Work With
                         </label>
                         <div className="text-sm text-gray-600 mb-2">
                           Types of ventures or projects you're interested in
                         </div>
                         <textarea
+                          id="ventureInterestsDescription"
+                          name="ventureInterestsDescription"
                           value={formData.ventureInterestsDescription}
                           onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
                           rows={4}
@@ -1229,10 +1291,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
                     {formData.userType === 'expert' && (
                       <div>
-                        <label className="block text-lg font-semibold text-gray-800 mb-3">
+                        <label htmlFor="timeCommitment" className="block text-lg font-semibold text-gray-800 mb-3">
                           Time Commitment
                         </label>
                         <select
+                          id="timeCommitment"
+                          name="timeCommitment"
                           value={formData.timeCommitment}
                           onChange={(e) => handleInputChange('timeCommitment', e.target.value)}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
@@ -1250,13 +1314,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
                   {/* Bio */}
                   <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                    <label htmlFor="bio" className="block text-lg font-semibold text-gray-800 mb-3">
                       About You
                     </label>
                     <div className="text-sm text-gray-600 mb-2">
                       A brief introduction about yourself
                     </div>
                     <textarea
+                      id="bio"
+                      name="bio"
                       value={formData.bio}
                       onChange={(e) => handleInputChange('bio', e.target.value)}
                       rows={4}
@@ -1266,13 +1332,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
                   {/* Experience */}
                   <div>
-                    <label className="block text-lg font-semibold text-gray-800 mb-3">
+                    <label htmlFor="experience" className="block text-lg font-semibold text-gray-800 mb-3">
                       Background
                     </label>
                     <div className="text-sm text-gray-600 mb-2">
                       Your relevant experience and background
                     </div>
                     <textarea
+                      id="experience"
+                      name="experience"
                       value={formData.experience}
                       onChange={(e) => handleInputChange('experience', e.target.value)}
                       rows={5}
@@ -1349,7 +1417,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Social Links</h3>
                     <div className="grid-3 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="linkedinUrl" className="block text-sm font-medium text-gray-700 mb-2">
                           LinkedIn
                         </label>
                         <div className="text-xs text-gray-500 mb-1">
@@ -1357,13 +1425,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         </div>
                         <input
                           type="text"
+                          id="linkedinUrl"
+                          name="linkedinUrl"
                           value={formData.linkedinUrl}
                           onChange={(e) => handleInputChange('linkedinUrl', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="githubUrl" className="block text-sm font-medium text-gray-700 mb-2">
                           GitHub
                         </label>
                         <div className="text-xs text-gray-500 mb-1">
@@ -1371,13 +1441,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         </div>
                         <input
                           type="text"
+                          id="githubUrl"
+                          name="githubUrl"
                           value={formData.githubUrl}
                           onChange={(e) => handleInputChange('githubUrl', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="websiteUrl" className="block text-sm font-medium text-gray-700 mb-2">
                           Website
                         </label>
                         <div className="text-xs text-gray-500 mb-1">
@@ -1385,6 +1457,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         </div>
                         <input
                           type="text"
+                          id="websiteUrl"
+                          name="websiteUrl"
                           value={formData.websiteUrl || formData.portfolioUrl}
                           onChange={(e) => {
                             handleInputChange('websiteUrl', e.target.value);
@@ -1394,7 +1468,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="twitterUrl" className="block text-sm font-medium text-gray-700 mb-2">
                           Twitter
                         </label>
                         <div className="text-xs text-gray-500 mb-1">
@@ -1402,13 +1476,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         </div>
                         <input
                           type="text"
+                          id="twitterUrl"
+                          name="twitterUrl"
                           value={formData.twitterUrl}
                           onChange={(e) => handleInputChange('twitterUrl', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="instagramUrl" className="block text-sm font-medium text-gray-700 mb-2">
                           Instagram
                         </label>
                         <div className="text-xs text-gray-500 mb-1">
@@ -1416,6 +1492,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         </div>
                         <input
                           type="text"
+                          id="instagramUrl"
+                          name="instagramUrl"
                           value={formData.instagramUrl}
                           onChange={(e) => handleInputChange('instagramUrl', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
@@ -1461,10 +1539,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Status</h3>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="accountStatus" className="block text-sm font-medium text-gray-700 mb-2">
                           Current Status
                         </label>
                         <select
+                          id="accountStatus"
+                          name="accountStatus"
                           value={formData.accountStatus || 'active'}
                           onChange={(e) => handleInputChange('accountStatus', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
@@ -1477,10 +1557,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       
                       {(formData.accountStatus === 'busy' || formData.accountStatus === 'inactive') && (
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label htmlFor="statusMessage" className="block text-sm font-medium text-gray-700 mb-2">
                             Status Message (Optional)
                           </label>
                           <textarea
+                            id="statusMessage"
+                            name="statusMessage"
                             value={formData.statusMessage || ''}
                             onChange={(e) => handleInputChange('statusMessage', e.target.value)}
                             placeholder="e.g., 'Currently focused on a major project until Q2 2024' or 'Taking a break from new opportunities'"
