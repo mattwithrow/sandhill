@@ -26,7 +26,7 @@ import {
   isRemoteLocation 
 } from './utils/locationUtils';
 import { getMissionValueNames, getMissionValueIds } from './data/missionValues';
-import { getVentureInterestNames, getVentureInterestIds } from './data/ventureInterests';
+
 
 import { validateUsername } from './utils/usernameUtils';
 import { clearProfileCache } from './utils/profileCache';
@@ -52,10 +52,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     longitude?: number;
     values: string;
     missionValuesAlignment: string;
-    ventureInterests: string;
     timeCommitment: string;
     expertSupportNeeded: string;
-    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -76,10 +74,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     timezone: getUserTimezone(),
     values: '',
     missionValuesAlignment: '',
-    ventureInterests: '',
     timeCommitment: '',
     expertSupportNeeded: '',
-    ventureInterestsDescription: '',
     linkedinUrl: '',
     githubUrl: '',
     portfolioUrl: '',
@@ -104,10 +100,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     longitude?: number;
     values: string;
     missionValuesAlignment: string;
-    ventureInterests: string;
     timeCommitment: string;
     expertSupportNeeded: string;
-    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -228,10 +222,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 timezone: dbProfile.timezone || getUserTimezone(),
                 values: dbProfile.values || '',
                 missionValuesAlignment: dbProfile.missionValuesAlignment || '',
-                ventureInterests: dbProfile.ventureInterests || '',
                 timeCommitment: dbProfile.timeCommitment || '',
                 expertSupportNeeded: dbProfile.expertSupportNeeded || '',
-                ventureInterestsDescription: '',
                 linkedinUrl: dbProfile.linkedinUrl || '',
                 githubUrl: dbProfile.githubUrl || '',
                 portfolioUrl: dbProfile.portfolioUrl || '',
@@ -308,10 +300,8 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               timezone: getUserTimezone(),
               values: '',
               missionValuesAlignment: '',
-              ventureInterests: '',
               timeCommitment: '',
               expertSupportNeeded: '',
-              ventureInterestsDescription: '',
               linkedinUrl: '',
               githubUrl: '',
               portfolioUrl: '',
@@ -547,7 +537,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           timezone: formData.timezone,
           values: formData.values,
           missionValuesAlignment: formData.missionValuesAlignment,
-          ventureInterests: formData.ventureInterests,
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
@@ -597,7 +586,6 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           timezone: formData.timezone,
           values: formData.values,
           missionValuesAlignment: formData.missionValuesAlignment,
-          ventureInterests: formData.ventureInterests,
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
@@ -1385,25 +1373,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       </div>
                     )}
 
-                    {formData.userType === 'expert' && (
-                      <div>
-                        <label htmlFor="ventureInterestsDescription" className="block text-lg font-semibold text-gray-800 mb-3">
-                          Ventures You Want to Work With
-                        </label>
-                        <div className="text-sm text-gray-600 mb-2">
-                          Types of ventures or projects you're interested in
-                        </div>
-                        <textarea
-                          id="ventureInterestsDescription"
-                          name="ventureInterestsDescription"
-                          value={formData.ventureInterestsDescription}
-                          onChange={(e) => handleInputChange('ventureInterestsDescription', e.target.value)}
-                          rows={4}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
-                          placeholder="Describe the types of ventures, projects, or companies you'd like to work with..."
-                        />
-                      </div>
-                    )}
+
 
                     {formData.userType === 'expert' && (
                       <div>

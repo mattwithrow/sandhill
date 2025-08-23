@@ -8,7 +8,7 @@ import {
 import { listUserProfiles } from '../queries';
 import { formatTimezone, getTimeInTimezone, isRemoteLocation, detectTimezoneFromLocation } from './utils/locationUtils';
 import { getMissionValueNames } from './data/missionValues';
-import { getVentureInterestNames } from './data/ventureInterests';
+
 
 import { getCachedProfile, setCachedProfile, getCachedProfileFromStorage, clearProfileCache } from './utils/profileCache';
 
@@ -27,7 +27,6 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     values: string;
     timeCommitment: string;
     expertSupportNeeded: string;
-    ventureInterestsDescription: string;
     linkedinUrl: string;
     githubUrl: string;
     portfolioUrl: string;
@@ -39,7 +38,6 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     statusMessage?: string | null;
     // New fields that will be available after schema deployment
     missionValuesAlignment?: string;
-    ventureInterests?: string;
 
     timezone?: string;
     latitude?: number;
@@ -124,7 +122,6 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             values: dbProfile.values || '',
             timeCommitment: dbProfile.timeCommitment || '',
             expertSupportNeeded: dbProfile.expertSupportNeeded || '',
-            ventureInterestsDescription: '', // Not in schema
             linkedinUrl: dbProfile.linkedinUrl || '',
             githubUrl: dbProfile.githubUrl || '',
             portfolioUrl: dbProfile.portfolioUrl || '',
@@ -136,7 +133,6 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             statusMessage: dbProfile.statusMessage || '',
             // Multi-select fields from database
             missionValuesAlignment: dbProfile.missionValuesAlignment || '',
-            ventureInterests: dbProfile.ventureInterests || '',
             
             timezone: dbProfile.timezone || detectTimezoneFromLocation(dbProfile.location || ''),
             latitude: dbProfile.latitude || undefined,
@@ -406,39 +402,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   )}
                 </div>
 
-                {/* Venture Interests */}
-                <div className="feature-card">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Venture Interests</h3>
-                  {profile.ventureInterests ? (
-                    <ul className="list-none p-0 m-0">
-                      {profile.ventureInterests.split(',').map((interest, index) => (
-                        <li key={index} className="inline-block mb-3 mr-3">
-                          <span className="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-blue-200">
-                            {interest.trim()}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-500 italic">No venture interests specified yet.</p>
-                  )}
-                </div>
 
-
-
-
-
-                {/* Venture Interests Description (for Experts and Both) */}
-                {(profile.userType === 'expert' || profile.userType === 'both') && (
-                  <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Ventures I Want to Work With</h3>
-                    {profile.ventureInterestsDescription ? (
-                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.ventureInterestsDescription}</p>
-                    ) : (
-                      <p className="text-gray-500 italic">No venture interests specified yet.</p>
-                    )}
-                  </div>
-                )}
 
                 {/* Location and Connect - Side by Side */}
                 <div className="grid-2">
