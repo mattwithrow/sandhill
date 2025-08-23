@@ -24,7 +24,6 @@ const schema = a.schema({
       values: a.string(),
       missionValuesAlignment: a.string(),
       ventureInterests: a.string(),
-      preferredEngagement: a.string(),
       contributionGoals: a.string(),
       skills: a.string(),
       location: a.string(),

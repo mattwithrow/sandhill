@@ -176,13 +176,6 @@
               "isRequired": false,
               "attributes": []
             },
-            "preferredEngagement": {
-              "name": "preferredEngagement",
-              "isArray": false,
-              "type": "String",
-              "isRequired": false,
-              "attributes": []
-            },
             "contributionGoals": {
               "name": "contributionGoals",
               "isArray": false,

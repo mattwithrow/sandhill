@@ -41,7 +41,6 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -80,7 +79,6 @@ export const createMessage = /* GraphQL */ `mutation CreateMessage(
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -148,7 +146,6 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     owner
     passions
     portfolioUrl
-    preferredEngagement
     projectDetails
     receivedMessages {
       nextToken
@@ -209,7 +206,6 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -248,7 +244,6 @@ export const deleteMessage = /* GraphQL */ `mutation DeleteMessage(
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -316,7 +311,6 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     owner
     passions
     portfolioUrl
-    preferredEngagement
     projectDetails
     receivedMessages {
       nextToken
@@ -377,7 +371,6 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -416,7 +409,6 @@ export const updateMessage = /* GraphQL */ `mutation UpdateMessage(
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -484,7 +476,6 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     owner
     passions
     portfolioUrl
-    preferredEngagement
     projectDetails
     receivedMessages {
       nextToken

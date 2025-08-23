@@ -14,7 +14,7 @@ import { listUserProfiles } from '../queries';
 import { createUserProfile, updateUserProfile } from '../mutations';
 import SkillsMultiSelect from './components/SkillsMultiSelect';
 import ValuesMultiSelect from './components/ValuesMultiSelect';
-import PreferredEngagementMultiSelect from './components/PreferredEngagementMultiSelect';
+
 
 import { 
   detectTimezoneFromLocation, 
@@ -25,7 +25,7 @@ import {
 } from './utils/locationUtils';
 import { getMissionValueNames, getMissionValueIds } from './data/missionValues';
 import { getVentureInterestNames, getVentureInterestIds } from './data/ventureInterests';
-import { getEngagementTypeNames, getEngagementTypeIds } from './data/engagementTypes';
+
 import { validateUsername } from './utils/usernameUtils';
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
@@ -47,7 +47,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     longitude?: number;
     values: string;
     missionValuesAlignment: string;
-    preferredEngagement: string;
+
     timeCommitment: string;
     expertSupportNeeded: string;
     ventureInterestsDescription: string;
@@ -70,7 +70,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     timezone: getUserTimezone(),
     values: '',
     missionValuesAlignment: '',
-    preferredEngagement: '',
+
     timeCommitment: '',
     expertSupportNeeded: '',
     ventureInterestsDescription: '',
@@ -97,7 +97,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     longitude?: number;
     values: string;
     missionValuesAlignment: string;
-    preferredEngagement: string;
+
     timeCommitment: string;
     expertSupportNeeded: string;
     ventureInterestsDescription: string;
@@ -211,7 +211,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 values: dbProfile.values || '',
                 missionValuesAlignment: '', // TODO: Add back after schema deployment
                 ventureInterests: '', // TODO: Add back after schema deployment
-                preferredEngagement: '', // TODO: Add back after schema deployment
+             // TODO: Add back after schema deployment
                 timeCommitment: '', // TODO: Add back after schema deployment
                 expertSupportNeeded: '', // TODO: Add back after schema deployment
                 ventureInterestsDescription: '', // TODO: Add back after schema deployment
@@ -290,7 +290,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               timezone: getUserTimezone(),
               values: '',
               missionValuesAlignment: '',
-              preferredEngagement: '',
+          
               timeCommitment: '',
               expertSupportNeeded: '',
               ventureInterestsDescription: '',
@@ -476,7 +476,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           values: formData.values,
           // missionValuesAlignment: formData.missionValuesAlignment,
           // ventureInterests: formData.ventureInterests,
-          // preferredEngagement: formData.preferredEngagement,
+
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
           // ventureInterestsDescription: formData.ventureInterestsDescription,
@@ -527,7 +527,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           values: formData.values,
           // missionValuesAlignment: formData.missionValuesAlignment,
           // ventureInterests: formData.ventureInterests,
-          // preferredEngagement: formData.preferredEngagement,
+
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
           // ventureInterestsDescription: formData.ventureInterestsDescription,
@@ -740,7 +740,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   }>({ isUnique: true, message: '' });
   const [isSkillsExpanded, setIsSkillsExpanded] = useState(false);
   const [isValuesExpanded, setIsValuesExpanded] = useState(false);
-  const [isEngagementExpanded, setIsEngagementExpanded] = useState(false);
+
 
 
 
@@ -1479,55 +1479,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     )}
                   </div>
 
-                  {/* How I Want to Engage - Multi-Select */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setIsEngagementExpanded(!isEngagementExpanded)}
-                      className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
-                    >
-                      <div>
-                        <span className="text-lg font-semibold text-gray-800">
-                          How I Want to Engage
-                        </span>
-                        {formData.preferredEngagement && (
-                          <span className="ml-2 text-sm text-gray-500">
-                            ({formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean).length} selected)
-                          </span>
-                        )}
-                      </div>
-                      <svg
-                        className={`w-5 h-5 text-gray-500 transition-transform ${
-                          isEngagementExpanded ? 'rotate-180' : ''
-                        }`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {isEngagementExpanded && (
-                      <div className="p-4 bg-white">
-                        <div className="text-sm text-gray-600 mb-3">
-                          Select how you want to engage with others
-                        </div>
-                        <div className="engagement-multi-select-container">
-                          <PreferredEngagementMultiSelect
-                            selectedEngagements={formData.preferredEngagement ? formData.preferredEngagement.split(',').map(s => s.trim()).filter(Boolean) : []}
-                            onChange={(engagements) => {
-                              console.log('🤝 MyAccountPage PreferredEngagementMultiSelect onChange called with:', engagements);
-                              handleInputChange('preferredEngagement', engagements.join(', '));
-                            }}
-                            placeholder="Select how you want to engage..."
-                            className="w-full"
-                            userType={formData.userType}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
+
 
                   {/* User Type Specific Fields */}
 

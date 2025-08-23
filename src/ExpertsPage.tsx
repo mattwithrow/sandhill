@@ -11,7 +11,7 @@ import { listUserProfiles } from '../queries';
 import { formatTimezone, getTimeInTimezone, isRemoteLocation } from './utils/locationUtils';
 import { getMissionValueNames } from './data/missionValues';
 import { getVentureInterestNames } from './data/ventureInterests';
-import { getEngagementTypeNames } from './data/engagementTypes';
+
 import RecommendationSection from './components/RecommendationSection';
 
 interface ExpertProfile {
@@ -26,7 +26,7 @@ interface ExpertProfile {
   values: string;
   missionValuesAlignment: string;
   ventureInterests: string;
-  preferredEngagement: string;
+
   timeCommitment: string;
   ventureInterestsDescription: string;
   messagingEnabled: boolean | null;
@@ -115,7 +115,7 @@ const ExpertsPage: React.FC = () => {
           values: profile.values || '',
           missionValuesAlignment: profile.missionValuesAlignment || '',
           ventureInterests: profile.ventureInterests || '',
-          preferredEngagement: profile.preferredEngagement || '',
+  
           timeCommitment: profile.timeCommitment || '',
           ventureInterestsDescription: profile.ventureInterestsDescription || '',
           messagingEnabled: profile.messagingEnabled,
@@ -152,7 +152,7 @@ const ExpertsPage: React.FC = () => {
         expert.missionValuesAlignment.toLowerCase().includes(searchLower) ||
         expert.ventureInterests.toLowerCase().includes(searchLower) ||
         expert.ventureInterestsDescription.toLowerCase().includes(searchLower) ||
-        expert.preferredEngagement.toLowerCase().includes(searchLower)
+false
       );
     }
 
@@ -697,23 +697,7 @@ const ExpertsPage: React.FC = () => {
                               </div>
                             )}
 
-                            {expert.preferredEngagement && (
-                              <div className="expert-list-engagement">
-                                <span className="expert-list-label">Engagement:</span>
-                                <div className="expert-list-tags">
-                                  {expert.preferredEngagement.split(',').slice(0, 2).map((engagement, index) => (
-                                    <span key={index} className="expert-list-tag engagement-tag">
-                                      {engagement.trim()}
-                                    </span>
-                                  ))}
-                                  {expert.preferredEngagement.split(',').length > 2 && (
-                                    <span className="expert-list-tag-more">
-                                      +{expert.preferredEngagement.split(',').length - 2} more
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            )}
+
 
                             {expert.values && (
                               <div className="expert-list-values">

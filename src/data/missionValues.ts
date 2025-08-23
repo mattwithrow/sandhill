@@ -6,18 +6,6 @@ export interface MissionValue {
 }
 
 export const MISSION_VALUES: MissionValue[] = [
-  // Core Values
-  { id: 'integrity', name: 'Integrity', category: 'Core Values', description: 'Honesty, transparency, and ethical behavior' },
-  { id: 'innovation', name: 'Innovation', category: 'Core Values', description: 'Creative problem-solving and forward-thinking' },
-  { id: 'collaboration', name: 'Collaboration', category: 'Core Values', description: 'Working together and building partnerships' },
-  { id: 'excellence', name: 'Excellence', category: 'Core Values', description: 'High standards and continuous improvement' },
-  { id: 'empathy', name: 'Empathy', category: 'Core Values', description: 'Understanding and caring for others' },
-  { id: 'resilience', name: 'Resilience', category: 'Core Values', description: 'Adaptability and perseverance' },
-  { id: 'authenticity', name: 'Authenticity', category: 'Core Values', description: 'Being genuine and true to oneself' },
-  { id: 'curiosity', name: 'Curiosity', category: 'Core Values', description: 'Lifelong learning and exploration' },
-  { id: 'courage', name: 'Courage', category: 'Core Values', description: 'Taking bold actions and calculated risks' },
-  { id: 'humility', name: 'Humility', category: 'Core Values', description: 'Modesty and willingness to learn from others' },
-
   // Social Impact
   { id: 'social-justice', name: 'Social Justice', category: 'Social Impact', description: 'Fighting inequality and promoting fairness' },
   { id: 'education-access', name: 'Education Access', category: 'Social Impact', description: 'Making quality education available to all' },
@@ -81,12 +69,6 @@ export const MISSION_VALUES: MissionValue[] = [
 
 // Create simplified mission values with focused categories
 export const SIMPLIFIED_MISSION_VALUES: MissionValue[] = [
-  // Core Values (most important)
-  { id: 'integrity', name: 'Integrity', category: 'Core Values', description: 'Honesty, transparency, and ethical behavior' },
-  { id: 'innovation', name: 'Innovation', category: 'Core Values', description: 'Creative problem-solving and forward-thinking' },
-  { id: 'collaboration', name: 'Collaboration', category: 'Core Values', description: 'Working together and building partnerships' },
-  { id: 'empathy', name: 'Empathy', category: 'Core Values', description: 'Understanding and caring for others' },
-
   // Social Impact (key areas)
   { id: 'social-justice', name: 'Social Justice', category: 'Social Impact', description: 'Fighting inequality and promoting fairness' },
   { id: 'education-access', name: 'Education Access', category: 'Social Impact', description: 'Making quality education available to all' },

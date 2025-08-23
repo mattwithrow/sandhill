@@ -38,7 +38,6 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -77,7 +76,6 @@ export const getMessage = /* GraphQL */ `query GetMessage($id: ID!) {
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -136,7 +134,6 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
     owner
     passions
     portfolioUrl
-    preferredEngagement
     projectDetails
     receivedMessages {
       nextToken
@@ -237,7 +234,6 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage

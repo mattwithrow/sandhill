@@ -11,7 +11,7 @@ export interface ProfileData {
   values: string;
   missionValuesAlignment: string;
   ventureInterests: string;
-  preferredEngagement: string;
+
   timeCommitment: string;
   expertSupportNeeded: string;
   ventureInterestsDescription: string;
@@ -69,10 +69,7 @@ function calculateInterestsMatch(expertInterests: string, ventureInterests: stri
   return calculateTextSimilarity(expertInterests, ventureInterests);
 }
 
-// Calculate engagement type match
-function calculateEngagementMatch(expertEngagement: string, ventureEngagement: string): number {
-  return calculateTextSimilarity(expertEngagement, ventureEngagement);
-}
+
 
 // Calculate location compatibility
 function calculateLocationMatch(expertLocation: string, ventureLocation: string): number {
@@ -158,7 +155,7 @@ export function generateRecommendations(
       const skillsScore = calculateSkillsMatch(expert.skills, venture.expertSupportNeeded);
       const valuesScore = calculateValuesMatch(expert.missionValuesAlignment, venture.missionValuesAlignment);
       const interestsScore = calculateInterestsMatch(expert.ventureInterests, venture.ventureInterests);
-      const engagementScore = calculateEngagementMatch(expert.preferredEngagement, venture.preferredEngagement);
+      const engagementScore = 0; // Engagement matching removed
       const locationScore = calculateLocationMatch(expert.location, venture.location);
       
       // Weighted average score

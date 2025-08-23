@@ -38,7 +38,6 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -77,7 +76,6 @@ export const onCreateMessage = /* GraphQL */ `subscription OnCreateMessage($filt
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -142,7 +140,6 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
     owner
     passions
     portfolioUrl
-    preferredEngagement
     projectDetails
     receivedMessages {
       nextToken
@@ -200,7 +197,6 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -239,7 +235,6 @@ export const onDeleteMessage = /* GraphQL */ `subscription OnDeleteMessage($filt
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -304,7 +299,6 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
     owner
     passions
     portfolioUrl
-    preferredEngagement
     projectDetails
     receivedMessages {
       nextToken
@@ -362,7 +356,6 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -401,7 +394,6 @@ export const onUpdateMessage = /* GraphQL */ `subscription OnUpdateMessage($filt
       owner
       passions
       portfolioUrl
-      preferredEngagement
       projectDetails
       skills
       statusMessage
@@ -466,7 +458,6 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
     owner
     passions
     portfolioUrl
-    preferredEngagement
     projectDetails
     receivedMessages {
       nextToken

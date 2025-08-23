@@ -9,7 +9,7 @@ import { listUserProfiles } from '../queries';
 import { formatTimezone, getTimeInTimezone, isRemoteLocation, detectTimezoneFromLocation } from './utils/locationUtils';
 import { getMissionValueNames } from './data/missionValues';
 import { getVentureInterestNames } from './data/ventureInterests';
-import { getEngagementTypeNames } from './data/engagementTypes';
+
 import { getCachedProfile, setCachedProfile, getCachedProfileFromStorage, clearProfileCache } from './utils/profileCache';
 
 const PublicProfilePage: React.FC = (): React.ReactNode => {
@@ -40,7 +40,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     // New fields that will be available after schema deployment
     missionValuesAlignment?: string;
     ventureInterests?: string;
-    preferredEngagement?: string;
+
     timezone?: string;
     latitude?: number;
     longitude?: number;
@@ -132,7 +132,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
             // Multi-select fields from database
             missionValuesAlignment: dbProfile.missionValuesAlignment || '',
             ventureInterests: dbProfile.ventureInterests || '',
-            preferredEngagement: dbProfile.preferredEngagement || '',
+            
             timezone: dbProfile.timezone || detectTimezoneFromLocation(dbProfile.location || ''),
             latitude: dbProfile.latitude || undefined,
             longitude: dbProfile.longitude || undefined
@@ -407,23 +407,7 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   )}
                 </div>
 
-                {/* Preferred Engagement */}
-                <div className="feature-card">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">How I Want to Engage</h3>
-                  {profile.preferredEngagement ? (
-                    <ul className="list-none p-0 m-0">
-                      {profile.preferredEngagement.split(',').map((engagement, index) => (
-                        <li key={index} className="inline-block mb-3 mr-3">
-                          <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                            {engagement.trim()}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-500 italic">No preferred engagement types specified yet.</p>
-                  )}
-                </div>
+
 
 
 

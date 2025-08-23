@@ -59,7 +59,7 @@ const RecommendationSection: React.FC<RecommendationSectionProps> = ({
         values: profile.values || '',
         missionValuesAlignment: profile.missionValuesAlignment || '',
         ventureInterests: profile.ventureInterests || '',
-        preferredEngagement: profile.preferredEngagement || '',
+
         timeCommitment: profile.timeCommitment || '',
         expertSupportNeeded: profile.expertSupportNeeded || '',
         ventureInterestsDescription: profile.ventureInterestsDescription || '',

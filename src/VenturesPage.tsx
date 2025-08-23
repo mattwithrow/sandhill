@@ -22,7 +22,7 @@ interface VentureProfile {
   values: string;
   missionValuesAlignment: string;
   ventureInterests: string;
-  preferredEngagement: string;
+
   timeCommitment: string;
   expertSupportNeeded: string;
   messagingEnabled: boolean | null;
@@ -108,7 +108,7 @@ const VenturesPage: React.FC = () => {
           values: profile.values || '',
           missionValuesAlignment: profile.missionValuesAlignment || '',
           ventureInterests: profile.ventureInterests || '',
-          preferredEngagement: profile.preferredEngagement || '',
+  
           timeCommitment: profile.timeCommitment || '',
           expertSupportNeeded: profile.expertSupportNeeded || '',
           messagingEnabled: profile.messagingEnabled,
@@ -671,23 +671,7 @@ const VenturesPage: React.FC = () => {
                               </div>
                             )}
 
-                            {venture.preferredEngagement && (
-                              <div className="expert-list-engagement">
-                                <span className="expert-list-label">Engagement:</span>
-                                <div className="expert-list-tags">
-                                  {venture.preferredEngagement.split(',').slice(0, 2).map((engagement, index) => (
-                                    <span key={index} className="expert-list-tag engagement-tag">
-                                      {engagement.trim()}
-                                    </span>
-                                  ))}
-                                  {venture.preferredEngagement.split(',').length > 2 && (
-                                    <span className="expert-list-tag-more">
-                                      +{venture.preferredEngagement.split(',').length - 2} more
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            )}
+
                           </div>
 
                           <div className="expert-list-meta">
