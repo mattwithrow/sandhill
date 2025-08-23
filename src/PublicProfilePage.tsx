@@ -46,6 +46,11 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
     longitude?: number;
   }>(null);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Load profile from AWS database on component mount
   useEffect(() => {
     const loadProfile = async () => {

@@ -16,6 +16,11 @@ const MessagingPage: React.FC = () => {
   // Check if user is authenticated
   const isAuthenticated = authStatus === 'authenticated';
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Handle URL parameters for compose functionality
   useEffect(() => {
     const composeParam = searchParams.get('compose');
