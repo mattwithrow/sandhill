@@ -29,6 +29,7 @@ import { getMissionValueNames, getMissionValueIds } from './data/missionValues';
 import { getVentureInterestNames, getVentureInterestIds } from './data/ventureInterests';
 
 import { validateUsername } from './utils/usernameUtils';
+import { clearProfileCache } from './utils/profileCache';
 
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
@@ -43,6 +44,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     username: string;
     userType: UserProfileUserType;
     bio: string;
+    experience: string;
     skills: string;
     location: string;
     timezone: string;
@@ -50,7 +52,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     longitude?: number;
     values: string;
     missionValuesAlignment: string;
-
+    ventureInterests: string;
     timeCommitment: string;
     expertSupportNeeded: string;
     ventureInterestsDescription: string;
@@ -68,12 +70,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     username: '',
     userType: UserProfileUserType.expert,
     bio: '',
+    experience: '',
     skills: '',
     location: '',
     timezone: getUserTimezone(),
     values: '',
     missionValuesAlignment: '',
-
+    ventureInterests: '',
     timeCommitment: '',
     expertSupportNeeded: '',
     ventureInterestsDescription: '',
@@ -93,6 +96,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     username: string;
     userType: UserProfileUserType;
     bio: string;
+    experience: string;
     skills: string;
     location: string;
     timezone: string;
@@ -100,7 +104,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     longitude?: number;
     values: string;
     missionValuesAlignment: string;
-
+    ventureInterests: string;
     timeCommitment: string;
     expertSupportNeeded: string;
     ventureInterestsDescription: string;
@@ -218,16 +222,16 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                 username: dbProfile.username || '',
                 userType: dbProfile.userType || UserProfileUserType.expert,
                 bio: dbProfile.bio || '',
+                experience: dbProfile.experience || '',
                 skills: dbProfile.skills || '',
                 location: dbProfile.location || '',
                 timezone: dbProfile.timezone || getUserTimezone(),
                 values: dbProfile.values || '',
-                missionValuesAlignment: '', // TODO: Add back after schema deployment
-                ventureInterests: '', // TODO: Add back after schema deployment
-             // TODO: Add back after schema deployment
-                timeCommitment: '', // TODO: Add back after schema deployment
-                expertSupportNeeded: '', // TODO: Add back after schema deployment
-                ventureInterestsDescription: '', // TODO: Add back after schema deployment
+                missionValuesAlignment: dbProfile.missionValuesAlignment || '',
+                ventureInterests: dbProfile.ventureInterests || '',
+                timeCommitment: dbProfile.timeCommitment || '',
+                expertSupportNeeded: dbProfile.expertSupportNeeded || '',
+                ventureInterestsDescription: '',
                 linkedinUrl: dbProfile.linkedinUrl || '',
                 githubUrl: dbProfile.githubUrl || '',
                 portfolioUrl: dbProfile.portfolioUrl || '',
@@ -298,12 +302,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               username: '',
               userType: UserProfileUserType.expert,
               bio: '',
+              experience: '',
               skills: '',
               location: '',
               timezone: getUserTimezone(),
               values: '',
               missionValuesAlignment: '',
-          
+              ventureInterests: '',
               timeCommitment: '',
               expertSupportNeeded: '',
               ventureInterestsDescription: '',
@@ -536,16 +541,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
+          experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
           timezone: formData.timezone,
           values: formData.values,
-          // missionValuesAlignment: formData.missionValuesAlignment,
-          // ventureInterests: formData.ventureInterests,
-
+          missionValuesAlignment: formData.missionValuesAlignment,
+          ventureInterests: formData.ventureInterests,
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
-          // ventureInterestsDescription: formData.ventureInterestsDescription,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
           githubUrl: formatSocialUrl('github', formData.githubUrl),
           portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),
@@ -587,16 +591,15 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           username: formData.username,
           userType: formData.userType,
           bio: formData.bio,
+          experience: formData.experience,
           skills: formData.skills,
           location: formData.location,
           timezone: formData.timezone,
           values: formData.values,
-          // missionValuesAlignment: formData.missionValuesAlignment,
-          // ventureInterests: formData.ventureInterests,
-
+          missionValuesAlignment: formData.missionValuesAlignment,
+          ventureInterests: formData.ventureInterests,
           timeCommitment: formData.timeCommitment,
           expertSupportNeeded: formData.expertSupportNeeded,
-          // ventureInterestsDescription: formData.ventureInterestsDescription,
           linkedinUrl: formatSocialUrl('linkedin', formData.linkedinUrl),
           githubUrl: formatSocialUrl('github', formData.githubUrl),
           portfolioUrl: formatSocialUrl('website', formData.portfolioUrl),
@@ -642,6 +645,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       console.log('✅ Also saved to localStorage as backup');
       
       console.log('✅ Profile saved successfully to AWS:', formData);
+      
+      // Clear profile cache to ensure public profile shows updated data
+      const cacheKey = `public_${formData.username}`;
+      clearProfileCache(cacheKey);
+      console.log('🧹 Cleared profile cache for:', cacheKey);
+      
       setProfile(formData);
       setMessage('Profile saved successfully! (Stored in AWS database)');
       setIsEditing(false);
@@ -924,7 +933,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             <div className="cta-buttons">
               {profile && (
                 <button
-                  onClick={() => navigate(`/profile/${profile.username}`)}
+                  onClick={() => {
+                    // Clear cache before viewing public profile to ensure fresh data
+                    const cacheKey = `public_${profile.username}`;
+                    clearProfileCache(cacheKey);
+                    console.log('🧹 Cleared profile cache before viewing public profile:', cacheKey);
+                    navigate(`/profile/${profile.username}`);
+                  }}
                   className="btn btn-outline btn-large"
                 >
                   View Public Profile
@@ -1053,6 +1068,14 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       <div className="feature-card">
                         <h3 className="text-lg font-semibold text-gray-800 mb-3">Bio</h3>
                         <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.bio}</p>
+                      </div>
+                    )}
+
+                    {/* Experience */}
+                    {profile.experience && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Experience</h3>
+                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.experience}</p>
                       </div>
                     )}
 
@@ -1418,6 +1441,24 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                       name="bio"
                       value={formData.bio}
                       onChange={(e) => handleInputChange('bio', e.target.value)}
+                      rows={4}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                    />
+                  </div>
+
+                  {/* Experience */}
+                  <div>
+                    <label htmlFor="experience" className="block text-lg font-semibold text-gray-800 mb-3">
+                      Experience
+                    </label>
+                    <div className="text-sm text-gray-600 mb-2">
+                      Your relevant experience and background
+                    </div>
+                    <textarea
+                      id="experience"
+                      name="experience"
+                      value={formData.experience}
+                      onChange={(e) => handleInputChange('experience', e.target.value)}
                       rows={4}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
                     />

@@ -264,17 +264,29 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
               {getUserTypeDescription(profile.userType)}
             </p>
             
-            {/* Message Button - Only show if user is authenticated and messaging is enabled */}
-            {profile.messagingEnabled !== false && (
-              <div className="mt-6">
+            <div className="mt-6 flex flex-wrap gap-3 justify-center">
+              {/* Message Button - Only show if user is authenticated and messaging is enabled */}
+              {profile.messagingEnabled !== false && (
                 <button
                   onClick={() => navigate(`/messages?compose=true&recipient=${profile.username}`)}
                   className="btn btn-primary btn-large"
                 >
                   💬 Send Message
                 </button>
-              </div>
-            )}
+              )}
+              
+              {/* Refresh Button */}
+              <button
+                onClick={() => {
+                  clearProfileCache(`public_${profile.username}`);
+                  window.location.reload();
+                }}
+                className="btn btn-outline btn-large"
+                title="Refresh profile data"
+              >
+                🔄 Refresh
+              </button>
+            </div>
 
           </div>
         </section>

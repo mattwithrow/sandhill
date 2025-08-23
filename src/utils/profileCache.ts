@@ -4,7 +4,7 @@ interface CachedProfile {
   expiresAt: number;
 }
 
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes in milliseconds (reduced for faster updates)
 const profileCache = new Map<string, CachedProfile>();
 
 export const getCachedProfile = (key: string): any | null => {
