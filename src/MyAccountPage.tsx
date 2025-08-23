@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
 import { generateClient } from "aws-amplify/api";
+import { getCurrentUser } from 'aws-amplify/auth';
 import { 
   ListUserProfilesQuery, 
   CreateUserProfileMutation, 
@@ -14,6 +15,7 @@ import { listUserProfiles } from '../queries';
 import { createUserProfile, updateUserProfile } from '../mutations';
 import SkillsMultiSelect from './components/SkillsMultiSelect';
 import ValuesMultiSelect from './components/ValuesMultiSelect';
+import WelcomeModal from './components/WelcomeModal';
 
 
 import { 
@@ -36,6 +38,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
   const [debugInfo, setDebugInfo] = useState<any>({});
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [formData, setFormData] = useState<{
     username: string;
     userType: UserProfileUserType;
@@ -164,6 +167,11 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
       // Try multiple ways to get the user email
       const userEmail = user?.signInDetails?.loginId || (user as any)?.email || user?.username;
+      
+      // Store user email in localStorage for fallback
+      if (userEmail) {
+        localStorage.setItem('userEmail', userEmail);
+      }
       
       if (authStatus === 'authenticated' && user && userEmail) {
         console.log('✅ User is authenticated, loading profile from AWS...');
@@ -305,6 +313,13 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
               statusMessage: '',
               isProfileHidden: false
             });
+            
+            // Show welcome modal for new users (only if they haven't seen it before)
+            const hasSeenWelcomeModal = localStorage.getItem(`welcomeModalSeen_${userEmail}`);
+            if (!hasSeenWelcomeModal) {
+              setShowWelcomeModal(true);
+              localStorage.setItem(`welcomeModalSeen_${userEmail}`, 'true');
+            }
           }
            
            // Load timeCommitment from localStorage if available
@@ -424,6 +439,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
 
     try {
       console.log('💾 Saving profile to AWS database...');
+      console.log('🔍 Auth status:', authStatus);
       console.log('🔍 Full user object:', user);
       console.log('🔍 User signInDetails:', user?.signInDetails);
       console.log('🔍 User email (signInDetails.loginId):', user?.signInDetails?.loginId);
@@ -435,10 +451,55 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       console.log('  - timeCommitment:', formData.timeCommitment);
       console.log('  - expertSupportNeeded:', formData.expertSupportNeeded);
       
+      // Check if user is properly authenticated
+      if (authStatus !== 'authenticated' || !user) {
+        throw new Error('User is not properly authenticated');
+      }
+      
       // Try multiple ways to get the user email
-      let userEmail = user?.signInDetails?.loginId || (user as any)?.email || user?.username;
+      console.log('🔍 Debugging user object:');
+      console.log('  - user object:', user);
+      console.log('  - user.signInDetails:', user?.signInDetails);
+      console.log('  - user.signInDetails?.loginId:', user?.signInDetails?.loginId);
+      console.log('  - (user as any)?.email:', (user as any)?.email);
+      console.log('  - user.username:', user?.username);
+      console.log('  - user.userId:', user?.userId);
+      console.log('  - user.attributes:', (user as any)?.attributes);
+      console.log('  - user.attributes?.email:', (user as any)?.attributes?.email);
+      
+      let userEmail = user?.signInDetails?.loginId || 
+                     (user as any)?.email || 
+                     (user as any)?.attributes?.email ||
+                     user?.username;
+      
+      console.log('🔍 Final userEmail value:', userEmail);
+      
+      // If we still don't have an email, try to get it from getCurrentUser
+      if (!userEmail) {
+        try {
+          console.log('🔍 Trying getCurrentUser as fallback...');
+          const currentUser = await getCurrentUser();
+          console.log('🔍 getCurrentUser result:', currentUser);
+          userEmail = currentUser?.signInDetails?.loginId || 
+                     (currentUser as any)?.email || 
+                     (currentUser as any)?.attributes?.email ||
+                     currentUser?.username;
+          console.log('🔍 userEmail from getCurrentUser:', userEmail);
+        } catch (getUserError) {
+          console.error('❌ Error getting current user:', getUserError);
+        }
+      }
+      
+      // Final fallback: try localStorage
+      if (!userEmail) {
+        console.log('🔍 Trying localStorage as final fallback...');
+        userEmail = localStorage.getItem('userEmail');
+        console.log('🔍 userEmail from localStorage:', userEmail);
+      }
       
       if (!userEmail) {
+        console.error('❌ No user email found in any of the expected locations');
+        console.error('❌ User object keys:', user ? Object.keys(user) : 'user is null/undefined');
         throw new Error('No user email available for saving profile');
       }
       
@@ -924,20 +985,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
             </section>
           )}
 
-          {/* Welcome Banner for New Users */}
-          {!profile && !isEditing && (
-            <div className="mb-8 p-6 rounded-2xl border-2 bg-gradient-to-r from-blue-50 to-teal-50 border-blue-200 shadow-lg">
-              <div className="flex items-center">
-                <div className="text-3xl mr-4">🎉</div>
-                <div>
-                  <h3 className="text-lg font-semibold text-blue-800 mb-1">Welcome to Sandhill!</h3>
-                  <p className="text-blue-700">
-                    Your account has been created successfully. Now let's set up your profile to help you connect with the right people and opportunities.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+
 
           {/* Success/Error Messages */}
           {message && (
@@ -1737,6 +1785,12 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
           </section>
         </div>
       </div>
+      
+      {/* Welcome Modal */}
+      <WelcomeModal 
+        isOpen={showWelcomeModal} 
+        onClose={() => setShowWelcomeModal(false)} 
+      />
     </div>
   );
 };
