@@ -1527,7 +1527,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <div className="text-sm text-gray-600 mb-3">
                           Select the values that are most important to you
                         </div>
-                        <div className="values-multi-select-container">
+                        <div className="skills-multi-select-container">
                           <ValuesMultiSelect
                             selectedValues={formData.missionValuesAlignment ? formData.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean) : []}
                             onChange={(values) => {
@@ -1640,130 +1640,136 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     </div>
                   </div>
 
-                  {/* Profile Visibility */}
-                  <div className="border-t border-gray-200 pt-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Profile Visibility</h3>
-                    <div className="space-y-4">
+                  {/* Account Settings Section */}
+                  <div className="border-t border-gray-200 pt-8 mt-8">
+                    <h2 className="text-xl font-bold text-gray-800 mb-6">Account Settings</h2>
+                    
+                    {/* Profile Visibility */}
+                    <div className="mb-8">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Profile Visibility</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-start space-x-3">
+                          <input
+                            type="checkbox"
+                            id="isProfileHidden"
+                            checked={formData.isProfileHidden}
+                            onChange={(e) => handleInputChange('isProfileHidden', e.target.checked)}
+                            className="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                          />
+                          <div className="flex-1">
+                            <label htmlFor="isProfileHidden" className="block text-lg font-semibold text-gray-800 mb-2">
+                              Hide My Profile
+                            </label>
+                            <p className="text-gray-600 text-sm mb-2">
+                              When enabled, your profile will not appear in search results on the Experts or Ventures pages.
+                            </p>
+                            {formData.isProfileHidden && (
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <p className="text-blue-800 text-sm">
+                                  <strong>Profile Hidden:</strong> Your profile is currently hidden from search results. 
+                                  Other users won't be able to find you when browsing experts or ventures.
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Account Status */}
+                    <div className="mb-8">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Status</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <label htmlFor="accountStatus" className="block text-sm font-medium text-gray-700 mb-2">
+                            Current Status
+                          </label>
+                          <select
+                            id="accountStatus"
+                            name="accountStatus"
+                            value={formData.accountStatus || 'active'}
+                            onChange={(e) => handleInputChange('accountStatus', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                          >
+                            <option value="active">Active - Available for opportunities</option>
+                            <option value="busy">Busy - Working on projects, limited availability</option>
+                            <option value="inactive">Inactive - Not taking on new work</option>
+                          </select>
+                        </div>
+                        
+                        {(formData.accountStatus === 'busy' || formData.accountStatus === 'inactive') && (
+                          <div>
+                            <label htmlFor="statusMessage" className="block text-sm font-medium text-gray-700 mb-2">
+                              Status Message (Optional)
+                            </label>
+                            <textarea
+                              id="statusMessage"
+                              name="statusMessage"
+                              value={formData.statusMessage || ''}
+                              onChange={(e) => handleInputChange('statusMessage', e.target.value)}
+                              placeholder="e.g., 'Currently focused on a major project until Q2 2024' or 'Taking a break from new opportunities'"
+                              rows={3}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                              This message will be visible to other users when they view your profile.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Messaging Preferences */}
+                    <div className="mb-8">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">Messaging Preferences</h3>
                       <div className="flex items-start space-x-3">
                         <input
                           type="checkbox"
-                          id="isProfileHidden"
-                          checked={formData.isProfileHidden}
-                          onChange={(e) => handleInputChange('isProfileHidden', e.target.checked)}
+                          id="messagingEnabled"
+                          checked={formData.messagingEnabled}
+                          onChange={(e) => handleInputChange('messagingEnabled', e.target.checked)}
                           className="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                         />
                         <div className="flex-1">
-                          <label htmlFor="isProfileHidden" className="block text-lg font-semibold text-gray-800 mb-2">
-                            Hide My Profile
+                          <label htmlFor="messagingEnabled" className="block text-lg font-semibold text-gray-800 mb-2">
+                            Allow Messages
                           </label>
-                          <p className="text-gray-600 text-sm mb-2">
-                            When enabled, your profile will not appear in search results on the Experts or Ventures pages.
+                          <p className="text-gray-600 text-sm">
+                            Let other users send you messages and start conversations.
                           </p>
-                          {formData.isProfileHidden && (
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                              <p className="text-blue-800 text-sm">
-                                <strong>Profile Hidden:</strong> Your profile is currently hidden from search results. 
-                                Other users won't be able to find you when browsing experts or ventures.
-                              </p>
-                            </div>
+                          {!formData.messagingEnabled && (
+                            <p className="text-orange-600 text-sm mt-2">
+                              <strong>Note:</strong> When disabled, you won't be able to send or receive messages.
+                            </p>
                           )}
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Account Status */}
-                  <div className="border-t border-gray-200 pt-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Status</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label htmlFor="accountStatus" className="block text-sm font-medium text-gray-700 mb-2">
-                          Current Status
-                        </label>
-                        <select
-                          id="accountStatus"
-                          name="accountStatus"
-                          value={formData.accountStatus || 'active'}
-                          onChange={(e) => handleInputChange('accountStatus', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                        >
-                          <option value="active">Active - Available for opportunities</option>
-                          <option value="busy">Busy - Working on projects, limited availability</option>
-                          <option value="inactive">Inactive - Not taking on new work</option>
-                        </select>
-                      </div>
-                      
-                      {(formData.accountStatus === 'busy' || formData.accountStatus === 'inactive') && (
-                        <div>
-                          <label htmlFor="statusMessage" className="block text-sm font-medium text-gray-700 mb-2">
-                            Status Message (Optional)
-                          </label>
-                          <textarea
-                            id="statusMessage"
-                            name="statusMessage"
-                            value={formData.statusMessage || ''}
-                            onChange={(e) => handleInputChange('statusMessage', e.target.value)}
-                            placeholder="e.g., 'Currently focused on a major project until Q2 2024' or 'Taking a break from new opportunities'"
-                            rows={3}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                          />
-                          <p className="text-xs text-gray-500 mt-1">
-                            This message will be visible to other users when they view your profile.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Messaging Preferences */}
-                  <div className="border-t border-gray-200 pt-6">
-                    <div className="flex items-start space-x-3">
-                      <input
-                        type="checkbox"
-                        id="messagingEnabled"
-                        checked={formData.messagingEnabled}
-                        onChange={(e) => handleInputChange('messagingEnabled', e.target.checked)}
-                        className="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                      />
-                      <div className="flex-1">
-                        <label htmlFor="messagingEnabled" className="block text-lg font-semibold text-gray-800 mb-2">
-                          Allow Messages
-                        </label>
-                        <p className="text-gray-600 text-sm">
-                          Let other users send you messages and start conversations.
-                        </p>
-                        {!formData.messagingEnabled && (
-                          <p className="text-orange-600 text-sm mt-2">
-                            <strong>Note:</strong> When disabled, you won't be able to send or receive messages.
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Account Deletion */}
-                  <div className="border-t border-red-200 pt-6 mt-8">
-                    <h3 className="text-lg font-semibold text-red-800 mb-4">Danger Zone</h3>
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="flex-1">
-                          <h4 className="text-md font-medium text-red-800 mb-2">
-                            Delete Account
-                          </h4>
-                          <p className="text-red-700 text-sm mb-4">
-                            This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                                handleDeleteAccount();
-                              }
-                            }}
-                            className="btn btn-danger"
-                          >
-                            Delete My Account
-                          </button>
+                    {/* Danger Zone */}
+                    <div className="border-t border-red-200 pt-6">
+                      <h3 className="text-lg font-semibold text-red-800 mb-4">Danger Zone</h3>
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="flex-1">
+                            <h4 className="text-md font-medium text-red-800 mb-2">
+                              Delete Account
+                            </h4>
+                            <p className="text-red-700 text-sm mb-4">
+                              This action cannot be undone. This will permanently delete your account and remove all your data from our servers.
+                            </p>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                                  handleDeleteAccount();
+                                }
+                              }}
+                              className="btn btn-danger"
+                            >
+                              Delete My Account
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
