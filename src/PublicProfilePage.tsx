@@ -351,6 +351,14 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   </div>
                 )}
 
+                {/* Experience */}
+                {profile.experience && (
+                  <div className="feature-card">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Experience</h3>
+                    <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.experience}</p>
+                  </div>
+                )}
+
                 {/* Values (if not already shown in Mission & Values Alignment) */}
                 {profile.values && !profile.missionValuesAlignment && (
                   <div className="feature-card">

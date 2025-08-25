@@ -1433,6 +1433,25 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                     />
                   </div>
 
+                  {/* Values */}
+                  <div>
+                    <label htmlFor="values" className="block text-lg font-semibold text-gray-800 mb-3">
+                      Values
+                    </label>
+                    <div className="text-sm text-gray-600 mb-2">
+                      Additional values, principles, or beliefs that guide your work
+                    </div>
+                    <textarea
+                      id="values"
+                      name="values"
+                      value={formData.values}
+                      onChange={(e) => handleInputChange('values', e.target.value)}
+                      rows={4}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-vertical transition-all"
+                      placeholder="Describe your core values, principles, or beliefs that guide your work and decision-making..."
+                    />
+                  </div>
+
 
 
                   {/* Skills - Collapsible Multi-Select */}
