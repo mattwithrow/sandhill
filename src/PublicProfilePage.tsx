@@ -7,7 +7,7 @@ import {
 } from '../API';
 import { listUserProfiles } from '../queries';
 import { formatTimezone, getTimeInTimezone, isRemoteLocation, detectTimezoneFromLocation } from './utils/locationUtils';
-import { getMissionValueNames } from './data/missionValues';
+import { getSimplifiedMissionValueNames } from './data/missionValues';
 
 
 import { getCachedProfile, setCachedProfile, getCachedProfileFromStorage, clearProfileCache } from './utils/profileCache';
@@ -385,10 +385,10 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                   {profile.missionValuesAlignment ? (
                     <>
                       <ul className="list-none p-0 m-0 mb-4">
-                        {profile.missionValuesAlignment.split(',').map((value, index) => (
+                        {getSimplifiedMissionValueNames(profile.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean)).map((valueName, index) => (
                           <li key={index} className="inline-block mb-3 mr-3">
                             <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200">
-                              {value.trim()}
+                              {valueName}
                             </span>
                           </li>
                         ))}
