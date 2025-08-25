@@ -25,7 +25,7 @@ import {
   getTimeInTimezone,
   isRemoteLocation 
 } from './utils/locationUtils';
-import { getMissionValueNames, getMissionValueIds } from './data/missionValues';
+import { getSimplifiedMissionValueNames, getMissionValueIds } from './data/missionValues';
 
 
 import { validateUsername } from './utils/usernameUtils';
@@ -1088,6 +1088,22 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                             <li key={index} className="inline-block mb-3 mr-3">
                               <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
                                 {skill.trim()}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Mission & Values */}
+                    {profile.missionValuesAlignment && (
+                      <div className="feature-card">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Mission & Values</h3>
+                        <ul className="list-none p-0 m-0">
+                          {getSimplifiedMissionValueNames(profile.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean)).map((valueName: string, index: number) => (
+                            <li key={index} className="inline-block mb-3 mr-3">
+                              <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
+                                {valueName}
                               </span>
                             </li>
                           ))}
