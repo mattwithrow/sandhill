@@ -361,45 +361,48 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
 
 
 
-                {/* Skills */}
-                {profile.skills && (
-                  <div className="feature-card">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                      {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
-                    </h3>
-                    <ul className="list-none p-0 m-0">
-                      {profile.skills.split(',').map((skill, index) => (
-                        <li key={index} className="inline-block mb-3 mr-3">
-                          <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
-                            {skill.trim()}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Mission & Values Alignment */}
-                <div className="feature-card">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Mission & Values</h3>
-                  {profile.missionValuesAlignment ? (
-                    <>
-                      <ul className="list-none p-0 m-0 mb-4">
-                        {getSimplifiedMissionValueNames(profile.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean)).map((valueName, index) => (
+                {/* Skills and Values - Side by Side */}
+                <div className="grid-2">
+                  {/* Skills */}
+                  {profile.skills && (
+                    <div className="feature-card">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        {profile.userType === 'ventures' ? 'Skills Needed' : 'Skills I Have'}
+                      </h3>
+                      <ul className="list-none p-0 m-0">
+                        {profile.skills.split(',').map((skill, index) => (
                           <li key={index} className="inline-block mb-3 mr-3">
-                            <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200">
-                              {valueName}
+                            <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200 hover:from-orange-200 hover:to-teal-200 transition-all duration-300">
+                              {skill.trim()}
                             </span>
                           </li>
                         ))}
                       </ul>
-                      {profile.values && (
-                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
-                      )}
-                    </>
-                  ) : (
-                    <p className="text-gray-500 italic">No mission and values information provided yet.</p>
+                    </div>
                   )}
+
+                  {/* Mission & Values Alignment */}
+                  <div className="feature-card">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Mission & Values</h3>
+                    {profile.missionValuesAlignment ? (
+                      <>
+                        <ul className="list-none p-0 m-0 mb-4">
+                          {getSimplifiedMissionValueNames(profile.missionValuesAlignment.split(',').map(s => s.trim()).filter(Boolean)).map((valueName, index) => (
+                            <li key={index} className="inline-block mb-3 mr-3">
+                              <span className="bg-gradient-to-r from-orange-100 to-teal-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium border border-orange-200">
+                                {valueName}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                        {profile.values && (
+                          <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{profile.values}</p>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-gray-500 italic">No mission and values information provided yet.</p>
+                    )}
+                  </div>
                 </div>
 
 

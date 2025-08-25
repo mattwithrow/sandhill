@@ -1294,9 +1294,11 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                           )}
                         </div>
                       )}
-                      <div className="mt-1 text-xs text-gray-500">
-                        Only letters, numbers, hyphens (-), and underscores (_). 3-30 characters.
-                      </div>
+                      {!profile?.username && (
+                        <div className="mt-1 text-xs text-gray-500">
+                          Only letters, numbers, hyphens (-), and underscores (_). 3-30 characters.
+                        </div>
+                      )}
                     </div>
 
                     <div>
