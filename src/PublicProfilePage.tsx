@@ -446,48 +446,42 @@ const PublicProfilePage: React.FC = (): React.ReactNode => {
                       <ul className="space-y-3">
                         {profile.linkedinUrl && (
                           <li>
-                            <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center">
-                              <span className="w-4 h-4 mr-2">🔗</span>
+                            <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">
                               LinkedIn
                             </a>
                           </li>
                         )}
                         {profile.githubUrl && (
                           <li>
-                            <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors flex items-center">
-                              <span className="w-4 h-4 mr-2">🔗</span>
+                            <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors">
                               GitHub
                             </a>
                           </li>
                         )}
                         {profile.portfolioUrl && (
                           <li>
-                            <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors flex items-center">
-                              <span className="w-4 h-4 mr-2">🔗</span>
+                            <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors">
                               Portfolio
                             </a>
                           </li>
                         )}
                         {profile.websiteUrl && (
                           <li>
-                            <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors flex items-center">
-                              <span className="w-4 h-4 mr-2">🔗</span>
+                            <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors">
                               Website
                             </a>
                           </li>
                         )}
                         {profile.twitterUrl && (
                           <li>
-                            <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors flex items-center">
-                              <span className="w-4 h-4 mr-2">🔗</span>
+                            <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors">
                               Twitter
                             </a>
                           </li>
                         )}
                         {profile.instagramUrl && (
                           <li>
-                            <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors flex items-center">
-                              <span className="w-4 h-4 mr-2">🔗</span>
+                            <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors">
                               Instagram
                             </a>
                           </li>

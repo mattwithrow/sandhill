@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
 import { generateClient } from "aws-amplify/api";
@@ -31,40 +31,56 @@ import { getSimplifiedMissionValueNames, getMissionValueIds } from './data/missi
 import { validateUsername } from './utils/usernameUtils';
 import { clearProfileCache } from './utils/profileCache';
 
+interface ProfileFormData {
+  username: string;
+  userType: UserProfileUserType;
+  bio: string;
+  experience: string;
+  skills: string;
+  location: string;
+  timezone: string;
+  latitude?: number;
+  longitude?: number;
+  values: string;
+  missionValuesAlignment: string;
+  timeCommitment: string;
+  expertSupportNeeded: string;
+  linkedinUrl: string;
+  githubUrl: string;
+  portfolioUrl: string;
+  websiteUrl: string;
+  twitterUrl: string;
+  instagramUrl: string;
+  messagingEnabled: boolean;
+  accountStatus: string;
+  statusMessage: string;
+  isProfileHidden: boolean;
+}
+
+interface DebugInfo {
+  authStatus: string;
+  user: {
+    userId: string;
+    username: string;
+    email: string | undefined;
+  } | null;
+  timestamp: string;
+}
+
 const MyAccountPage: React.FC = (): React.ReactNode => {
   const { user, signOut, authStatus } = useAuthenticator();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [debugInfo, setDebugInfo] = useState<any>({});
+  const [debugInfo, setDebugInfo] = useState<DebugInfo>({
+    authStatus: '',
+    user: null,
+    timestamp: ''
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [formData, setFormData] = useState<{
-    username: string;
-    userType: UserProfileUserType;
-    bio: string;
-    experience: string;
-    skills: string;
-    location: string;
-    timezone: string;
-    latitude?: number;
-    longitude?: number;
-    values: string;
-    missionValuesAlignment: string;
-    timeCommitment: string;
-    expertSupportNeeded: string;
-    linkedinUrl: string;
-    githubUrl: string;
-    portfolioUrl: string;
-    websiteUrl: string;
-    twitterUrl: string;
-    instagramUrl: string;
-    messagingEnabled: boolean;
-    accountStatus: string;
-    statusMessage: string;
-    isProfileHidden: boolean;
-  }>({
+  const [formData, setFormData] = useState<ProfileFormData>({
     username: '',
     userType: UserProfileUserType.expert,
     bio: '',
@@ -88,56 +104,29 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     isProfileHidden: false
   });
   
-  const [profile, setProfile] = useState<null | {
-    username: string;
-    userType: UserProfileUserType;
-    bio: string;
-    experience: string;
-    skills: string;
-    location: string;
-    timezone: string;
-    latitude?: number;
-    longitude?: number;
-    values: string;
-    missionValuesAlignment: string;
-    timeCommitment: string;
-    expertSupportNeeded: string;
-    linkedinUrl: string;
-    githubUrl: string;
-    portfolioUrl: string;
-    websiteUrl: string;
-    twitterUrl: string;
-    instagramUrl: string;
-    messagingEnabled: boolean;
-    accountStatus: string;
-    statusMessage: string;
-    isProfileHidden: boolean;
-  }>(null);
+  const [profile, setProfile] = useState<ProfileFormData | null>(null);
 
-  const getUserTypeDisplay = (userType: UserProfileUserType) => {
+  const getUserTypeDisplay = useCallback((userType: UserProfileUserType) => {
     switch (userType) {
       case UserProfileUserType.expert:
         return 'Expert';
       case UserProfileUserType.ventures:
         return 'Venture';
-  
-        return 'Expert & Venture';
       default:
         return 'User';
     }
-  };
+  }, []);
 
-  const getUserTypeDescription = (userType: UserProfileUserType) => {
+  const getUserTypeDescription = useCallback((userType: UserProfileUserType) => {
     switch (userType) {
       case UserProfileUserType.expert:
         return 'Skilled professional ready to help bring ideas to life';
       case UserProfileUserType.ventures:
         return 'Find the right people and build something meaningful';
-      
       default:
         return 'Member of the Sandhill community';
     }
-  };
+  }, []);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -665,7 +654,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
     }
   };
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = useCallback((field: string, value: string | boolean) => {
     console.log(`🔄 handleInputChange called - field: ${field}, value:`, value);
     setFormData(prev => {
       const updatedData = {
@@ -683,7 +672,7 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
       console.log(`📝 Updated formData for ${field}:`, (updatedData as any)[field]);
       return updatedData;
     });
-  };
+  }, []);
 
   const formatSocialUrl = (platform: string, value: string) => {
     if (!value) return '';
@@ -1156,48 +1145,42 @@ const MyAccountPage: React.FC = (): React.ReactNode => {
                         <ul className="space-y-3">
                           {profile.linkedinUrl && (
                             <li>
-                              <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center">
-                                <span className="w-4 h-4 mr-2">🔗</span>
+                              <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors">
                                 LinkedIn
                               </a>
                             </li>
                           )}
                           {profile.githubUrl && (
                             <li>
-                              <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors flex items-center">
-                                <span className="w-4 h-4 mr-2">🔗</span>
+                              <a href={profile.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-800 hover:text-gray-600 transition-colors">
                                 GitHub
                               </a>
                             </li>
                           )}
                           {profile.portfolioUrl && (
                             <li>
-                              <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors flex items-center">
-                                <span className="w-4 h-4 mr-2">🔗</span>
+                              <a href={profile.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-800 transition-colors">
                                 Portfolio
                               </a>
                             </li>
                           )}
                           {profile.websiteUrl && (
                             <li>
-                              <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors flex items-center">
-                                <span className="w-4 h-4 mr-2">🔗</span>
+                              <a href={profile.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 transition-colors">
                                 Website
                               </a>
                             </li>
                           )}
                           {profile.twitterUrl && (
                             <li>
-                              <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors flex items-center">
-                                <span className="w-4 h-4 mr-2">🔗</span>
+                              <a href={profile.twitterUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-600 transition-colors">
                                 Twitter
                               </a>
                             </li>
                           )}
                           {profile.instagramUrl && (
                             <li>
-                              <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors flex items-center">
-                                <span className="w-4 h-4 mr-2">🔗</span>
+                              <a href={profile.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:text-pink-800 transition-colors">
                                 Instagram
                               </a>
                             </li>

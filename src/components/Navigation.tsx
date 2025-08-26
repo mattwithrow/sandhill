@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
@@ -8,7 +8,9 @@ interface NavItem {
   requiresAuth?: boolean;
 }
 
-const Navigation: React.FC = () => {
+interface NavigationProps {}
+
+const Navigation: React.FC<NavigationProps> = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const location = useLocation();
   const { authStatus, signOut } = useAuthenticator();
@@ -35,19 +37,19 @@ const Navigation: React.FC = () => {
 
   const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems;
 
-  const isActiveRoute = (path: string): boolean => {
+  const isActiveRoute = useCallback((path: string): boolean => {
     return location.pathname === path;
-  };
+  }, [location.pathname]);
 
-  const toggleMobileMenu = (): void => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const toggleMobileMenu = useCallback((): void => {
+    setIsMobileMenuOpen(prev => !prev);
+  }, []);
 
-  const closeMobileMenu = (): void => {
+  const closeMobileMenu = useCallback((): void => {
     setIsMobileMenuOpen(false);
-  };
+  }, []);
 
-  const handleSignOut = async (): Promise<void> => {
+  const handleSignOut = useCallback(async (): Promise<void> => {
     try {
       console.log('🔄 Navigation: Sign out initiated...');
       console.log('Navigation: Current auth status:', authStatus);
@@ -69,7 +71,7 @@ const Navigation: React.FC = () => {
         console.error('❌ Navigation: Alternative sign out also failed:', redirectError);
       }
     }
-  };
+  }, [authStatus, signOut, closeMobileMenu]);
 
   return (
     <nav className="nav-container">
@@ -119,16 +121,6 @@ const Navigation: React.FC = () => {
               <button 
                 className="btn btn-ghost" 
                 onClick={handleSignOut}
-                style={{ 
-                  cursor: 'pointer',
-                  padding: '8px 16px',
-                  border: 'none',
-                  borderRadius: '6px',
-                  backgroundColor: 'transparent',
-                  color: 'var(--text-secondary)',
-                  fontWeight: '500',
-                  transition: 'all 0.3s ease'
-                }}
               >
                 Sign Out
               </button>
@@ -209,16 +201,6 @@ const Navigation: React.FC = () => {
                 <button 
                   className="btn btn-ghost" 
                   onClick={handleSignOut}
-                  style={{ 
-                    cursor: 'pointer',
-                    padding: '8px 16px',
-                    border: 'none',
-                    borderRadius: '6px',
-                    backgroundColor: 'transparent',
-                    color: 'var(--text-secondary)',
-                    fontWeight: '500',
-                    transition: 'all 0.3s ease'
-                  }}
                 >
                   Sign Out
                 </button>
