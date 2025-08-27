@@ -1,11 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { useUnreadMessagesContext } from '../contexts/UnreadMessagesContext';
 
 interface NavItem {
   name: string;
   path: string;
   requiresAuth?: boolean;
+  showNotification?: boolean;
 }
 
 interface NavigationProps {}
@@ -14,6 +16,7 @@ const Navigation: React.FC<NavigationProps> = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const location = useLocation();
   const { authStatus, signOut } = useAuthenticator();
+  const { unreadCount } = useUnreadMessagesContext();
 
   // Check if user is authenticated using Amplify auth
   const isAuthenticated = authStatus === 'authenticated';
@@ -32,7 +35,7 @@ const Navigation: React.FC<NavigationProps> = () => {
     { name: 'About', path: '/about' },
     { name: 'Experts', path: '/experts', requiresAuth: true },
     { name: 'Ventures', path: '/ventures', requiresAuth: true },
-    { name: 'Messages', path: '/messages', requiresAuth: true },
+    { name: 'Messages', path: '/messages', requiresAuth: true, showNotification: true },
   ];
 
   const navItems = isAuthenticated ? authenticatedNavItems : unauthenticatedNavItems;
@@ -96,6 +99,11 @@ const Navigation: React.FC<NavigationProps> = () => {
                   className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
                 >
                   <span>{item.name}</span>
+                  {item.showNotification && unreadCount > 0 && (
+                    <span className="nav-notification-badge" aria-label={`${unreadCount} unread messages`}>
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
               </li>
             );
@@ -160,17 +168,22 @@ const Navigation: React.FC<NavigationProps> = () => {
                   return null;
                 }
 
-                return (
-                  <li key={item.name} className="nav-item">
-                    <Link
-                      to={item.path}
-                      className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
-                      onClick={closeMobileMenu}
-                    >
-                      <span>{item.name}</span>
-                    </Link>
-                  </li>
-                );
+                                  return (
+                    <li key={item.name} className="nav-item">
+                      <Link
+                        to={item.path}
+                        className={`nav-link ${isActiveRoute(item.path) ? 'active' : ''}`}
+                        onClick={closeMobileMenu}
+                      >
+                        <span>{item.name}</span>
+                        {item.showNotification && unreadCount > 0 && (
+                          <span className="nav-notification-badge" aria-label={`${unreadCount} unread messages`}>
+                            {unreadCount > 99 ? '99+' : unreadCount}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  );
               })}
             </ul>
 

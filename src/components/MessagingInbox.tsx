@@ -3,6 +3,7 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { listMessages, listUserProfiles, getUserProfile } from '../../queries';
 import { updateMessage } from '../../mutations';
+import { useUnreadMessagesContext } from '../contexts/UnreadMessagesContext';
 
 interface Message {
   id: string;
@@ -26,6 +27,7 @@ interface MessagingInboxProps {
 
 const MessagingInbox: React.FC<MessagingInboxProps> = ({ onViewConversation }) => {
   const { user } = useAuthenticator();
+  const { decrementUnreadCount } = useUnreadMessagesContext();
   const [conversations, setConversations] = useState<Array<{
     conversationId: string;
     otherUserId: string;
@@ -173,6 +175,71 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onViewConversation }) =
     }
   };
 
+  const handleConversationClick = async (conversationId: string, otherUserId: string, unreadCount: number) => {
+    // Mark messages as read when conversation is opened
+    if (unreadCount > 0) {
+      try {
+        const client = generateClient();
+        
+        // Get user's profile to find their ID
+        const profileResult = await client.graphql({
+          query: listUserProfiles,
+          variables: {
+            filter: {
+              email: { eq: user?.signInDetails?.loginId }
+            }
+          }
+        });
+
+        const profiles = profileResult.data.listUserProfiles.items;
+        if (profiles.length > 0) {
+          const userProfile = profiles[0];
+          
+          // Get unread messages in this conversation
+          const messagesResult = await client.graphql({
+            query: listMessages,
+            variables: {
+              filter: {
+                and: [
+                  { conversationId: { eq: conversationId } },
+                  { recipientId: { eq: userProfile.id } },
+                  { isRead: { eq: false } }
+                ]
+              }
+            }
+          });
+
+          const unreadMessages = messagesResult.data.listMessages.items;
+          
+          // Mark each unread message as read
+          for (const message of unreadMessages) {
+            await client.graphql({
+              query: updateMessage,
+              variables: {
+                input: {
+                  id: message.id,
+                  isRead: true
+                }
+              }
+            });
+          }
+
+          // Update local unread count
+          for (let i = 0; i < unreadMessages.length; i++) {
+            decrementUnreadCount();
+          }
+        }
+      } catch (error) {
+        console.error('Error marking messages as read:', error);
+      }
+    }
+
+    // Call the original onViewConversation callback
+    if (onViewConversation) {
+      onViewConversation(conversationId, otherUserId);
+    }
+  };
+
   if (loading) {
     return (
       <div className="messaging-inbox">
@@ -224,7 +291,7 @@ const MessagingInbox: React.FC<MessagingInboxProps> = ({ onViewConversation }) =
               <div
                 key={conversation.conversationId}
                 className={`conversation-item ${conversation.unreadCount > 0 ? 'unread' : ''}`}
-                onClick={() => onViewConversation?.(conversation.conversationId, conversation.otherUserId)}
+                onClick={() => handleConversationClick(conversation.conversationId, conversation.otherUserId, conversation.unreadCount)}
               >
                 <div className="conversation-header">
                   <span className="conversation-name">

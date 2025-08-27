@@ -147,6 +147,55 @@ a:focus {
   font-weight: 600;
 }
 
+/* ===============================================
+   NOTIFICATION BADGE
+   =============================================== */
+
+.nav-notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0 4px;
+  border: 2px solid var(--bg-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: notification-pulse 2s ease-in-out infinite;
+}
+
+@keyframes notification-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* High contrast mode support for notification badge */
+@media (prefers-contrast: high) {
+  .nav-notification-badge {
+    background: #000000;
+    border-color: #ffffff;
+  }
+}
+
+/* Reduced motion support for notification badge */
+@media (prefers-reduced-motion: reduce) {
+  .nav-notification-badge {
+    animation: none;
+  }
+}
+
 body {
   font-family: var(--font-family);
   color: var(--text-primary);
@@ -906,6 +955,7 @@ p {
 .nav-item {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 
