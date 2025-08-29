@@ -69,6 +69,8 @@
   border-top: 1px solid #e9ecef;
   padding: 12px 0;
   margin-top: auto;
+  position: relative;
+  z-index: 10;
 }
 
 .footer-wrapper {
@@ -307,10 +309,9 @@ body {
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ===============================================
@@ -1411,7 +1412,7 @@ p {
    RESPONSIVE DESIGN
    =============================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .container {
     padding: 0 1rem;
   }
