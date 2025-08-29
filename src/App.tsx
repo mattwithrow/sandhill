@@ -17,6 +17,13 @@ const PublicProfilePage = lazy(() => import("./PublicProfilePage"));
 const MessagingPage = lazy(() => import("./MessagingPage"));
 const AdminCleanup = lazy(() => import("./components/AdminCleanup"));
 
+// Legal pages
+const TermsOfServicePage = lazy(() => import("./pages/TermsOfServicePage"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const CookiePolicyPage = lazy(() => import("./pages/CookiePolicyPage"));
+const CommunityGuidelinesPage = lazy(() => import("./pages/CommunityGuidelinesPage"));
+const DisclaimerPage = lazy(() => import("./pages/DisclaimerPage"));
+
 //const client = generateClient<Schema>();
 
 // Loading component for lazy-loaded pages
@@ -66,6 +73,13 @@ function App() {
                     <AdminCleanup />
                   </ProtectedRoute>
                 } />
+                
+                {/* Legal Pages */}
+                <Route path="/legal/terms-of-service" element={<TermsOfServicePage />} />
+                <Route path="/legal/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/legal/cookie-policy" element={<CookiePolicyPage />} />
+                <Route path="/legal/community-guidelines" element={<CommunityGuidelinesPage />} />
+                <Route path="/legal/disclaimer" element={<DisclaimerPage />} />
               </Routes>
             </Suspense>
           </Layout>
