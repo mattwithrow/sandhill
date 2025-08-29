@@ -478,7 +478,6 @@ a:hover {
    =============================================== */
 
 .messaging-page {
-  min-height: 100vh;
   background: var(--light-gradient);
   padding: var(--spacing-lg) 0;
 }
@@ -1468,12 +1467,12 @@ select:focus {
 
 /* Authentication Styles */
 .auth-page {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #f6ad55 0%, #38b2ac 100%);
   padding: var(--spacing-md);
+  min-height: calc(100vh - 200px); /* Account for header/footer */
 }
 
 .auth-wrapper {

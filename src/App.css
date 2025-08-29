@@ -681,6 +681,8 @@ p {
   padding: var(--space-2xl) 0 var(--space-xl);
   margin-top: auto;
   border-top: 1px solid var(--border-light);
+  position: relative;
+  z-index: 10;
 }
 
 .footer-content {
@@ -756,7 +758,6 @@ p {
 .legal-page {
   padding: var(--space-2xl) 0;
   background: var(--bg-light);
-  min-height: 100vh;
 }
 
 .legal-content {
@@ -1328,7 +1329,6 @@ p {
 /* Ideas & Builders Pages Specific */
 .ideas-page,
 .builders-page {
-  min-height: 100vh;
   background: var(--light-gradient);
 }
 
@@ -1376,25 +1376,21 @@ p {
 
 /* About Page Specific */
 .about-page {
-  min-height: 100vh;
   background: var(--light-gradient);
 }
 
 /* Start Page Specific */
 .start-page {
-  min-height: 100vh;
   background: var(--light-gradient);
 }
 
 /* My Account Page Specific */
 .my-account-page {
-  min-height: 100vh;
   background: var(--light-gradient);
 }
 
 /* Public Profile Page Specific */
 .public-profile-page {
-  min-height: 100vh;
   background: var(--light-gradient);
 }
 
@@ -1408,12 +1404,12 @@ p {
    =============================================== */
 
 .error-boundary {
-  min-height: 100vh;
   background: var(--light-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-lg);
+  min-height: calc(100vh - 200px); /* Account for header/footer */
 }
 
 .error-boundary .content-card {
