@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
+  console.log('Footer component is rendering'); // Debug log
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="footer">
+    <footer className="footer" style={{background: 'red', color: 'white', padding: '20px', textAlign: 'center'}}>
       <div className="footer-wrapper">
         <div className="footer-content">
           <div className="footer-links">
