@@ -9,6 +9,11 @@ const CustomSignUp: React.FC = () => {
     password: '',
     confirmPassword: '',
   });
+  const [agreements, setAgreements] = useState({
+    termsOfService: false,
+    communityGuidelines: false,
+    cookiePolicy: false,
+  });
   const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,6 +27,14 @@ const CustomSignUp: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleAgreementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setAgreements(prev => ({
+      ...prev,
+      [name]: checked
     }));
   };
 
@@ -39,6 +52,13 @@ const CustomSignUp: React.FC = () => {
 
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters long');
+      setLoading(false);
+      return;
+    }
+
+    // Check if all agreements are accepted
+    if (!agreements.termsOfService || !agreements.communityGuidelines || !agreements.cookiePolicy) {
+      setError('Please accept all required agreements to continue');
       setLoading(false);
       return;
     }
@@ -234,6 +254,70 @@ const CustomSignUp: React.FC = () => {
               >
                 {showConfirmPassword ? "Show" : "Hide"}
               </button>
+            </div>
+          </div>
+
+          <div className="form-group agreements-section">
+            <h3 className="agreements-title">Required Agreements</h3>
+            
+            <div className="agreement-item">
+              <label className="agreement-label">
+                <input
+                  type="checkbox"
+                  name="termsOfService"
+                  checked={agreements.termsOfService}
+                  onChange={handleAgreementChange}
+                  required
+                  className="agreement-checkbox"
+                />
+                <span className="agreement-text">
+                  I agree to the{' '}
+                  <a href="/legal/terms-of-service" target="_blank" rel="noopener noreferrer" className="agreement-link">
+                    Terms of Service
+                  </a>
+                  *
+                </span>
+              </label>
+            </div>
+
+            <div className="agreement-item">
+              <label className="agreement-label">
+                <input
+                  type="checkbox"
+                  name="communityGuidelines"
+                  checked={agreements.communityGuidelines}
+                  onChange={handleAgreementChange}
+                  required
+                  className="agreement-checkbox"
+                />
+                <span className="agreement-text">
+                  I agree to the{' '}
+                  <a href="/legal/community-guidelines" target="_blank" rel="noopener noreferrer" className="agreement-link">
+                    Community Guidelines
+                  </a>
+                  *
+                </span>
+              </label>
+            </div>
+
+            <div className="agreement-item">
+              <label className="agreement-label">
+                <input
+                  type="checkbox"
+                  name="cookiePolicy"
+                  checked={agreements.cookiePolicy}
+                  onChange={handleAgreementChange}
+                  required
+                  className="agreement-checkbox"
+                />
+                <span className="agreement-text">
+                  I agree to the{' '}
+                  <a href="/legal/cookie-policy" target="_blank" rel="noopener noreferrer" className="agreement-link">
+                    Cookie Policy
+                  </a>
+                  *
+                </span>
+              </label>
             </div>
           </div>
 

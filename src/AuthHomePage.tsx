@@ -41,35 +41,48 @@ useEffect(() => {
   }
 
   return (
-
-    <main>
-
-
-
-      <h1>Sign In... h1 label</h1>
-      <button onClick={createTodo}>Sign In Button</button>
-
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li 
-          onClick={() => deleteTodo(todo.id)}
-          key={todo.id}>{todo.content}
-          </li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
+    <div className="auth-page">
+      <div className="auth-wrapper">
+        <div className="auth-header">
+          <h1>Welcome to Sandhill</h1>
+          <p>Connect with the right people to build what matters.</p>
+        </div>
+        
+        <div className="auth-container">
+          <div className="auth-card">
+            <h2>Sign In</h2>
+            <button onClick={createTodo} className="btn btn-primary btn-large">
+              Sign In Button
+            </button>
+          </div>
+        </div>
+        
+        <div className="auth-content">
+          <h3>My todos</h3>
+          <button onClick={createTodo} className="btn btn-outline">+ new</button>
+          <ul>
+            {todos.map((todo) => (
+              <li 
+                onClick={() => deleteTodo(todo.id)}
+                key={todo.id}
+                className="todo-item"
+              >
+                {todo.content}
+              </li>
+            ))}
+          </ul>
+          <div className="auth-info">
+            🥳 App successfully hosted. Try creating a new todo.
+            <br />
+            <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
+              Review next step of this tutorial.
+            </a>
+          </div>
+        </div>
+        
+        <button onClick={signOut} className="btn btn-ghost">Sign out</button>
       </div>
-      /*
-      <button onClick={signOut}>Sign out</button>
-
-    </main>
+    </div>
 
   );
 };
