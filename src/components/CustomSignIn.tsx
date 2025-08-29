@@ -118,8 +118,7 @@ const CustomSignIn: React.FC = () => {
 
   if (showForgotPassword) {
     return (
-      <div className="auth-container">
-        <div className="auth-card">
+      <div className="auth-card">
           <h2>Reset Password</h2>
           {!resetSuccess ? (
             <>
@@ -181,13 +180,11 @@ const CustomSignIn: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
     );
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
+    <div className="auth-card">
         <h2>Sign In</h2>
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -248,7 +245,6 @@ const CustomSignIn: React.FC = () => {
           </button>
         </form>
       </div>
-    </div>
   );
 };
 

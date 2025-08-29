@@ -119,8 +119,7 @@ const CustomSignUp: React.FC = () => {
 
   if (showVerification) {
     return (
-      <div className="auth-container">
-        <div className="auth-card">
+      <div className="auth-card">
           <h2>Verify Your Email</h2>
           <p className="auth-text">
             We've sent a verification code to <strong>{formData.email}</strong>. 
@@ -152,13 +151,11 @@ const CustomSignUp: React.FC = () => {
             </button>
           </form>
         </div>
-      </div>
     );
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
+    <div className="auth-card">
         <h2>Create Account</h2>
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -332,7 +329,6 @@ const CustomSignUp: React.FC = () => {
           </button>
         </form>
       </div>
-    </div>
   );
 };
 
