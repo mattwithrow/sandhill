@@ -131,6 +131,54 @@ const StartPage: React.FC = () => {
             </div>
           </section>
 
+          {/* Success Starts Here Section */}
+          <section className="section">
+            <div className="content-card">
+              <div className="section-header">
+                <h2 className="section-title">Success Starts Here</h2>
+                <p className="section-subtitle">
+                  Ideas don't stay ideas for long. Here's how members are already imagining using the platform:
+                </p>
+              </div>
+              
+              <div className="success-stories">
+                <div className="success-story">
+                  <h3>From Idea to Prototype</h3>
+                  <p>
+                    A nonprofit founder with a mission to reduce food waste connects with a UX designer and engineer. 
+                    Together, they launch a pilot app within weeks.
+                  </p>
+                </div>
+                
+                <div className="success-story">
+                  <h3>From Yard to Market</h3>
+                  <p>
+                    A person with a big yard and a vision meets a collaborator with gardening expertise. 
+                    Together, they transform the space into a thriving garden—and launch a farmers market with 
+                    all-organic, locally grown food.
+                  </p>
+                </div>
+                
+                <div className="success-story">
+                  <h3>Building What Matters</h3>
+                  <p>
+                    An early-stage founder seeking accountability finds a collaborator who shares their values. 
+                    The result? A project that not only launches—but grows.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="success-cta">
+                <p className="success-cta-text">
+                  Your story could be next.
+                </p>
+                <p className="success-cta-subtext">
+                  Post your idea. Offer your skills. Build what matters—together.
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* Call to Action Section */}
           <section className="cta-section fade-in">
                       <div className="section-header">

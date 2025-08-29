@@ -659,6 +659,85 @@ p {
 }
 
 /* ===============================================
+   SUCCESS STORIES SECTION
+   =============================================== */
+
+.success-stories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+.success-story {
+  background: var(--bg-light);
+  padding: var(--space-xl);
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-orange);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.success-story::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.success-story:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-left-color: var(--primary-teal);
+}
+
+.success-story:hover::before {
+  opacity: 1;
+}
+
+.success-story h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+
+.success-story p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.success-cta {
+  text-align: center;
+  padding: var(--space-xl);
+  background: var(--light-gradient);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-light);
+}
+
+.success-cta-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.success-cta-subtext {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ===============================================
    CTA SECTIONS
    =============================================== */
 
@@ -2618,6 +2697,28 @@ p {
     align-items: flex-start;
     text-align: left;
     padding: var(--space-md);
+  }
+  
+  /* Success Stories Responsive */
+  .success-stories {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .success-story {
+    padding: var(--space-lg);
+  }
+  
+  .success-cta {
+    padding: var(--space-lg);
+  }
+  
+  .success-cta-text {
+    font-size: 1.3rem;
+  }
+  
+  .success-cta-subtext {
+    font-size: 1rem;
   }
   
   .step-number {
