@@ -71,6 +71,12 @@
   margin-top: auto;
 }
 
+.footer-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
 .footer-content {
   display: flex;
   flex-direction: column;
