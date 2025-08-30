@@ -1515,19 +1515,20 @@ select:focus {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: var(--spacing-md);
+  padding: 20px;
 }
 
 .auth-wrapper {
   background: var(--bg-white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: var(--spacing-2xl);
+  padding: 40px;
   width: 100%;
   max-width: 400px;
   max-height: 90vh;
   overflow-y: auto;
   animation: modalFadeIn 0.3s ease-out;
+  margin: 20px;
 }
 
 /* Responsive auth modal for desktop */
@@ -1548,34 +1549,39 @@ select:focus {
 @media (min-width: 768px) {
   .auth-wrapper {
     max-width: 800px;
-    padding: var(--spacing-3xl);
+    padding: 50px;
+    margin: 30px;
   }
   
   .auth-page {
-    padding: var(--spacing-xl);
+    padding: 30px;
   }
 }
 
 @media (min-width: 1024px) {
   .auth-wrapper {
     max-width: 1000px;
+    padding: 60px;
+    margin: 40px;
   }
 }
 
 @media (min-width: 1200px) {
   .auth-wrapper {
     max-width: 1200px;
+    padding: 70px;
+    margin: 50px;
   }
 }
 
 .auth-header {
   text-align: center;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: 30px;
 }
 
 .auth-header h1 {
   color: var(--text-primary);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 15px;
   font-size: 1.75rem;
   font-weight: 700;
 }
@@ -1588,7 +1594,7 @@ select:focus {
 
 .auth-tabs {
   display: flex;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 25px;
   border-bottom: 1px solid var(--border-color);
 }
 
